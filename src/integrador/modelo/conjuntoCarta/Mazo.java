@@ -1,4 +1,6 @@
-package integrador.modelo;
+package integrador.modelo.conjuntoCarta;
+
+import integrador.modelo.cartas.Carta;
 
 import java.util.Random;
 

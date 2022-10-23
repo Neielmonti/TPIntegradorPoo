@@ -1,5 +1,11 @@
 package integrador.modelo;
 
+import integrador.modelo.cartas.Carta;
+import integrador.modelo.cartas.PaloCarta;
+import integrador.modelo.cartas.TipoCarta;
+import integrador.modelo.cartas.ValoresXTipo;
+import integrador.modelo.conjuntoCarta.Mazo;
+
 import java.util.ArrayList;
 import java.util.List;
 

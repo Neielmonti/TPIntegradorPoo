@@ -1,4 +1,4 @@
-package integrador.modelo;
+package integrador.modelo.cartas;
 import java.util.ArrayList;
 import java.util.List;
 

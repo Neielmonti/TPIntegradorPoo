@@ -1,4 +1,6 @@
-package integrador.modelo;
+package integrador.modelo.conjuntoCarta;
+
+import integrador.modelo.cartas.Carta;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +21,19 @@ public abstract class ConjuntoCartas {
     public void agregarCartas(List<Carta> cartas) {
         if (cartas.size() > 0) {
             this.cartas.addAll(cartas);
+        }
+    }
+
+    public List<Carta> getCartas() {
+        return this.cartas;
+    }
+
+    public void quitarCartas(ConjuntoCartas con) {
+        List<Carta> resta = con.getCartas();
+        for (Carta carta: resta) {
+            if (cartas.contains(carta)) {
+                cartas.remove(carta);
+            }
         }
     }
 

@@ -1,4 +1,4 @@
-package integrador.modelo;
+package integrador.modelo.cartas;
 
 public class Carta {
     private PaloCarta palo;

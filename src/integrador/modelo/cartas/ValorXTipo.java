@@ -1,4 +1,4 @@
-package integrador.modelo;
+package integrador.modelo.cartas;
 
 public class ValorXTipo {
     private TipoCarta tipo;
