@@ -5,7 +5,7 @@ import java.util.List;
 public class ValoresXTipo {
     private final List<ValorXTipo> valores;
 
-    ValoresXTipo() {
+    public ValoresXTipo() {
         List<ValorXTipo> list = new ArrayList<>();
         ValorXTipo aux = new ValorXTipo(TipoCarta.A,20);
         list.add(aux);

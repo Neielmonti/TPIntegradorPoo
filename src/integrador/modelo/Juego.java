@@ -41,8 +41,8 @@ public class Juego {
         return this.mazo.MostrarCartas();
     }
 
-    public String cartaRandom() {
-        return this.mazo.tomarCarta().mostrarCarta();
+    public Carta cartaRandom() {
+        return this.mazo.tomarCarta();
     }
 
 

@@ -14,7 +14,7 @@ public class VerificarTrio extends VerificarJugada{
     }
 
     @Override
-    public Jugada formarJugada(Mano mano) {
+    public Jugada formarJugada(Mano mano) { //NO FUNCIONA, NO TIENE EN CUENTA JOKERS
         List<Carta> cartas = mano.getCartas();
         List<Carta> result = new ArrayList<>();
         boolean armado = false;
@@ -30,6 +30,7 @@ public class VerificarTrio extends VerificarJugada{
                 armado = true;
             }
             else result = new ArrayList<>();
+            i++;
         }
 
         if (armado) {
