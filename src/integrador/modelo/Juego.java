@@ -12,25 +12,27 @@ import java.util.List;
 public class Juego {
     private List<Jugador> jugadores = new ArrayList<>();
     private ValoresXTipo valores = new ValoresXTipo();
-    private Mazo mazo = new Mazo();
+    private Mazo mazo;
 
     private void crearMazo() {
+        List<Carta> mazoList = new ArrayList<>();
         for (PaloCarta palo : PaloCarta.values()) {
             if (palo != PaloCarta.JOKER) {
                 for (TipoCarta tipo : TipoCarta.values()) {
                     if (tipo != TipoCarta.JOKER) {
                         Carta c1 = new Carta(palo, tipo, this.valores.valorXTipo(tipo));
-                        this.mazo.agregarCarta(c1);
-                        this.mazo.agregarCarta(c1);
+                        mazoList.add(c1);
+                        mazoList.add(c1);
                     }
                 }
             }
         }
         Carta c2 = new Carta(PaloCarta.JOKER,TipoCarta.JOKER,this.valores.valorXTipo(TipoCarta.JOKER));
-        this.mazo.agregarCarta(c2);
-        this.mazo.agregarCarta(c2);
-        this.mazo.agregarCarta(c2);
-        this.mazo.agregarCarta(c2);
+        mazoList.add(c2);
+        mazoList.add(c2);
+        mazoList.add(c2);
+        mazoList.add(c2);
+        this.mazo = new Mazo(mazoList);
     }
 
     public Juego() {

@@ -6,7 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public abstract class ConjuntoCartas {
-    protected List<Carta> cartas = new ArrayList<>();
+    private List<Carta> cartas = new ArrayList<>();
+
+    public ConjuntoCartas(List <Carta> cartas) {
+        this.cartas = cartas;
+    }
 
     public void agregarCarta(Carta carta) {
         this.cartas.add(carta);

@@ -8,9 +8,8 @@ public class Jugada extends ConjuntoCartas{
     private Formacion forma;
 
     public Jugada(Formacion forma, List<Carta> cartas) {
-        super();
+        super(cartas);
         this.forma = forma;
-        this.cartas = cartas;
     }
 
     public Formacion getForma(){

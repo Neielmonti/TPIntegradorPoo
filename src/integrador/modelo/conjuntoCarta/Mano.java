@@ -8,13 +8,12 @@ public class Mano extends ConjuntoCartas{
     private int sizeMano = 12;
 
     public Mano(List<Carta> cartas) {
-        if (cartas.size() == sizeMano) {
-            this.cartas = cartas;
-        }
+        super(cartas);
     }
 
     public boolean tomaCarta(Carta carta) {
-        if (this.cartas.size() <= sizeMano) {
+        List<Carta> cartas = getCartas();
+        if (cartas.size() <= sizeMano) {
             cartas.add(carta);
             return true;
         }
@@ -22,8 +21,9 @@ public class Mano extends ConjuntoCartas{
     }
 
     public boolean tiraCarta(Carta carta) {
-        if ((this.cartas.size() > sizeMano) || (this.cartas.contains(carta))) {
-            this.cartas.remove(carta);
+        List<Carta> cartas = getCartas();
+        if ((cartas.size() > sizeMano) || (cartas.contains(carta))) {
+            cartas.remove(carta);
             return true;
         }
         else return false;
