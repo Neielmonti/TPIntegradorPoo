@@ -1,6 +1,6 @@
 package integrador.modelo.conjuntoCarta;
 
-import integrador.modelo.cartas.Carta;
+import integrador.modelo.commons.Formacion;
 
 import java.util.List;
 

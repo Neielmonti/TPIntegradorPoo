@@ -1,4 +1,7 @@
-package integrador.modelo.cartas;
+package integrador.modelo.conjuntoCarta;
+
+import integrador.modelo.commons.PaloCarta;
+import integrador.modelo.commons.TipoCarta;
 
 public class Carta {
     private PaloCarta palo;

@@ -1,7 +1,5 @@
 package integrador.modelo.conjuntoCarta;
 
-import integrador.modelo.cartas.Carta;
-
 import java.util.List;
 
 public class Pozo extends ConjuntoCartas{

@@ -1,11 +1,9 @@
 import integrador.modelo.Juego;
-import integrador.modelo.cartas.Carta;
-import integrador.modelo.cartas.PaloCarta;
-import integrador.modelo.cartas.TipoCarta;
+import integrador.modelo.conjuntoCarta.Carta;
 import integrador.modelo.conjuntoCarta.Jugada;
 import integrador.modelo.conjuntoCarta.Mano;
-import integrador.modelo.conjuntoCarta.VerificarEscala;
-import integrador.modelo.conjuntoCarta.VerificarTrio;
+import integrador.modelo.verificadores.VerificarEscala;
+import integrador.modelo.verificadores.VerificarTrio;
 
 import java.util.ArrayList;
 import java.util.List;

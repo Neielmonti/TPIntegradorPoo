@@ -1,7 +1,9 @@
-package integrador.modelo.conjuntoCarta;
+package integrador.modelo.verificadores;
 
-import integrador.modelo.cartas.Carta;
-import integrador.modelo.cartas.TipoCarta;
+import integrador.modelo.conjuntoCarta.Carta;
+import integrador.modelo.commons.Formacion;
+import integrador.modelo.conjuntoCarta.Jugada;
+import integrador.modelo.conjuntoCarta.Mano;
 
 import java.util.ArrayList;
 import java.util.List;

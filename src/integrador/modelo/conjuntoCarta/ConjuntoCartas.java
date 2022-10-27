@@ -1,7 +1,5 @@
 package integrador.modelo.conjuntoCarta;
 
-import integrador.modelo.cartas.Carta;
-
 import java.util.ArrayList;
 import java.util.List;
 
