@@ -39,11 +39,19 @@ public abstract class ConjuntoCartas {
         }
     }
 
-    public String MostrarCartas() {
+    public String mostrarCartas() {
         String result = "";
         for (Carta carta : this.cartas) {
             result += carta.mostrarCarta();
         }
         return result;
+    }
+
+    public void quitarCartas(List<Carta> cartas) {
+        for (Carta carta: cartas) {
+            if (this.cartas.contains(carta)) {
+                this.cartas.remove(carta);
+            }
+        }
     }
 }

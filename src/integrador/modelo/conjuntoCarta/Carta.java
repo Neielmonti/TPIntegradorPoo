@@ -6,12 +6,10 @@ import integrador.modelo.commons.TipoCarta;
 public class Carta {
     private PaloCarta palo;
     private TipoCarta tipo;
-    private int valor;
 
-    public Carta(PaloCarta palo, TipoCarta tipo, int valor) {
+    public Carta(PaloCarta palo, TipoCarta tipo) {
         this.palo = palo;
         this.tipo = tipo;
-        this.valor = valor;
     }
 
     public PaloCarta getPalo(){
@@ -22,11 +20,7 @@ public class Carta {
         return this.tipo;
     }
 
-    public int getValor() {
-        return this.valor;
-    }
-
     public String mostrarCarta() {
-        return (this.tipo.toString() + " - " + this.palo.toString() + " - " + this.valor + "\n");
+        return (this.tipo.toString() + " - " + this.palo.toString() + " - " + this.tipo.getValor() + "\n");
     }
 }

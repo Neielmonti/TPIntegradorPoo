@@ -32,6 +32,19 @@ public enum TipoCarta {
         return this.label;
     }
 
+    public TipoCarta getNext() {
+        TipoCarta[] vals = TipoCarta.values();
+        if (this.ordinal() < vals.length - 1) {
+            return vals[(this.ordinal() + 1) % vals.length];
+        } else return null;
+    }
+
+    public TipoCarta getPrevius() {
+        TipoCarta[] vals = TipoCarta.values();
+        if (this.ordinal() > 0) {
+            return vals[(this.ordinal() - 1) % vals.length];
+        } else return null;
+    }
 
 
 }

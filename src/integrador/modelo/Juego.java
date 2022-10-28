@@ -18,8 +18,8 @@ public class Juego {
             if (palo != PaloCarta.JOKER) {
                 for (TipoCarta tipo : TipoCarta.values()) {
                     if (tipo != TipoCarta.JOKER) {
-                        Carta c1 = new Carta(palo, tipo, tipo.getValor());
-                        Carta c2 = new Carta(palo, tipo, tipo.getValor());
+                        Carta c1 = new Carta(palo, tipo);
+                        Carta c2 = new Carta(palo, tipo);
                         mazoList.add(c1);
                         mazoList.add(c2);
                     }
@@ -28,7 +28,7 @@ public class Juego {
         }
         Carta c2;
         for (int i = 0; i < 4; i++) {
-            c2 = new Carta(PaloCarta.JOKER, TipoCarta.JOKER, TipoCarta.JOKER.getValor());
+            c2 = new Carta(PaloCarta.JOKER, TipoCarta.JOKER);
             mazoList.add(c2);
         }
         this.mazo = new Mazo(mazoList);
@@ -39,7 +39,7 @@ public class Juego {
     }
 
     public String mostrarMazo() {
-        return this.mazo.MostrarCartas();
+        return this.mazo.mostrarCartas();
     }
 
     public Carta cartaRandom() {

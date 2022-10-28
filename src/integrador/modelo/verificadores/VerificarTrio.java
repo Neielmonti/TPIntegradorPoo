@@ -1,5 +1,4 @@
 package integrador.modelo.verificadores;
-
 import integrador.modelo.commons.TipoCarta;
 import integrador.modelo.conjuntoCarta.Carta;
 import integrador.modelo.commons.Formacion;
@@ -17,17 +16,31 @@ public class VerificarTrio extends VerificarJugada{
     }
 
     @Override
-    public Jugada formarJugada(Mano mano) { //NO FUNCIONA, NO TIENE EN CUENTA JOKERS
+    public Jugada formarJugada(Mano mano) {
+
         List<Carta> cartas = mano.getCartas();
         List<Carta> result = new ArrayList<>();
         boolean armado = false;
+        boolean jokerUsado = false;
         int i = 0;
+
         while ((i < cartas.size()) && (!armado)) {
+
             TipoCarta tipoBuscado = cartas.get(i).getTipo();
+
             for (Carta cartaActual: cartas) {
-                if ((cartaActual.getTipo() == tipoBuscado) && (result.size() < this.cantidadCartas)) {
-                    result.add(cartaActual);
+
+                if (result.size() < this.cantidadCartas) {
+
+                    if (cartaActual.getTipo() == tipoBuscado) {
+                        result.add(cartaActual);
+                    }
+                    else if ((cartaActual.getTipo() == TipoCarta.JOKER) && (!jokerUsado)) {
+                        jokerUsado = true;
+                        result.add(cartaActual);
+                    }
                 }
+
             }
             if (result.size() == this.cantidadCartas) {
                 armado = true;
@@ -37,6 +50,7 @@ public class VerificarTrio extends VerificarJugada{
         }
 
         if (armado) {
+            mano.quitarCartas(result);
             return new Jugada(this.forma,result);
         }
         else return null;
