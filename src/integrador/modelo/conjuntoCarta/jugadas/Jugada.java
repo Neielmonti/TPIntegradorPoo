@@ -4,6 +4,7 @@ import integrador.modelo.commons.Formacion;
 import integrador.modelo.conjuntoCarta.Carta;
 import integrador.modelo.conjuntoCarta.ConjuntoCartas;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Jugada extends ConjuntoCartas {
@@ -17,5 +18,7 @@ public class Jugada extends ConjuntoCartas {
     public Formacion getForma(){
         return this.forma;
     }
+
+
 
 }

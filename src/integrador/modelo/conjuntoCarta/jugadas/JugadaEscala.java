@@ -18,7 +18,7 @@ public class JugadaEscala extends JugadaAscendiente{
             return false;
         }
         else {
-            if (cartas.get(0).getTipo() == carta.getTipo()) {
+            if ((cartas.get(0).getPalo() == carta.getPalo()) || (carta.getTipo() == TipoCarta.JOKER)) {
                 return super.agregarCarta(carta);
             }
             else return false;

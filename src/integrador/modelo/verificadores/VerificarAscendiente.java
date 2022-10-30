@@ -14,17 +14,25 @@ public abstract class VerificarAscendiente extends VerificarJugada{
         Boolean found = false;
         int i = 0;
         int salida = -1;
-        if (carta.getTipo().getNext() != TipoCarta.JOKER) {
-            while ((i < cartas.size()) && (!found)) {
-                Carta cartaActual = cartas.get(i);
-                if ((cartaActual.getTipo().ordinal() == carta.getTipo().ordinal() + 1) && (cartaActual.getPalo() == carta.getPalo())) {
-                    found = true;
-                    salida = i;
-                }
-                i++;
+        while ((i < cartas.size()) && (!found)) {
+            Carta cartaActual = cartas.get(i);
+            if ((cartaActual.getTipo().ordinal() == carta.getTipo().ordinal() + 1) && (cartaActual.getPalo() == carta.getPalo())) {
+                found = true;
+                salida = i;
             }
+            i++;
         }
         return salida;
+    }
+
+    private int cantJokers(List<Carta> cartas) {
+        int contador = 0;
+        for (Carta carta:cartas) {
+            if (carta.getTipo() == TipoCarta.JOKER) {
+                contador ++;
+            }
+        }
+        return contador;
     }
 
     private int buscarJoker(List<Carta> cartas) {
@@ -42,12 +50,12 @@ public abstract class VerificarAscendiente extends VerificarJugada{
         return salida;
     }
 
-    protected boolean verificarListaCartas(List<Carta> cartas) {
+    protected List<Carta> verificarListaCartas(List<Carta> cartas) {
         boolean armado = false;
         List<Carta> result = new ArrayList<>();
         int i = 0;
 
-        if (cartas.size() == this.cantidadCartas) {
+        if ((cartas.size() == this.cantidadCartas) && (cantJokers(cartas) < 2)) {
             while ((i < cartas.size()) && (!armado)) {
 
                 Carta cartaActual = cartas.get(i);
@@ -88,7 +96,10 @@ public abstract class VerificarAscendiente extends VerificarJugada{
                 i++;
             }
         }
-        return armado;
+        if (armado) {
+            return result;
+        }
+        else return null;
     }
 
 

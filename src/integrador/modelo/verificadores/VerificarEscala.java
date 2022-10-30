@@ -17,9 +17,10 @@ public class VerificarEscala extends VerificarAscendiente{
 
 
     @Override
-    public Jugada formarJugada(List<Carta> cartas) {
-        if (this.verificarListaCartas(cartas)) {
-            return new JugadaEscala(cartas);
+    public JugadaEscala formarJugada(List<Carta> cartas) {
+        List<Carta> result = this.verificarListaCartas(cartas);
+        if (result != null) {
+            return new JugadaEscala(result);
         }
         return null;
     }

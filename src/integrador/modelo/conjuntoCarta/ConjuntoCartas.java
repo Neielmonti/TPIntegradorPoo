@@ -15,6 +15,14 @@ public abstract class ConjuntoCartas {
         return true;
     }
 
+    public boolean agregarCartaPrincipio(Carta carta) {
+        List<Carta> c = new ArrayList<>();
+        c.add(carta);
+        c.addAll(this.cartas);
+        this.cartas = c;
+        return true;
+    }
+
     public List<Carta> pasarCartas() {
         List<Carta> ret = this.cartas;
         this.cartas.clear();

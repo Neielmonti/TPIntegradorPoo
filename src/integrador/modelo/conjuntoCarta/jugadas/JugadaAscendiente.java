@@ -4,6 +4,7 @@ import integrador.modelo.commons.Formacion;
 import integrador.modelo.commons.TipoCarta;
 import integrador.modelo.conjuntoCarta.Carta;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public abstract class JugadaAscendiente extends Jugada{
@@ -26,6 +27,17 @@ public abstract class JugadaAscendiente extends Jugada{
         else return null;
     }
 
+    private boolean tieneJoker() {
+        boolean result = false;
+        List<Carta> cartas = this.getCartas();
+        for (Carta carta:cartas) {
+            if (carta.getTipo() == TipoCarta.JOKER) {
+                result = true;
+            }
+        }
+        return result;
+    }
+
     private Carta buscarMenor() {
         List <Carta> cartas = this.getCartas();
         if (cartas.size() > 0) {
@@ -42,19 +54,51 @@ public abstract class JugadaAscendiente extends Jugada{
 
     @Override
     public boolean agregarCarta(Carta carta) {
-        Carta menorCarta = buscarMenor();
-        Carta mayorCarta = buscarMayor();
+        boolean result = false;
+        List<Carta> cartas = this.getCartas();
+        Carta menorCarta = cartas.get(0);
+        Carta mayorCarta = cartas.get(cartas.size()-1);
         if (carta.getTipo() == TipoCarta.JOKER) {
-            if ((menorCarta.getTipo() == TipoCarta.A.getMenorTipo()) &&
-                    (mayorCarta.getTipo() == TipoCarta.A.getMayorTipo())) {
-                return false;
+            if (!this.tieneJoker()){
+                if (mayorCarta.getTipo() != TipoCarta.A.getMayorTipo()) {
+                    result = true;
+                    super.agregarCarta(carta);
+                }
+                else if (menorCarta.getTipo() != TipoCarta.A.getMenorTipo()) {
+                    result = true;
+                    super.agregarCartaPrincipio(carta);
+                }
             }
-            else return super.agregarCarta(carta);
         }
-        if ((carta.getTipo().ordinal() > mayorCarta.getTipo().ordinal()) ||
-                (carta.getTipo().ordinal() < menorCarta.getTipo().ordinal())) {
-            return super.agregarCarta(carta);
+        else {
+            if (carta.getTipo() == mayorCarta.getTipo().getNext()) {
+                result = true;
+                super.agregarCarta(carta);
+            }
+            else if (carta.getTipo() == menorCarta.getTipo().getPrevius()) {
+                result = true;
+                super.agregarCartaPrincipio(carta);
+            }
         }
-        else return false;
+        return result;
+    }
+
+    public void ordenarCartas() {
+        List<Carta> ordenado = new ArrayList<>();
+        List<Carta> cartas = this.getCartas();
+
+        while (!cartas.isEmpty()) {
+            Carta cartaMenor = buscarMenor();
+            if (cartaMenor != null) {
+                ordenado.add(cartaMenor);
+                cartas.remove(cartaMenor);
+            }
+            else if (!cartas.isEmpty()) {
+                ordenado.addAll(cartas);
+            }
+        }
+        this.quitarCartas(cartas);
+        this.agregarCartas(ordenado);
+
     }
 }
