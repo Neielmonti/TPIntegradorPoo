@@ -24,6 +24,22 @@ public enum TipoCarta {
         this.label = label;
     }
 
+    public TipoCarta getMenorTipo(){//POSIBLEMENTE INUTIL  <-------------
+        TipoCarta[] vals = TipoCarta.values();
+        if (vals.length > 0) {
+            return vals[0];
+        }
+        else return null;
+    }
+
+    public TipoCarta getMayorTipo(){//POSIBLEMENTE INUTIL  <-------------
+        TipoCarta[] vals = TipoCarta.values();
+        if (vals.length > 0) {
+            return vals[vals.length - 2];
+        }
+        else return null;
+    }
+
     public int getValor(){
         return this.valor;
     }
@@ -33,8 +49,9 @@ public enum TipoCarta {
     }
 
     public TipoCarta getNext() {
+
         TipoCarta[] vals = TipoCarta.values();
-        if (this.ordinal() < vals.length - 1) {
+        if ((this.ordinal() < vals.length - 1) && (this.ordinal() != JOKER.ordinal() - 1)) {
             return vals[(this.ordinal() + 1) % vals.length];
         } else return null;
     }

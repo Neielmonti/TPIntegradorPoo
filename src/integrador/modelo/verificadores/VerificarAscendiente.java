@@ -2,8 +2,7 @@ package integrador.modelo.verificadores;
 
 import integrador.modelo.commons.TipoCarta;
 import integrador.modelo.conjuntoCarta.Carta;
-import integrador.modelo.commons.Formacion;
-import integrador.modelo.conjuntoCarta.Jugada;
+import integrador.modelo.conjuntoCarta.jugadas.Jugada;
 import integrador.modelo.conjuntoCarta.Mano;
 
 import java.util.ArrayList;
@@ -43,49 +42,53 @@ public abstract class VerificarAscendiente extends VerificarJugada{
         return salida;
     }
 
-    @Override
-    public Jugada formarJugada(Mano mano) {
-        List<Carta> cartas = mano.getCartas();
+    protected boolean verificarListaCartas(List<Carta> cartas) {
         boolean armado = false;
         List<Carta> result = new ArrayList<>();
         int i = 0;
 
-        while ((i < cartas.size()) && (!armado)) {
+        if (cartas.size() == this.cantidadCartas) {
+            while ((i < cartas.size()) && (!armado)) {
 
-            Carta cartaActual = cartas.get(i);
-            result = new ArrayList<>();
-            result.add(cartaActual);
-            boolean jokerUsado = false;
-
-            int iSiguiente = buscarSiguiente(cartas, cartaActual);
-
-            if ((iSiguiente == -1) && (cartaActual.getTipo().getNext() != null) && (!jokerUsado)) {
-                iSiguiente = buscarJoker(cartas);
-                cartaActual = new Carta(cartaActual.getPalo(),cartaActual.getTipo().getNext());
-                jokerUsado = true;
-            }
-
-            while ((iSiguiente != -1) && (result.size() < this.cantidadCartas)) {
-                cartaActual = cartas.get(iSiguiente);
+                Carta cartaActual = cartas.get(i);
+                result = new ArrayList<>();
                 result.add(cartaActual);
-                iSiguiente = buscarSiguiente(cartas, cartaActual);
+                boolean jokerUsado = false;
+
+                int iSiguiente = buscarSiguiente(cartas, cartaActual);
+
                 if ((iSiguiente == -1) && (cartaActual.getTipo().getNext() != null) && (!jokerUsado)) {
                     iSiguiente = buscarJoker(cartas);
-                    cartaActual = new Carta(cartaActual.getPalo(),cartaActual.getTipo().getNext());
-                    jokerUsado = true;
+                    if (iSiguiente != -1) {
+                        result.add(cartas.get(iSiguiente));
+                        cartaActual = new Carta(cartaActual.getPalo(), cartaActual.getTipo().getNext());
+                        iSiguiente = buscarSiguiente(cartas, cartaActual);
+                        jokerUsado = true;
+                    }
                 }
-            }
 
-            if (result.size() == this.cantidadCartas) {
-                armado = true;
+                while ((iSiguiente != -1) && (result.size() < this.cantidadCartas)) {
+                    cartaActual = cartas.get(iSiguiente);
+                    result.add(cartaActual);
+                    iSiguiente = buscarSiguiente(cartas, cartaActual);
+                    if ((iSiguiente == -1) && (cartaActual.getTipo().getNext() != null) && (!jokerUsado)) {
+                        iSiguiente = buscarJoker(cartas);
+                        if (iSiguiente != -1) {
+                            result.add(cartas.get(iSiguiente));
+                            cartaActual = new Carta(cartaActual.getPalo(), cartaActual.getTipo().getNext());
+                            iSiguiente = buscarSiguiente(cartas, cartaActual);
+                            jokerUsado = true;
+                        }
+                    }
+                }
+
+                if (result.size() == this.cantidadCartas) {
+                    armado = true;
+                }
+                i++;
             }
-            i++;
         }
-        if (armado) {
-            mano.quitarCartas(result);
-            return new Jugada(this.forma,result);
-        }
-        else return null;
+        return armado;
     }
 
 

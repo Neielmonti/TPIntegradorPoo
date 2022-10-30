@@ -10,8 +10,9 @@ public abstract class ConjuntoCartas {
         this.cartas = cartas;
     }
 
-    public void agregarCarta(Carta carta) {
+    public boolean agregarCarta(Carta carta) {
         this.cartas.add(carta);
+        return true;
     }
 
     public List<Carta> pasarCartas() {
@@ -46,6 +47,7 @@ public abstract class ConjuntoCartas {
         }
         return result;
     }
+
 
     public void quitarCartas(List<Carta> cartas) {
         for (Carta carta: cartas) {
