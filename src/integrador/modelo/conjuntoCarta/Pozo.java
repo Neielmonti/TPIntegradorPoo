@@ -1,19 +1,10 @@
 package integrador.modelo.conjuntoCarta;
 
-import java.util.List;
+import java.util.ArrayList;
 
 public class Pozo extends ConjuntoCartas{
 
-    public Pozo(List<Carta> cartas) {
-        super(cartas);
+    public Pozo() {
+        super(new ArrayList<>());
     }
-
-    public Carta tomarCarta() {
-        List<Carta> cartas = getCartas();
-        if (cartas.size() > 0) {
-            return cartas.get(cartas.size()-1);
-        }
-        else return null;
-    }
-
 }

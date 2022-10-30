@@ -1,5 +1,6 @@
 package integrador.modelo.verificadores;
 
+import integrador.modelo.commons.Formacion;
 import integrador.modelo.commons.TipoCarta;
 import integrador.modelo.conjuntoCarta.Carta;
 import integrador.modelo.conjuntoCarta.jugadas.Jugada;
@@ -10,7 +11,11 @@ import java.util.List;
 
 public abstract class VerificarAscendiente extends VerificarJugada{
 
-    private int buscarSiguiente(List<Carta> cartas, Carta carta) {
+    public VerificarAscendiente(Formacion forma) {
+        super(forma);
+    }
+
+    protected int buscarSiguiente(List<Carta> cartas, Carta carta) {
         Boolean found = false;
         int i = 0;
         int salida = -1;
@@ -55,7 +60,7 @@ public abstract class VerificarAscendiente extends VerificarJugada{
         List<Carta> result = new ArrayList<>();
         int i = 0;
 
-        if ((cartas.size() == this.cantidadCartas) && (cantJokers(cartas) < 2)) {
+        if ((cartas.size() == this.getCantCartas()) && (cantJokers(cartas) < 2)) {
             while ((i < cartas.size()) && (!armado)) {
 
                 Carta cartaActual = cartas.get(i);
@@ -75,7 +80,7 @@ public abstract class VerificarAscendiente extends VerificarJugada{
                     }
                 }
 
-                while ((iSiguiente != -1) && (result.size() < this.cantidadCartas)) {
+                while ((iSiguiente != -1) && (result.size() < this.getCantCartas())) {
                     cartaActual = cartas.get(iSiguiente);
                     result.add(cartaActual);
                     iSiguiente = buscarSiguiente(cartas, cartaActual);
@@ -90,7 +95,7 @@ public abstract class VerificarAscendiente extends VerificarJugada{
                     }
                 }
 
-                if (result.size() == this.cantidadCartas) {
+                if (result.size() == this.getCantCartas()) {
                     armado = true;
                 }
                 i++;

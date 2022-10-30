@@ -4,10 +4,7 @@ import integrador.modelo.commons.TipoCarta;
 import integrador.modelo.conjuntoCarta.Carta;
 import integrador.modelo.conjuntoCarta.jugadas.Jugada;
 import integrador.modelo.conjuntoCarta.Mano;
-import integrador.modelo.conjuntoCarta.jugadas.JugadaEscala;
-import integrador.modelo.conjuntoCarta.jugadas.JugadaEscaleraReal;
-import integrador.modelo.verificadores.VerificarEscala;
-import integrador.modelo.verificadores.VerificarEscaleraReal;
+import integrador.modelo.verificadores.VerificarEscaleraSucia;
 import integrador.modelo.verificadores.VerificarJugada;
 
 import java.util.ArrayList;
@@ -29,19 +26,37 @@ public class CariocaApp {
         prueba.add(c);
         c = new Carta(PaloCarta.PICAS, TipoCarta.CUATRO);
         prueba.add(c);
+        c = new Carta(PaloCarta.PICAS, TipoCarta.CINCO);
+        prueba.add(c);
+        c = new Carta(PaloCarta.PICAS, TipoCarta.SEIS);
+        prueba.add(c);
+        c = new Carta(PaloCarta.PICAS, TipoCarta.SIETE);
+        prueba.add(c);
+        c = new Carta(PaloCarta.PICAS, TipoCarta.OCHO);
+        prueba.add(c);
+        c = new Carta(PaloCarta.PICAS, TipoCarta.NUEVE);
+        prueba.add(c);
+        c = new Carta(PaloCarta.PICAS, TipoCarta.JOKER);
+        prueba.add(c);
+        c = new Carta(PaloCarta.CORAZONES, TipoCarta.J);
+        prueba.add(c);
+        c = new Carta(PaloCarta.PICAS, TipoCarta.Q);
+        prueba.add(c);
+        c = new Carta(PaloCarta.PICAS, TipoCarta.K);
+        prueba.add(c);
 
 
         Mano mano = new Mano(prueba);
         System.out.println(mano.mostrarCartas());
 
-        VerificarEscala ve = new VerificarEscala();
-        JugadaEscala jugada1 = ve.formarJugada(prueba);
+        VerificarJugada ve = new VerificarEscaleraSucia();
+        Jugada jugada1 = ve.formarJugada(prueba);
 
         if (jugada1 != null) {
             System.out.println("Hay escala >:)");
             System.out.println(jugada1.mostrarCartas() + "\n");
 
-            if (jugada1.agregarCarta(new Carta(PaloCarta.PICAS,TipoCarta.SEIS))) {
+            if (jugada1.agregarCarta(new Carta(PaloCarta.PICAS,TipoCarta.J))) {
                 System.out.println("Carta agregada :) \n");
                 System.out.println(jugada1.mostrarCartas() + "\n");
             }

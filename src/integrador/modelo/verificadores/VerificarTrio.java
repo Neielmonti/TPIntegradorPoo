@@ -11,8 +11,7 @@ import java.util.List;
 public class VerificarTrio extends VerificarJugada{
 
     public VerificarTrio() {
-        this.forma = Formacion.TRIO;
-        this.cantidadCartas = 3;
+        super(Formacion.TRIO);
     }
 
     @Override
@@ -22,7 +21,7 @@ public class VerificarTrio extends VerificarJugada{
         boolean armado = false;
         boolean jokerUsado = false;
         int i = 0;
-        if (cartas.size() != this.cantidadCartas) {
+        if (cartas.size() != this.getCantCartas()) {
             return null;
         } else {
             while ((i < cartas.size()) && (!armado)) {
@@ -31,7 +30,7 @@ public class VerificarTrio extends VerificarJugada{
 
                 for (Carta cartaActual : cartas) {
 
-                    if (result.size() < this.cantidadCartas) {
+                    if (result.size() < this.getCantCartas()) {
 
                         if (cartaActual.getTipo() == tipoBuscado) {
                             result.add(cartaActual);
@@ -42,7 +41,7 @@ public class VerificarTrio extends VerificarJugada{
                     }
 
                 }
-                if (result.size() == this.cantidadCartas) {
+                if (result.size() == this.getCantCartas()) {
                     armado = true;
                 } else result = new ArrayList<>();
                 i++;

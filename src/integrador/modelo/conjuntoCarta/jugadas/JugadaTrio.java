@@ -12,8 +12,8 @@ public class JugadaTrio extends Jugada{
 
     public boolean agregarCarta(Carta carta) {
         boolean salida = false;
-        if (this.getCartas().size() > 0) {
-            List<Carta> cartas = this.getCartas();
+        List<Carta> cartas = this.getCartas();
+        if (!cartas.isEmpty()) {
             if (cartas.get(cartas.size() - 1).getTipo() == carta.getTipo()) {
                 this.agregarCarta(carta);
                 salida = true;

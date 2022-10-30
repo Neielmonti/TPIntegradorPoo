@@ -9,11 +9,11 @@ public class Mano extends ConjuntoCartas{
         super(cartas);
     }
 
-    public boolean tomaCarta(Carta carta) {
+    @Override
+    public boolean agregarCarta(Carta carta) {
         List<Carta> cartas = getCartas();
         if (cartas.size() <= sizeMano) {
-            cartas.add(carta);
-            return true;
+            return super.agregarCarta(carta);
         }
         else return false;
     }

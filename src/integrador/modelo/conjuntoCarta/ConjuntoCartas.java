@@ -25,7 +25,7 @@ public abstract class ConjuntoCartas {
 
     public List<Carta> pasarCartas() {
         List<Carta> ret = this.cartas;
-        this.cartas.clear();
+        this.cartas = new ArrayList<>();
         return ret;
     }
 
@@ -46,6 +46,13 @@ public abstract class ConjuntoCartas {
                 cartas.remove(carta);
             }
         }
+    }
+
+    public Carta tomarCarta() {
+        if (!this.cartas.isEmpty()) {
+            return this.cartas.get(this.cartas.size()-1);
+        }
+        else return null;
     }
 
     public String mostrarCartas() {
