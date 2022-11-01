@@ -24,7 +24,7 @@ public enum TipoCarta {
         this.label = label;
     }
 
-    public TipoCarta getMenorTipo(){//POSIBLEMENTE INUTIL  <-------------
+    public static TipoCarta getMenorTipo(){//POSIBLEMENTE INUTIL  <-------------
         TipoCarta[] vals = TipoCarta.values();
         if (vals.length > 0) {
             return vals[0];
@@ -32,7 +32,7 @@ public enum TipoCarta {
         else return null;
     }
 
-    public TipoCarta getMayorTipo(){//POSIBLEMENTE INUTIL  <-------------
+    public static TipoCarta getMayorTipo(){//POSIBLEMENTE INUTIL  <-------------
         TipoCarta[] vals = TipoCarta.values();
         if (vals.length > 0) {
             return vals[vals.length - 2];

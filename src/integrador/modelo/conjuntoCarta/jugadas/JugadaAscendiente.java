@@ -3,8 +3,6 @@ package integrador.modelo.conjuntoCarta.jugadas;
 import integrador.modelo.commons.Formacion;
 import integrador.modelo.commons.TipoCarta;
 import integrador.modelo.conjuntoCarta.Carta;
-
-import java.util.ArrayList;
 import java.util.List;
 
 public abstract class JugadaAscendiente extends Jugada{
@@ -60,11 +58,11 @@ public abstract class JugadaAscendiente extends Jugada{
         Carta mayorCarta = cartas.get(cartas.size()-1);
         if (carta.getTipo() == TipoCarta.JOKER) {
             if (!this.tieneJoker()){
-                if (mayorCarta.getTipo() != TipoCarta.A.getMayorTipo()) {
+                if (mayorCarta.getTipo() != TipoCarta.getMayorTipo()) {
                     result = true;
                     super.agregarCarta(carta);
                 }
-                else if (menorCarta.getTipo() != TipoCarta.A.getMenorTipo()) {
+                else if (menorCarta.getTipo() != TipoCarta.getMenorTipo()) {
                     result = true;
                     super.agregarCartaPrincipio(carta);
                 }
@@ -81,24 +79,5 @@ public abstract class JugadaAscendiente extends Jugada{
             }
         }
         return result;
-    }
-
-    public void ordenarCartas() {
-        List<Carta> ordenado = new ArrayList<>();
-        List<Carta> cartas = this.getCartas();
-
-        while (!cartas.isEmpty()) {
-            Carta cartaMenor = buscarMenor();
-            if (cartaMenor != null) {
-                ordenado.add(cartaMenor);
-                cartas.remove(cartaMenor);
-            }
-            else if (!cartas.isEmpty()) {
-                ordenado.addAll(cartas);
-            }
-        }
-        this.quitarCartas(cartas);
-        this.agregarCartas(ordenado);
-
     }
 }

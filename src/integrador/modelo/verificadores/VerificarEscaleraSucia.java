@@ -36,6 +36,4 @@ public class VerificarEscaleraSucia extends VerificarAscendiente{
         }
         return salida;
     }
-
-
 }
