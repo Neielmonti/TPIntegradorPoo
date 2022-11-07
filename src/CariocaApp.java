@@ -1,4 +1,5 @@
 import integrador.modelo.Juego;
+import integrador.modelo.commons.Formacion;
 import integrador.modelo.commons.PaloCarta;
 import integrador.modelo.commons.TipoCarta;
 import integrador.modelo.conjuntoCarta.Carta;
@@ -18,11 +19,15 @@ public class CariocaApp {
         List <Carta> prueba = new ArrayList<>();
         Carta c;
 
+        c = new Carta(PaloCarta.PICAS, TipoCarta.K);
+        prueba.add(c);
         c = new Carta(PaloCarta.PICAS, TipoCarta.A);
         prueba.add(c);
         c = new Carta(PaloCarta.PICAS, TipoCarta.DOS);
         prueba.add(c);
         c = new Carta(PaloCarta.PICAS, TipoCarta.TRES);
+        prueba.add(c);
+        c = new Carta(PaloCarta.PICAS, TipoCarta.OCHO);
         prueba.add(c);
         c = new Carta(PaloCarta.PICAS, TipoCarta.CUATRO);
         prueba.add(c);
@@ -30,19 +35,15 @@ public class CariocaApp {
         prueba.add(c);
         c = new Carta(PaloCarta.PICAS, TipoCarta.SEIS);
         prueba.add(c);
-        c = new Carta(PaloCarta.PICAS, TipoCarta.SIETE);
+        c = new Carta(PaloCarta.PICAS, TipoCarta.Q);
         prueba.add(c);
-        c = new Carta(PaloCarta.PICAS, TipoCarta.OCHO);
+        c = new Carta(PaloCarta.PICAS, TipoCarta.SIETE);
         prueba.add(c);
         c = new Carta(PaloCarta.PICAS, TipoCarta.NUEVE);
         prueba.add(c);
         c = new Carta(PaloCarta.PICAS, TipoCarta.JOKER);
         prueba.add(c);
         c = new Carta(PaloCarta.CORAZONES, TipoCarta.J);
-        prueba.add(c);
-        c = new Carta(PaloCarta.PICAS, TipoCarta.Q);
-        prueba.add(c);
-        c = new Carta(PaloCarta.PICAS, TipoCarta.K);
         prueba.add(c);
 
 
