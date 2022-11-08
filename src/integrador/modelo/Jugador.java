@@ -1,14 +1,19 @@
 package integrador.modelo;
 
+import integrador.modelo.conjuntoCarta.Mano;
+import integrador.modelo.conjuntoCarta.jugadas.Jugada;
+import java.util.ArrayList;
+import java.util.List;
+
 public class Jugador {
     private String nombre;
-    private int puntaje;
-    private boolean bajo;
+    private int puntaje = 0;
+    private boolean bajo = false;
+    private List<Jugada> jugadas = new ArrayList<>();
+    private Mano mano;
 
     public Jugador(String nombre) {
         this.nombre = nombre;
-        this.puntaje = 0;
-        this.bajo = false;
     }
 
     public int getPuntaje() {
@@ -23,5 +28,18 @@ public class Jugador {
         if (puntos > 0) {
             this.puntaje += puntos;
         }
+    }
+    public Mano tomarMazo(){
+        Mano m = this.mano;
+        this.mano = null;
+        return m;
+    }
+
+    public Mano getMano(){
+        return this.mano;
+    }
+
+    public void setMano(Mano mano){
+        this.mano = mano;
     }
 }

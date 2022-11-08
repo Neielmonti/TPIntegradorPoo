@@ -36,7 +36,19 @@ public class Mazo extends ConjuntoCartas{
         if (cartas.size() > 0) {
             Random r = new Random();
             Carta carta = cartas.get(r.nextInt(cartas.size()));
+            this.quitarCarta(carta);
             return carta;
+        }
+        else return null;
+    }
+
+    public Mano formarMano(){
+        if (this.getCartas().size() >= Mano.getSizeMano()) {
+            List<Carta> cartas = new ArrayList<>();
+            for (int i = 0; i < Mano.getSizeMano();i++) {
+                cartas.add(this.tomarCarta());
+            }
+            return new Mano(cartas);
         }
         else return null;
     }

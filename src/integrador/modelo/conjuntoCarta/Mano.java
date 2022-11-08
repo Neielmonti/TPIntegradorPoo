@@ -3,7 +3,7 @@ package integrador.modelo.conjuntoCarta;
 import java.util.List;
 
 public class Mano extends ConjuntoCartas{
-    private int sizeMano = 12;
+    private static int sizeMano = 12;
 
     public Mano(List<Carta> cartas) {
         super(cartas);
@@ -17,7 +17,7 @@ public class Mano extends ConjuntoCartas{
         }
         else return false;
     }
-
+    public static int getSizeMano(){return sizeMano;}
     public boolean tiraCarta(Carta carta) {
         List<Carta> cartas = getCartas();
         if ((cartas.size() > sizeMano) || (cartas.contains(carta))) {

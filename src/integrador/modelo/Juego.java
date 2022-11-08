@@ -2,18 +2,25 @@ package integrador.modelo;
 
 import integrador.modelo.commons.Formacion;
 import integrador.modelo.conjuntoCarta.Carta;
+import integrador.modelo.conjuntoCarta.Mano;
 import integrador.modelo.conjuntoCarta.Mazo;
+import integrador.utils.observer.IObservable;
+import integrador.utils.observer.IObservador;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-public class Juego {
+public class Juego implements IObservable {
     private List<Jugador> jugadores = new ArrayList<>();
-    private List<Ronda> rondas = new ArrayList<>();
-
+    private List<Ronda> rondas;
     private Jugador JugadorActual;
     private Mazo mazo = new Mazo();
+    private List<IObservador> observadores = new ArrayList<>();
+
+    public Juego(){
+        generarRondas();
+    }
 
     public boolean agregarJugador(Jugador j) {
         if (jugadores.contains(j)){
@@ -24,8 +31,6 @@ public class Juego {
             return true;
         }
     }
-
-
     private void generarRondas(){
         List<Formacion> f;
         List<Ronda> rondas1 = new ArrayList<>();
@@ -52,13 +57,37 @@ public class Juego {
         this.rondas = rondas1;
         }
 
-
     public String mostrarMazo() {
         return this.mazo.mostrarCartas();
+    }
+
+    private void resetMazo(){
+        for(Jugador jugador:this.jugadores) {
+            Mano manoActual = jugador.getMano();
+            if (manoActual != null) {
+                manoActual.pasarCartas(this.mazo);
+            }
+        }
+    }
+    public void repartirCartas(){
+        this.resetMazo();
+        for(Jugador jugador:this.jugadores) {
+            jugador.setMano(this.mazo.formarMano());
+        }
     }
     public Carta cartaRandom() {
         return this.mazo.tomarCarta();
     }
 
+    @Override
+    public void notificar(Object evento) {
+        for (IObservador observador : this.observadores) {
+            observador.actualizar(evento, this);
+        }
+    }
 
+    @Override
+    public void agregadorObservador(IObservador observador) {
+        this.observadores.add(observador);
+    }
 }

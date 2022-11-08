@@ -1,5 +1,4 @@
 import integrador.modelo.Juego;
-import integrador.modelo.commons.Formacion;
 import integrador.modelo.commons.PaloCarta;
 import integrador.modelo.commons.TipoCarta;
 import integrador.modelo.conjuntoCarta.Carta;

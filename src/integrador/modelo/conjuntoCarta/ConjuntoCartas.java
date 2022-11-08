@@ -23,10 +23,10 @@ public abstract class ConjuntoCartas {
         return true;
     }
 
-    public List<Carta> pasarCartas() {
+    public void pasarCartas(ConjuntoCartas conjuntoCartas) {
         List<Carta> ret = this.cartas;
-        this.cartas = new ArrayList<>();
-        return ret;
+        this.cartas.clear();
+        conjuntoCartas.agregarCartas(ret);
     }
 
     public void agregarCartas(List<Carta> cartas) {
@@ -63,6 +63,13 @@ public abstract class ConjuntoCartas {
         return result;
     }
 
+    public boolean quitarCarta(Carta carta) {
+        if (this.cartas.contains(carta)) {
+            this.cartas.remove(carta);
+            return true;
+        }
+        else return false;
+    }
 
     public void quitarCartas(List<Carta> cartas) {
         for (Carta carta: cartas) {
