@@ -42,4 +42,7 @@ public class Jugador {
     public void setMano(Mano mano){
         this.mano = mano;
     }
+    public List<Jugada> getJugadas(){
+        return this.jugadas;
+    }
 }

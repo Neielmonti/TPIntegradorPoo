@@ -1,9 +1,11 @@
 package integrador.modelo.conjuntoCarta;
 
+import integrador.vista.IConjuntoCarta;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ConjuntoCartas {
+public abstract class ConjuntoCartas implements IConjuntoCarta {
     private List<Carta> cartas = new ArrayList<>();
 
     public ConjuntoCartas(List <Carta> cartas) {
@@ -24,9 +26,10 @@ public abstract class ConjuntoCartas {
     }
 
     public void pasarCartas(ConjuntoCartas conjuntoCartas) {
-        List<Carta> ret = this.cartas;
-        this.cartas.clear();
-        conjuntoCartas.agregarCartas(ret);
+        while (!this.cartas.isEmpty()) {
+            conjuntoCartas.agregarCarta(cartas.get(0));
+            cartas.remove(0);
+        }
     }
 
     public void agregarCartas(List<Carta> cartas) {
@@ -55,10 +58,11 @@ public abstract class ConjuntoCartas {
         else return null;
     }
 
+    @Override
     public String mostrarCartas() {
         String result = "";
-        for (Carta carta : this.cartas) {
-            result += carta.mostrarCarta();
+        for (int i = 0; i < cartas.size(); i++) {
+            result += (i+1) + " [" +cartas.get(i).mostrarCarta() + "]" + "\n";
         }
         return result;
     }

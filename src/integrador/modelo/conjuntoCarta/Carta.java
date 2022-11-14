@@ -22,8 +22,8 @@ public class Carta {
 
     public String mostrarCarta() {
         if (this.tipo == TipoCarta.JOKER) {
-            return (this.tipo.getLabel() + " - " + this.tipo.getValor() + "\n");
+            return (this.tipo.getLabel() + " - " + this.tipo.getValor());
         }
-        else return (this.palo.getLabel() + " - " + this.tipo.getLabel() + " - " + this.tipo.getValor() + "\n");
+        else return (this.palo.getLabel() + " - " + this.tipo.getLabel() + " - " + this.tipo.getValor());
     }
 }

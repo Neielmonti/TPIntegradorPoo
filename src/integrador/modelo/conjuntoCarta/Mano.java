@@ -1,8 +1,9 @@
 package integrador.modelo.conjuntoCarta;
+import integrador.vista.IMano;
 
 import java.util.List;
 
-public class Mano extends ConjuntoCartas{
+public class Mano extends ConjuntoCartas implements IMano {
     private static int sizeMano = 12;
 
     public Mano(List<Carta> cartas) {
@@ -25,5 +26,9 @@ public class Mano extends ConjuntoCartas{
             return true;
         }
         else return false;
+    }
+    @Override
+    public String getStringCartas() {
+        return super.mostrarCartas();
     }
 }

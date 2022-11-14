@@ -2,15 +2,16 @@ package integrador.modelo;
 
 import integrador.modelo.commons.Formacion;
 import integrador.modelo.conjuntoCarta.jugadas.Jugada;
+import integrador.vista.IRonda;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Ronda {
+public class Ronda implements IRonda {
     private List<CantXForma> formaciones = new ArrayList<>();
 
     public Ronda(List<Formacion> formaciones){
-        while (formaciones.isEmpty()) {
+        while (!formaciones.isEmpty()) {
             Formacion formaActual = formaciones.get(0);
             int cantidad = getCantForm(formaciones,formaActual);
             while (formaciones.contains(formaActual)) {
@@ -38,6 +39,22 @@ public class Ronda {
             }
         }
         return salida;
+    }
+
+    @Override
+    public String mostrarRonda() {
+        String result = "";
+        CantXForma ultimaFormacion = null;
+        if (!formaciones.isEmpty()) {
+            ultimaFormacion = formaciones.get(formaciones.size()-1);
+        }
+        for (CantXForma forma: formaciones) {
+            result += forma.getString();
+            if (forma != ultimaFormacion) {
+                result += ", ";
+            }
+        }
+        return result;
     }
 
     private int getCantForm(List<Formacion> formaciones, Formacion forma) {
