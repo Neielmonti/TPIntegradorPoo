@@ -115,8 +115,30 @@ public class Juego implements IObservable {
         return this.pozo;
     }
 
-    public Mano getManoJugadorActual(){
-        return this.jugadorActual.getMano();
+    public void tomarDelPozo(Jugador jugador) {
+        jugador.getMano().agregarCarta(this.pozo.tomarCarta());
+        if (this.pozo.isEmpty()) {
+            this.pozo.agregarCarta(this.mazo.tomarCarta());
+        }
+    }
+
+    public void tomarDelMazo(Jugador jugador) {
+        jugador.getMano().agregarCarta(this.mazo.tomarCarta());
+        if (this.mazo.isEmpty()) {
+            pozo.pasarCartas(this.mazo);
+            this.pozo.agregarCarta(this.mazo.tomarCarta());
+        }
+    }
+
+    public Jugador getJugadorActual() {
+        return this.jugadorActual;
+    }
+
+    public Mano getManoJugador(Jugador jugador){
+        if (jugadores.contains(jugador)) {
+            return jugador.getMano();
+        }
+        else return null;
     }
     public Carta cartaRandom() {
         return this.mazo.tomarCarta();

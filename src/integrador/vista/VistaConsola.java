@@ -26,7 +26,7 @@ public class VistaConsola implements IVista {
     public void iniciar() {
         while (this.seguir) {
             if (!onGame) {
-                tomarInput();
+                //tomarInput();
             }
             else {
                 iniciarJuego();
@@ -45,7 +45,7 @@ public class VistaConsola implements IVista {
     public void agregarJugador(){
         System.out.println("Nuevo jugador, ingrese su nombre:\n");
         String in = this.entrada.nextLine();
-        this.controlador.agregarJugador(in);
+        //this.controlador.agregarJugador(in);
     }
 
     public void mostrarRonda(IRonda ronda) {
@@ -63,14 +63,11 @@ public class VistaConsola implements IVista {
         presioneEnterParaContinuar();
     }
 
-    private void reiniciarControlador() {
-        this.controlador.reiniciar();
-    }
-
     public void iniciarJuego() {
         System.out.println("INICIANDO JUEGO \n");
-        this.controlador.iniciarJuego();
     }
+
+    /**
     public void tomarInput() {
         mostrarMenu();
         String in = this.entrada.nextLine();
@@ -96,4 +93,26 @@ public class VistaConsola implements IVista {
             default -> System.out.println("[ERROR] - Comando no reconocido :/");
         }
     }
+     **/
+
+    public boolean tomarDeMazoOPozo() {
+        System.out.println("De donde quiere tomar la carta?:");
+        System.out.println("1 - del Mazo");
+        System.out.println("2 - del Pozo");
+        System.out.println("Elija su opcion:");
+        String opcion = this.entrada.nextLine();
+        switch (opcion) {
+            case "1" -> {
+                return true;
+            }
+            case "2" -> {
+                return false;
+            }
+            default -> {
+                System.out.println("[ERROR] - Accion no soportada, selecione una opcion valida");
+                return tomarDeMazoOPozo();
+            }
+        }
+    }
+
 }//END.

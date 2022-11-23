@@ -17,6 +17,10 @@ public abstract class ConjuntoCartas implements IConjuntoCarta {
         return true;
     }
 
+    public boolean isEmpty() {
+        return this.cartas.isEmpty();
+    }
+
     public boolean agregarCartaPrincipio(Carta carta) {
         List<Carta> c = new ArrayList<>();
         c.add(carta);
@@ -53,7 +57,9 @@ public abstract class ConjuntoCartas implements IConjuntoCarta {
 
     public Carta tomarCarta() {
         if (!this.cartas.isEmpty()) {
-            return this.cartas.get(this.cartas.size()-1);
+            Carta carta = cartas.get(this.cartas.size()-1);
+            this.cartas.remove(carta);
+            return carta;
         }
         else return null;
     }
