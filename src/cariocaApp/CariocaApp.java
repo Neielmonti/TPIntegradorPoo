@@ -1,25 +1,35 @@
 package cariocaApp;
 
-import integrador.controlador.Controlador;
-import integrador.modelo.Juego;
-import integrador.vista.VistaConsola;
-import integrador.vista.VistaConsolaSwing;
-
-import javax.swing.*;
+import programa.controlador.Controlador;
+import programa.modelo.Juego;
+import programa.vista.VistaConsolaSwing;
 
 public class CariocaApp {
 
     public static void main(String[] args) {
         Juego juego = new Juego();
-        VistaConsolaSwing vista = new VistaConsolaSwing();
-        Controlador controlador = new Controlador(juego, vista);
+        VistaConsolaSwing v1 = new VistaConsolaSwing();
+        Controlador c1 = new Controlador(juego, v1);
+        VistaConsolaSwing v2 = new VistaConsolaSwing();
+        Controlador c2 = new Controlador(juego, v2);
+        VistaConsolaSwing v3 = new VistaConsolaSwing();
+        Controlador c3 = new Controlador(juego, v3);
+        VistaConsolaSwing v4 = new VistaConsolaSwing();
+        Controlador c4 = new Controlador(juego, v4);
+        v1.inicioGrafico();
+        v2.inicioGrafico();
+        v3.inicioGrafico();
+        v4.inicioGrafico();
 
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                vista.setSize(300,300);
-                vista.setVisible(true);
-            }
-        });
+
+        /**
+        Jugador jugador = new Jugador("pepe");
+        juego.agregarJugador(jugador);
+        juego.repartirCartas();
+        System.out.println(juego.getPozo().mostrarCartas() + "\n");
+        System.out.println(jugador.getMano().getCartas().get(0).mostrarCarta());
+        juego.tirarCartaPozo(jugador,jugador.getMano().getCartas().get(0));
+        System.out.println(juego.getPozo().mostrarCartas() + "\n");
+        **/
     }
 }
