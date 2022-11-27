@@ -1,11 +1,11 @@
 package programa.modelo.conjuntoCarta;
 
-import programa.vista.IConjuntoCarta;
+import programa.vista.IConjuntoCartas;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class ConjuntoCartas implements IConjuntoCarta {
+public abstract class ConjuntoCartas implements IConjuntoCartas {
     private List<Carta> cartas = new ArrayList<>();
 
     public ConjuntoCartas(List <Carta> cartas) {

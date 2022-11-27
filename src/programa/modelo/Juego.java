@@ -6,9 +6,10 @@ import programa.modelo.conjuntoCarta.Carta;
 import programa.modelo.conjuntoCarta.Mano;
 import programa.modelo.conjuntoCarta.Mazo;
 import programa.modelo.conjuntoCarta.Pozo;
+import programa.modelo.conjuntoCarta.jugadas.Jugada;
+import programa.modelo.verificadores.*;
 import programa.utils.observer.IObservable;
 import programa.utils.observer.IObservador;
-
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -16,7 +17,7 @@ import java.util.Objects;
 
 public class Juego implements IObservable {
     private List<Jugador> jugadores = new ArrayList<>();
-    private int maxJugadores = 4;
+    private int maxJugadores = 2;
     private int minJugadores = 2;
     private List<Ronda> rondas;
     private Jugador jugadorActual;
@@ -24,11 +25,12 @@ public class Juego implements IObservable {
     private Mazo mazo = new Mazo();
     private Pozo pozo = new Pozo();
     private List<IObservador> observadores = new ArrayList<>();
-
+    private List<VerificarJugada> verificadoresJugada = new ArrayList<>();
 
     public Juego(){
         generarRondas();
         this.rondaActual = this.rondas.get(0);
+        generarVerificadores();
     }
 
     public void pasarSiguienteJugador() {
@@ -42,12 +44,15 @@ public class Juego implements IObservable {
         this.rondaActual = this.rondas.get(indiceSiguiente);
     }
 
+
+    /**
     public boolean getPreparadoParaJugar() {
         if (this.jugadores.size() >= this.minJugadores) {
             return true;
         }
         else return false;
     }
+    **/
 
     public Ronda getRondaActual() {
         return this.rondaActual;
@@ -61,6 +66,26 @@ public class Juego implements IObservable {
             }
         }
         return salida;
+    }
+
+    public boolean faltanJugadores() {
+        if (this.jugadores.size() < maxJugadores) {
+            return true;
+        }
+        else return false;
+    }
+
+    public void armarJugada(List<Carta> cartas, Jugador jugador) {
+        if (jugadores.contains(jugador)) {
+            int i = 0;
+            Jugada jugada = null;
+            while ((i < verificadoresJugada.size()) && (jugada == null)) {
+                jugada = verificadoresJugada.get(i).formarJugada(cartas,jugador);
+                i++;
+            }
+            if (jugada != null) {notificar(Evento.JUGADA_ARMADA);}
+            else {notificar(Evento.JUGADA_RECHAZADA);}
+        }
     }
 
     public boolean agregarJugador(Jugador j) {
@@ -79,11 +104,17 @@ public class Juego implements IObservable {
             jugadores.add(j);
             if (jugadores.size() == maxJugadores) {
                 repartirCartas();
-                notificar(Evento.LISTO_PARA_JUGAR);
+                //notificar(Evento.LISTO_PARA_JUGAR);
                 notificar(Evento.CAMBIO_DE_JUGADOR);
             }
             return true;
         }
+    }
+    private void generarVerificadores() {
+        this.verificadoresJugada.add(new VerificarEscaleraReal());
+        this.verificadoresJugada.add(new VerificarEscaleraSucia());
+        this.verificadoresJugada.add(new VerificarEscala());
+        this.verificadoresJugada.add(new VerificarTrio());
     }
     private void generarRondas(){
         List<Formacion> f;
@@ -111,9 +142,7 @@ public class Juego implements IObservable {
         this.rondas = rondas1;
         }
 
-    public String mostrarMazo() {
-        return this.mazo.mostrarCartas();
-    }
+    //public String mostrarMazo() {return this.mazo.mostrarCartas();}
 
     private void resetMazo(){
         for(Jugador jugador:this.jugadores) {

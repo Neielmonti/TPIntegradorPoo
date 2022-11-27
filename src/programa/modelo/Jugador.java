@@ -49,4 +49,6 @@ public class Jugador {
     public List<Jugada> getJugadas(){
         return this.jugadas;
     }
+
+    public void addJugada(Jugada jugada) {this.jugadas.add(jugada);}
 }

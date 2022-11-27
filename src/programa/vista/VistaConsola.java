@@ -15,7 +15,7 @@ public class VistaConsola implements IVista {
         System.out.println(mano.getStringCartas() + "\n");
     }
 
-    public void mostrarConjuntoCarta(IConjuntoCarta cc) {
+    public void mostrarConjuntoCarta(IConjuntoCartas cc) {
         System.out.println(cc.mostrarCartas() + "\n");
     }
     @Override

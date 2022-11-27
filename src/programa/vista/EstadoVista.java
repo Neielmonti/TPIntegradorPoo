@@ -8,7 +8,9 @@ public enum EstadoVista {
     TOMAR_CARTA("De donde quiere tomar la carta? Del mazo o del pozo?"),
     TIRAR_O_BAJAR("Quiere tirar una carta al pozo? o quiere bajarse?"),
     TIRAR_CARTA("Que carta quiene tirar?"),
-    BAJAR("Arme sus juegos");
+    BAJAR("Armar juego, bajar, o cancelar"),
+    BAJARSE(""),
+    ARMANDO_JUEGO("Ingrese las cartas del juego a armar");
     private String label;
     EstadoVista(String label) {
         this.label = label;

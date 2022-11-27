@@ -1,11 +1,14 @@
 package programa.vista;
+import java.lang.Character;
 
 import programa.controlador.Controlador;
+import programa.modelo.conjuntoCarta.jugadas.Jugada;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 
 public class VistaConsolaSwing extends JFrame{
     private JTextArea memoPrincipal;
@@ -43,9 +46,12 @@ public class VistaConsolaSwing extends JFrame{
             case INICIALIZANDO -> {
                 String nombre = textbox.getText();
                 if (!controlador.nombreValido(nombre.trim())) {
-                    println("Por favor, ingrese un nombre valido");
+                    println("[ERROR]: Nombre invalido o ya en uso");
                 }
-                else controlador.agregarJugador(nombre.trim());
+                else {
+                    if (controlador.faltanJugadoes()) {controlador.agregarJugador(nombre.trim());}
+                    else {println("[ERROR]: Partida llena :(");}
+                }
             }
 
             case TOMAR_CARTA -> {
@@ -79,6 +85,43 @@ public class VistaConsolaSwing extends JFrame{
                 this.controlador.tirarCartaAlPozo(Integer.parseInt(in)-1);
             }
 
+            case BAJAR -> {
+                String in = textbox.getText().trim();
+                if (in.equals("1")) {
+                    setEstado(EstadoVista.ARMANDO_JUEGO);
+                }
+                else if (in.equals("2")) {
+                    setEstado(EstadoVista.BAJARSE);
+                }
+                else if (in.equals("3")) {
+                    setEstado(EstadoVista.TIRAR_O_BAJAR);
+                }
+            }
+
+            case ARMANDO_JUEGO -> {
+                String in = textbox.getText().trim();
+                if (!verificarCartasJugada(in)) {
+                    println("Por favor, solo ingrese numeros y '-' ");
+                }
+                else {
+                    String[] aux = in.split("-");
+                    int[] indices = new int[aux.length];
+                    boolean result = true;
+                    int cantCartas = this.controlador.getMano().getCantidadCartas();
+                    for (int i = 0; i < aux.length; i++) {
+                        int a = Integer.parseInt(aux[i]);
+                        if ((a > cantCartas) || (a < 1)) {
+                            result = false;
+                        }
+                        else indices[i] = (a - 1);
+                    }
+                    if (result) {
+                        this.controlador.armarJugada(indices);
+                    }
+                    else println("EH NO, que haces? fuera de rango crack");
+                }
+            }
+
             case ESPERANDO_TURNO -> println("Pera tu turno capo");
         }
     }
@@ -87,7 +130,7 @@ public class VistaConsolaSwing extends JFrame{
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    setSize(300,300);
+                    setSize(400,400);
                     setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -96,6 +139,13 @@ public class VistaConsolaSwing extends JFrame{
         });
 
         println("Ingrese su nombre de jugador");
+    }
+
+    public void mostrarJugadasJugador() {
+        List<IConjuntoCartas> jugadas = this.controlador.getJugadasJugador();
+        for (IConjuntoCartas jugada: jugadas) {
+            println("[Jugada " + (jugadas.indexOf(jugada) + 1) + "] -------- \n" + jugada.mostrarCartas() + "\n");
+        }
     }
 
     public void setEstado(EstadoVista estado) {
@@ -107,20 +157,39 @@ public class VistaConsolaSwing extends JFrame{
         println("Bienvenido! Ahora debe esperar a que se conecte el resto!");
     }
 
+    public boolean verificarCartasJugada(String text) {
+        Boolean salida = true;
+        for (int i = 0; i < text.length(); i++) {
+            char c = text.charAt(i);
+            if (!((Character.isDigit(c)) || (c == "-".charAt(0)))) {
+                salida = false;
+            }
+        }
+        return salida;
+    }
+
+    public void jugadaRechazada() {
+        println("[ERROR]: Jugada rechazada");
+    }
+
     public void jugando() {
         estado = EstadoVista.JUGANDO;
     }
 
     public void mostrarMano() {
         IMano mano = this.controlador.getMano();
-        println(mano.getStringCartas());
+        println("---------[MANO]---------" + "\n" + mano.getStringCartas() + "\n");
     }
 
     public void mostrarPozo() {
         println(this.controlador.getPozo().mostrarCartas());
     }
 
-    private void clearMemo() {
+    public void mostrarRonda() {
+        println(this.controlador.getRonda().mostrarRonda());
+    }
+
+    public void clearMemo() {
         memoPrincipal.setText("");
     }
 

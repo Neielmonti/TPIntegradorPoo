@@ -32,6 +32,11 @@ public class Mano extends ConjuntoCartas implements IMano {
         return super.mostrarCartas();
     }
 
+    @Override
+    public int getCantidadCartas() {
+        return getCartas().size();
+    }
+
     public Carta tomarCarta(int indice) {
         List<Carta> c = this.getCartas();
         if ((indice >= 0) && (indice < c.size() - 1)) {
