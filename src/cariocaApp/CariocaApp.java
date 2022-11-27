@@ -2,7 +2,15 @@ package cariocaApp;
 
 import programa.controlador.Controlador;
 import programa.modelo.Juego;
+import programa.modelo.Jugador;
+import programa.modelo.commons.PaloCarta;
+import programa.modelo.commons.TipoCarta;
+import programa.modelo.conjuntoCarta.Carta;
+import programa.modelo.verificadores.VerificarEscala;
 import programa.vista.VistaConsolaSwing;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class CariocaApp {
 
@@ -21,5 +29,20 @@ public class CariocaApp {
         //v3.inicioGrafico();
         //v4.inicioGrafico();
 
+
+        /**
+        List<Carta> cartas = new ArrayList<>();
+        cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.J));
+        cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.Q));
+        cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.K));
+        cartas.add(new Carta(PaloCarta.JOKER, TipoCarta.JOKER));
+
+        VerificarEscala ve = new VerificarEscala();
+        //ve.formarJugada(cartas,new Jugador("hola"));
+        if ((ve.verificarListaCartas(cartas))){
+            System.out.println("Formada");
+        }
+        else System.out.println("No formada");
+        **/
     }
 }

@@ -47,9 +47,6 @@ public class Controlador implements IObservador {
 
             case POZO_ACTUALIZADO -> {
                 this.vista.mostrarPozo();
-                if (this.jugador == this.juego.getJugadorActual()) {
-                    this.vista.setEstado(EstadoVista.TIRAR_O_BAJAR);
-                }
             }
 
             case LISTO_PARA_JUGAR -> {
@@ -69,6 +66,10 @@ public class Controlador implements IObservador {
                 if (this.jugador == this.juego.getJugadorActual()) {this.vista.jugadaRechazada();}
             }
         }
+    }
+
+    public void deshacerJugadas() {
+        this.juego.deshacerJugadas(this.jugador);
     }
 
     public IMano getMano() {

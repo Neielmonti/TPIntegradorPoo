@@ -95,6 +95,7 @@ public class VistaConsolaSwing extends JFrame{
                 }
                 else if (in.equals("3")) {
                     setEstado(EstadoVista.TIRAR_O_BAJAR);
+                    controlador.deshacerJugadas();
                 }
             }
 

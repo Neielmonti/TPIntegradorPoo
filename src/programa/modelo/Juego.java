@@ -75,6 +75,13 @@ public class Juego implements IObservable {
         else return false;
     }
 
+    public void deshacerJugadas(Jugador jugador) {
+        if (jugadores.contains(jugador)) {
+            jugador.deshacerJugadas();
+            notificar(Evento.MANO_ACTUALIZADA);
+        }
+    }
+
     public void armarJugada(List<Carta> cartas, Jugador jugador) {
         if (jugadores.contains(jugador)) {
             int i = 0;
@@ -83,7 +90,10 @@ public class Juego implements IObservable {
                 jugada = verificadoresJugada.get(i).formarJugada(cartas,jugador);
                 i++;
             }
-            if (jugada != null) {notificar(Evento.JUGADA_ARMADA);}
+            if (jugada != null) {
+                jugador.getMano().quitarCartas(jugada);
+                notificar(Evento.JUGADA_ARMADA);
+            }
             else {notificar(Evento.JUGADA_RECHAZADA);}
         }
     }

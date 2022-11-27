@@ -1,5 +1,6 @@
 package programa.modelo;
 
+import programa.modelo.conjuntoCarta.Carta;
 import programa.modelo.conjuntoCarta.Mano;
 import programa.modelo.conjuntoCarta.jugadas.Jugada;
 import java.util.ArrayList;
@@ -33,6 +34,16 @@ public class Jugador {
         Mano m = this.mano;
         this.mano = null;
         return m;
+    }
+
+    public void deshacerJugadas() {
+        if (mano != null) {
+            for (Jugada jugada: jugadas) {
+                List<Carta> cartas = jugada.getCartas();
+                jugada.pasarCartas(mano);
+            }
+            this.jugadas = new ArrayList<>();
+        }
     }
 
     public Mano getMano(){
