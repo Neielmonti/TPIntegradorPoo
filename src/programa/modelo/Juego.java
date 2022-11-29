@@ -10,6 +10,8 @@ import programa.modelo.conjuntoCarta.jugadas.Jugada;
 import programa.modelo.verificadores.*;
 import programa.utils.observer.IObservable;
 import programa.utils.observer.IObservador;
+import programa.vista.IJugada;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -54,6 +56,13 @@ public class Juego implements IObservable {
     }
     **/
 
+    public void agregarCartaAJuego(Jugada jugada, Carta carta){
+        if (jugada.agregarCarta(carta)) {
+            notificar(Evento.JUGADA_MODIFICADA);
+        }
+        else notificar(Evento.DESCARGA_RECHAZADA);
+    }
+
     public Ronda getRondaActual() {
         return this.rondaActual;
     }
@@ -80,6 +89,24 @@ public class Juego implements IObservable {
             jugador.deshacerJugadas();
             notificar(Evento.MANO_ACTUALIZADA);
         }
+    }
+
+    public void verificarJugadas(Jugador jugador) {
+        if ((jugador == jugadorActual) && (!jugador.yaBajo()) && (rondaActual.verificarJugadasxRonda(jugador))) {
+            jugador.bajar();
+            notificar(Evento.JUGADOR_BAJO);
+        }
+        else {
+            notificar(Evento.BAJADA_RECHAZADA);
+        }
+    }
+
+    public List<Jugada> getAllJugadas() {
+        List<Jugada> jugadas = new ArrayList<>();
+        for (Jugador jugador: jugadores) {
+            jugadas.addAll(jugador.getJugadas());
+        }
+        return jugadas;
     }
 
     public void armarJugada(List<Carta> cartas, Jugador jugador) {
@@ -200,6 +227,7 @@ public class Juego implements IObservable {
             this.pozo.agregarCarta(this.mazo.tomarCarta());
         }
         notificar(Evento.MANO_ACTUALIZADA);
+        pasarSiguienteJugador();
     }
 
     public Jugador getJugadorActual() {

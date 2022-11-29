@@ -21,14 +21,9 @@ public abstract class VerificarJugada {
         return contador;
     }
     protected boolean verificarListaCartas(List<Carta> cartas) {
-        if ((cartas.size() != getCantCartas()) || (cartas.size() == 0) || (cantJokers(cartas) > 1)) {
+        if ((cartas.size() != this.forma.getCantCartas()) || (cartas.size() == 0) || (cantJokers(cartas) > 1)) {
             return false;
         }
         else return true;
     }
-
-    public int getCantCartas(){
-        return this.forma.getCantCartas();
-    };
-
 }

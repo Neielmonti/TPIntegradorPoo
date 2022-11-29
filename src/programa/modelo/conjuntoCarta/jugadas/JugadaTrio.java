@@ -27,4 +27,5 @@ public class JugadaTrio extends Jugada{
         }
         return false;
     }
+
 }

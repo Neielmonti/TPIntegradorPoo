@@ -15,4 +15,11 @@ public class VerificarEscala extends VerificarAscendiente{
         }
         return null;
     }
+    @Override
+    protected boolean esSiguiente(Carta c1, Carta siguiente) {
+        if (super.esSiguiente(c1,siguiente) && (siguiente.getPalo() == c1.getPalo())) {
+            return true;
+        }
+        else return false;
+    }
 }

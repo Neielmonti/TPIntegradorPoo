@@ -27,10 +27,6 @@ public class Mano extends ConjuntoCartas implements IMano {
         }
         else return false;
     }
-    @Override
-    public String getStringCartas() {
-        return super.mostrarCartas();
-    }
 
     @Override
     public int getCantidadCartas() {

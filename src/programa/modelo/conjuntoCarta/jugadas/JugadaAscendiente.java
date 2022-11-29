@@ -8,42 +8,6 @@ public abstract class JugadaAscendiente extends Jugada{
     public JugadaAscendiente(Formacion forma, List<Carta> cartas, Jugador jugador) {
         super(forma, cartas, jugador);
     }
-    private Carta buscarMayor() {
-        List <Carta> cartas = this.getCartas();
-        if (cartas.size() > 0) {
-            Carta mayorCarta = cartas.get(0);
-            for (Carta carta : cartas) {
-                if (carta.getTipo().ordinal() > mayorCarta.getTipo().ordinal()) {
-                    mayorCarta = carta;
-                }
-            }
-            return mayorCarta;
-        }
-        else return null;
-    }
-    private boolean tieneJoker() {
-        boolean result = false;
-        List<Carta> cartas = this.getCartas();
-        for (Carta carta:cartas) {
-            if (carta.getTipo() == TipoCarta.JOKER) {
-                result = true;
-            }
-        }
-        return result;
-    }
-    private Carta buscarMenor() {
-        List <Carta> cartas = this.getCartas();
-        if (cartas.size() > 0) {
-            Carta menorCarta = cartas.get(0);
-            for (Carta carta : cartas) {
-                if (carta.getTipo().ordinal() < menorCarta.getTipo().ordinal()) {
-                    menorCarta = carta;
-                }
-            }
-            return menorCarta;
-        }
-        else return null;
-    }
     protected boolean esSiguiente(Carta c1, Carta siguiente) {
         if (siguiente.getTipo() == c1.getTipo().getNext()) {
             return true;

@@ -2,6 +2,8 @@ package programa.controlador;
 import programa.modelo.Juego;
 import programa.modelo.Jugador;
 import programa.modelo.conjuntoCarta.Carta;
+import programa.modelo.conjuntoCarta.Mano;
+import programa.modelo.conjuntoCarta.jugadas.Jugada;
 import programa.utils.observer.IObservable;
 import programa.utils.observer.IObservador;
 import programa.vista.*;
@@ -31,7 +33,11 @@ public class Controlador implements IObservador {
                 vista.mostrarMano();
                 vista.mostrarPozo();
                 if (this.jugador == this.juego.getJugadorActual()) {
-                    this.vista.setEstado(EstadoVista.TOMAR_CARTA);
+                    if (this.jugador.yaBajo()) {
+                        this.vista.mostrarAllJugadas();
+                        this.vista.setEstado(EstadoVista.BAJADO_DESCARGAR_O_TIRAR);
+                    }
+                    else this.vista.setEstado(EstadoVista.TOMAR_CARTA);
                 }
                 else this.vista.setEstado(EstadoVista.ESPERANDO_TURNO);
             }
@@ -41,7 +47,10 @@ public class Controlador implements IObservador {
                     this.vista.clearMemo();
                     this.vista.mostrarRonda();
                     this.vista.mostrarMano();
-                    this.vista.setEstado(EstadoVista.TIRAR_O_BAJAR);
+                    if (this.jugador.yaBajo()) {
+                        this.vista.setEstado(EstadoVista.BAJADO_DESCARGAR_O_TIRAR);
+                    }
+                    else this.vista.setEstado(EstadoVista.TIRAR_O_BAJAR);
                 }
             }
 
@@ -65,6 +74,30 @@ public class Controlador implements IObservador {
             case JUGADA_RECHAZADA -> {
                 if (this.jugador == this.juego.getJugadorActual()) {this.vista.jugadaRechazada();}
             }
+            case JUGADOR_BAJO -> {
+                this.vista.mostrarAllJugadas();
+                if (this.jugador == this.juego.getJugadorActual()) {
+                    this.vista.mostrarMano();
+                    this.vista.setEstado(EstadoVista.BAJADO_DESCARGAR_O_TIRAR);
+                }
+            }
+            case BAJADA_RECHAZADA -> {
+                if (this.jugador == this.juego.getJugadorActual()) {
+                    this.vista.bajadaRechazada();
+                    this.vista.setEstado(EstadoVista.TIRAR_O_BAJAR);
+                    this.juego.deshacerJugadas(this.jugador);
+                }
+            }
+            case JUGADA_MODIFICADA -> {
+                if (this.jugador == this.juego.getJugadorActual()) {
+                    vista.setEstado(EstadoVista.TOMAR_CARTA);
+                }
+            }
+            case DESCARGA_RECHAZADA -> {
+                if (this.jugador == this.juego.getJugadorActual()) {
+                    vista.setEstado(EstadoVista.BAJADO_DESCARGAR_O_TIRAR);
+                }
+            }
         }
     }
 
@@ -83,19 +116,22 @@ public class Controlador implements IObservador {
         else return true;
     }
 
-
-    public List<IConjuntoCartas> getJugadasJugador() {
-        List<IConjuntoCartas> jugadasOut = new ArrayList<>();
-        int max = this.jugador.getJugadas().size();
-        for (int i = 0; i < max; i++) {
-            jugadasOut.add(getJugadaJugador(i));
+    public void agregarCartaJuego(IJugada jugada, int indiceCarta) {
+        List<Jugada> jugadas = this.juego.getAllJugadas();
+        Carta carta = this.jugador.getMano().tomarCarta(indiceCarta);
+        if ((jugadas.contains(jugada)) && (carta != null)) {
+            this.juego.agregarCartaAJuego(jugadas.get(jugadas.indexOf(jugada)),carta);
         }
+    }
+
+    public List<IJugada> getJugadasJugador() {
+        List<IJugada> jugadasOut = new ArrayList<>(jugador.getJugadas());
         return jugadasOut;
     }
-    private IConjuntoCartas getJugadaJugador(int i) {
-        return this.jugador.getJugadas().get(i);
+    public List<IJugada> getAllJugadas(){
+        List<IJugada> jugadasOut = new ArrayList<>(this.juego.getAllJugadas());
+        return jugadasOut;
     }
-
 
     public boolean faltanJugadoes() {
         return this.juego.faltanJugadores();
@@ -112,6 +148,10 @@ public class Controlador implements IObservador {
 
     public void tomarCartaMazo() {
         this.juego.tomarDelMazo(this.jugador);
+    }
+
+    public void verificarJuegos() {
+        this.juego.verificarJugadas(this.jugador);
     }
 
     public void agregarJugador(String nombre) {

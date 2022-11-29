@@ -15,12 +15,6 @@ public abstract class VerificarAscendiente extends VerificarJugada{
         }
         else return false;
     }
-    protected boolean esSiguienteDoble(Carta c1, Carta siguiente) {
-        if (siguiente.getTipo() == c1.getTipo().getNext().getNext()) {
-            return true;
-        }
-        else return false;
-    }
     public boolean verificarListaCartas(List<Carta> cartas) {
         if (!super.verificarListaCartas(cartas)) {
             return false;

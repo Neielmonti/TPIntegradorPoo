@@ -23,7 +23,8 @@ public class Ronda implements IRonda {
         }
     }
 
-    public boolean verificarJugadasxRonda(List<Jugada> jugadas) {
+    public boolean verificarJugadasxRonda(Jugador jugador) {
+        List<Jugada> jugadas = jugador.getJugadas();
         boolean salida = true;
         for (CantXForma cf:this.formaciones) {
             Formacion formaActual = cf.forma();

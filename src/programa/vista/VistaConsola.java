@@ -12,7 +12,7 @@ public class VistaConsola implements IVista {
     @Override
     public void mostrarMano(IMano mano) {
         System.out.println("================MANO================");
-        System.out.println(mano.getStringCartas() + "\n");
+        System.out.println(mano.mostrarCartas() + "\n");
     }
 
     public void mostrarConjuntoCarta(IConjuntoCartas cc) {

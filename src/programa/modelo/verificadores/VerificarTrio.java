@@ -3,7 +3,6 @@ import programa.modelo.Jugador;
 import programa.modelo.commons.TipoCarta;
 import programa.modelo.conjuntoCarta.Carta;
 import programa.modelo.commons.Formacion;
-import programa.modelo.conjuntoCarta.jugadas.Jugada;
 import programa.modelo.conjuntoCarta.jugadas.JugadaTrio;
 import java.util.List;
 public class VerificarTrio extends VerificarJugada{
@@ -11,7 +10,7 @@ public class VerificarTrio extends VerificarJugada{
         super(Formacion.TRIO);
     }
     @Override
-    public Jugada formarJugada(List<Carta> cartas, Jugador jugador) {
+    public JugadaTrio formarJugada(List<Carta> cartas, Jugador jugador) {
         if (verificarListaCartas(cartas)) {
             return new JugadaTrio(cartas, jugador);
         }

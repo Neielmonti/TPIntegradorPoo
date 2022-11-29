@@ -1,6 +1,6 @@
 package programa.vista;
 
 public interface IMano {
-    public String getStringCartas();
+    public String mostrarCartas();
     public int getCantidadCartas();
 }

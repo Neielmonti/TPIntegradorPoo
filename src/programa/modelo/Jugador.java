@@ -25,6 +25,10 @@ public class Jugador {
         return this.bajo;
     }
 
+    public void bajar() {
+        this.bajo = true;
+    }
+
     public void agregarPuntos(int puntos) {
         if (puntos > 0) {
             this.puntaje += puntos;
@@ -44,6 +48,11 @@ public class Jugador {
             }
             this.jugadas = new ArrayList<>();
         }
+    }
+
+    public void resetearJugador() {
+        this.bajo = false;
+        deshacerJugadas();
     }
 
     public Mano getMano(){
