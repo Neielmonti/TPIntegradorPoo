@@ -65,3 +65,4 @@ No se puede tener dos o más comodines en una misma escala o trío.
 
 ### UML
 
+![Imagen](https://github.com/Neielmonti/TPIntegradorPoo/blob/main/UML/UML%20Integrador%20pruebita.png)
