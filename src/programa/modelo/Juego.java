@@ -56,7 +56,7 @@ public class Juego implements IObservable {
     **/
 
     public void agregarCartaAJuego(Jugada jugada, Carta carta, Jugador jugador){
-        if (jugada.agregarCarta(carta)) {
+        if (jugada.agregarCarta(carta,true)) {
             jugador.getMano().quitarCarta(carta);
             notificar(Evento.MANO_ACTUALIZADA);
             //notificar(Evento.JUGADA_MODIFICADA);

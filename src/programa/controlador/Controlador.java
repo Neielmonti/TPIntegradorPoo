@@ -122,9 +122,7 @@ public class Controlador implements IObservador {
     public void agregarCartaJuego(int indiceJugada, int indiceCarta) {
         Jugada jugada = this.juego.getAllJugadas().get(indiceJugada);
         Carta carta = this.jugador.getMano().tomarCarta(indiceCarta);
-        System.out.println("LLEGAMOS ACA");
         if ((jugada != null) && (carta != null)) {
-            System.out.println("ENTRA EN EL IF");
             this.juego.agregarCartaAJuego(jugada,carta, jugador);
         }
         else this.vista.setEstado(EstadoVista.BAJADO_DESCARGAR_O_TIRAR);
