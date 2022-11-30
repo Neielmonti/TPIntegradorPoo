@@ -158,7 +158,10 @@ public class VistaConsolaSwing extends JFrame{
                     println("Jugada fuera de rango");
                 }
 
-                else this.controlador.agregarCartaJuego(jugadas.get(jugadaCarta[0]-1),jugadaCarta[1]-1);
+                else {
+                    System.out.println("Jugada: " + (jugadaCarta[0]-1) + ", Carta: " + (jugadaCarta[1]-1));
+                    this.controlador.agregarCartaJuego(jugadaCarta[0]-1,jugadaCarta[1]-1);
+                }
             }
 
             case ESPERANDO_TURNO -> clearTextbox();

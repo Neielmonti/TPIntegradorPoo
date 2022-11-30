@@ -93,7 +93,7 @@ public class Controlador implements IObservador {
             }
             case JUGADA_MODIFICADA -> {
                 if (this.jugador == this.juego.getJugadorActual()) {
-                    vista.setEstado(EstadoVista.TOMAR_CARTA);
+                    vista.setEstado(EstadoVista.BAJADO_DESCARGAR_O_TIRAR);
                 }
             }
             case DESCARGA_RECHAZADA -> {
@@ -119,13 +119,15 @@ public class Controlador implements IObservador {
         else return true;
     }
 
-    public void agregarCartaJuego(IJugada jugada, int indiceCarta) {
-        List<Jugada> jugadas = this.juego.getAllJugadas();
+    public void agregarCartaJuego(int indiceJugada, int indiceCarta) {
+        Jugada jugada = this.juego.getAllJugadas().get(indiceJugada);
         Carta carta = this.jugador.getMano().tomarCarta(indiceCarta);
-        if ((jugadas.contains(jugada)) && (carta != null)) {
-            System.out.println("LLEGO HASTA ACA");
-            this.juego.agregarCartaAJuego(jugadas.get(jugadas.indexOf(jugada)),carta);
+        System.out.println("LLEGAMOS ACA");
+        if ((jugada != null) && (carta != null)) {
+            System.out.println("ENTRA EN EL IF");
+            this.juego.agregarCartaAJuego(jugada,carta, jugador);
         }
+        else this.vista.setEstado(EstadoVista.BAJADO_DESCARGAR_O_TIRAR);
     }
 
     public List<IJugada> getJugadasJugador() {

@@ -10,7 +10,6 @@ import programa.modelo.conjuntoCarta.jugadas.Jugada;
 import programa.modelo.verificadores.*;
 import programa.utils.observer.IObservable;
 import programa.utils.observer.IObservador;
-import programa.vista.IJugada;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -56,9 +55,11 @@ public class Juego implements IObservable {
     }
     **/
 
-    public void agregarCartaAJuego(Jugada jugada, Carta carta){
+    public void agregarCartaAJuego(Jugada jugada, Carta carta, Jugador jugador){
         if (jugada.agregarCarta(carta)) {
-            notificar(Evento.JUGADA_MODIFICADA);
+            jugador.getMano().quitarCarta(carta);
+            notificar(Evento.MANO_ACTUALIZADA);
+            //notificar(Evento.JUGADA_MODIFICADA);
         }
         else notificar(Evento.DESCARGA_RECHAZADA);
     }
