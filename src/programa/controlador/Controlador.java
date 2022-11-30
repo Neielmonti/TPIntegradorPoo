@@ -31,15 +31,17 @@ public class Controlador implements IObservador {
                 vista.clearMemo();
                 vista.mostrarRonda();
                 vista.mostrarMano();
-                vista.mostrarPozo();
                 if (this.jugador == this.juego.getJugadorActual()) {
                     if (this.jugador.yaBajo()) {
                         this.vista.mostrarAllJugadas();
-                        this.vista.setEstado(EstadoVista.BAJADO_DESCARGAR_O_TIRAR);
                     }
-                    else this.vista.setEstado(EstadoVista.TOMAR_CARTA);
+                    vista.mostrarPozo();
+                    this.vista.setEstado(EstadoVista.TOMAR_CARTA);
                 }
-                else this.vista.setEstado(EstadoVista.ESPERANDO_TURNO);
+                else {
+                    vista.mostrarPozo();
+                    this.vista.setEstado(EstadoVista.ESPERANDO_TURNO);
+                }
             }
 
             case MANO_ACTUALIZADA -> {
@@ -48,6 +50,7 @@ public class Controlador implements IObservador {
                     this.vista.mostrarRonda();
                     this.vista.mostrarMano();
                     if (this.jugador.yaBajo()) {
+                        this.vista.mostrarAllJugadas();
                         this.vista.setEstado(EstadoVista.BAJADO_DESCARGAR_O_TIRAR);
                     }
                     else this.vista.setEstado(EstadoVista.TIRAR_O_BAJAR);
@@ -120,6 +123,7 @@ public class Controlador implements IObservador {
         List<Jugada> jugadas = this.juego.getAllJugadas();
         Carta carta = this.jugador.getMano().tomarCarta(indiceCarta);
         if ((jugadas.contains(jugada)) && (carta != null)) {
+            System.out.println("LLEGO HASTA ACA");
             this.juego.agregarCartaAJuego(jugadas.get(jugadas.indexOf(jugada)),carta);
         }
     }

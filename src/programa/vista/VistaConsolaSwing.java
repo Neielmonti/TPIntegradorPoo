@@ -141,18 +141,24 @@ public class VistaConsolaSwing extends JFrame{
                 String in = textbox.getText().trim();
                 String[] aux = in.split("-");
                 int[] jugadaCarta = new int[aux.length];
+                jugadaCarta[0] = Integer.parseInt(aux[0]);
+                jugadaCarta[1] = Integer.parseInt(aux[1]);
                 List<IJugada> jugadas = this.controlador.getAllJugadas();
                 IMano mano = this.controlador.getMano();
+
                 if (jugadaCarta.length != 2)  {
                     println("Por favor, ingrese los parametros necesarios");
                 }
-                else if ((jugadaCarta[0] > mano.getCantidadCartas()) || (jugadaCarta[0] < 1)) {
-                    println("Carta fuera de rango");
+
+                else if ((jugadaCarta[1] > mano.getCantidadCartas()) || (jugadaCarta[1] < 1)) {
+                    println("Carta fuera de rango, la mano tiene solamente: " + mano.getCantidadCartas());
                 }
-                else if ((jugadaCarta[1] < 1) || (jugadaCarta[1] > jugadas.size())) {
+
+                else if ((jugadaCarta[0] < 1) || (jugadaCarta[0] > jugadas.size())) {
                     println("Jugada fuera de rango");
                 }
-                else this.controlador.agregarCartaJuego(jugadas.get(jugadaCarta[1]),jugadaCarta[0]);
+
+                else this.controlador.agregarCartaJuego(jugadas.get(jugadaCarta[0]-1),jugadaCarta[1]-1);
             }
 
             case ESPERANDO_TURNO -> clearTextbox();

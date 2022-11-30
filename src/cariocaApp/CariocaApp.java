@@ -1,7 +1,16 @@
 package cariocaApp;
 import programa.controlador.Controlador;
 import programa.modelo.Juego;
+import programa.modelo.Jugador;
+import programa.modelo.conjuntoCarta.Carta;
+import programa.modelo.conjuntoCarta.jugadas.Jugada;
+import programa.modelo.conjuntoCarta.jugadas.JugadaTrio;
+import programa.vista.IJugada;
 import programa.vista.VistaConsolaSwing;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class CariocaApp {
     public static void main(String[] args) {
         Juego juego = new Juego();

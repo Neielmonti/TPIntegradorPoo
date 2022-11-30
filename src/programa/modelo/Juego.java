@@ -227,7 +227,6 @@ public class Juego implements IObservable {
             this.pozo.agregarCarta(this.mazo.tomarCarta());
         }
         notificar(Evento.MANO_ACTUALIZADA);
-        pasarSiguienteJugador();
     }
 
     public Jugador getJugadorActual() {
