@@ -45,7 +45,7 @@ public class VistaConsolaSwing extends JFrame{
             case INICIALIZANDO -> {
                 String nombre = textbox.getText();
                 if (!controlador.nombreValido(nombre.trim())) {
-                    println("[ERROR]: Nombre invalido o ya en uso");
+                    printError(ErrorVista.NOMBRE_TOMADO);
                 }
                 else {
                     if (controlador.faltanJugadoes()) {controlador.agregarJugador(nombre.trim());}
@@ -81,8 +81,13 @@ public class VistaConsolaSwing extends JFrame{
 
             case TIRAR_CARTA -> {
                 String in = textbox.getText().trim();
-                clearTextbox();
-                this.controlador.tirarCartaAlPozo(Integer.parseInt(in)-1);
+                if (in.equals(OpcionVista.CANCELAR.getLabel())) {
+                    setEstado(EstadoVista.TIRAR_O_BAJAR);
+                }
+                else {
+                    clearTextbox();
+                    this.controlador.tirarCartaAlPozo(Integer.parseInt(in) - 1);
+                }
             }
 
             case BAJAR -> {
@@ -104,6 +109,9 @@ public class VistaConsolaSwing extends JFrame{
                 String in = textbox.getText().trim();
                 if (!verificarCartasJugada(in)) {
                     println("Por favor, solo ingrese numeros y '-' ");
+                }
+                else if (in.equals(OpcionVista.CANCELAR.getLabel())) {
+                    setEstado(EstadoVista.BAJAR);
                 }
                 else {
                     String[] aux = in.split("-");
@@ -146,7 +154,11 @@ public class VistaConsolaSwing extends JFrame{
                 List<IJugada> jugadas = this.controlador.getAllJugadas();
                 IMano mano = this.controlador.getMano();
 
-                if (jugadaCarta.length != 2)  {
+                if (in.equals(OpcionVista.CANCELAR.getLabel())) {
+                    setEstado(EstadoVista.BAJADO_DESCARGAR_O_TIRAR);
+                }
+
+                else if (jugadaCarta.length != 2)  {
                     println("Por favor, ingrese los parametros necesarios");
                 }
 
@@ -196,9 +208,9 @@ public class VistaConsolaSwing extends JFrame{
         for (IJugada jugada: jugadas) {
             if (jugada.getNombreJugador() != jugadorAnterior) {
                 jugadorAnterior = jugada.getNombreJugador();
-                println("---------Jugador " + jugada.getNombreJugador() + "---------");
+                println("------------Jugador " + jugada.getNombreJugador() + "------------");
             }
-            println("[Jugada " + (jugadas.indexOf(jugada) + 1) + "] -------- \n" + jugada.mostrarCartas() + "\n");
+            println("{Jugada " + (jugadas.indexOf(jugada) + 1) + "} -------- \n" + jugada.mostrarCartas() + "\n");
         }
     }
     public void setEstado(EstadoVista estado) {
@@ -222,7 +234,7 @@ public class VistaConsolaSwing extends JFrame{
     }
 
     public void jugadaRechazada() {
-        println("[ERROR]: Jugada rechazada");
+        printError(ErrorVista.JUGADA_RECHAZADA);
     }
 
     public void jugando() {
@@ -231,15 +243,17 @@ public class VistaConsolaSwing extends JFrame{
 
     public void mostrarMano() {
         IMano mano = this.controlador.getMano();
-        println("---------[MANO]---------" + "\n" + mano.mostrarCartas() + "\n");
+        println("---------MANO---------" + "\n" + mano.mostrarCartas() + "\n");
     }
 
     public void mostrarPozo() {
-        println(this.controlador.getPozo().mostrarCartas());
+        println("---------POZO---------");
+        println(this.controlador.getPozo().mostrarCartas() + "\n");
     }
 
     public void mostrarRonda() {
-        println(this.controlador.getRonda().mostrarRonda());
+        println("---------RONDA---------");
+        println("Jugadas a armar: " + this.controlador.getRonda().mostrarRonda() + "\n");
     }
 
     public void clearMemo() {

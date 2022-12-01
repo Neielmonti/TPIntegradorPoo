@@ -35,7 +35,7 @@ public class Mano extends ConjuntoCartas implements IMano {
 
     public Carta tomarCarta(int indice) {
         List<Carta> c = this.getCartas();
-        if ((indice >= 0) && (indice < c.size() - 1)) {
+        if ((indice >= 0) && (indice <= c.size() - 1)) {
             Carta carta = c.get(indice);
             quitarCarta(carta);
             return carta;

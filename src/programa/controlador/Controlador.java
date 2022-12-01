@@ -26,7 +26,6 @@ public class Controlador implements IObservador {
     @Override
     public void actualizar(Evento evento, IObservable observado) {
         switch (evento) {
-
             case CAMBIO_DE_JUGADOR -> {
                 vista.clearMemo();
                 vista.mostrarRonda();
@@ -67,6 +66,7 @@ public class Controlador implements IObservador {
                 //vista.mostrarPozo();
                 //MOSTRAR 'ESPERANDO A TU TURNO'
             }
+
             case JUGADA_ARMADA -> {
                 if (this.jugador == juego.getJugadorActual()) {
                     this.vista.mostrarJugadasJugador();
@@ -74,9 +74,11 @@ public class Controlador implements IObservador {
                     this.vista.setEstado(EstadoVista.BAJAR);
                 }
             }
+
             case JUGADA_RECHAZADA -> {
                 if (this.jugador == this.juego.getJugadorActual()) {this.vista.jugadaRechazada();}
             }
+
             case JUGADOR_BAJO -> {
                 this.vista.mostrarAllJugadas();
                 if (this.jugador == this.juego.getJugadorActual()) {
@@ -84,6 +86,7 @@ public class Controlador implements IObservador {
                     this.vista.setEstado(EstadoVista.BAJADO_DESCARGAR_O_TIRAR);
                 }
             }
+
             case BAJADA_RECHAZADA -> {
                 if (this.jugador == this.juego.getJugadorActual()) {
                     this.vista.bajadaRechazada();
@@ -91,11 +94,13 @@ public class Controlador implements IObservador {
                     this.juego.deshacerJugadas(this.jugador);
                 }
             }
+
             case JUGADA_MODIFICADA -> {
                 if (this.jugador == this.juego.getJugadorActual()) {
                     vista.setEstado(EstadoVista.BAJADO_DESCARGAR_O_TIRAR);
                 }
             }
+
             case DESCARGA_RECHAZADA -> {
                 if (this.jugador == this.juego.getJugadorActual()) {
                     vista.setEstado(EstadoVista.BAJADO_DESCARGAR_O_TIRAR);

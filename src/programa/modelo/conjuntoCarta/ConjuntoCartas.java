@@ -55,7 +55,7 @@ public abstract class ConjuntoCartas implements IConjuntoCartas {
     public String mostrarCartas() {
         String result = "";
         for (int i = 0; i < cartas.size(); i++) {
-            result += (i+1) + " [" +cartas.get(i).mostrarCarta() + "]" + "\n";
+            result += (i+1) + " " + cartas.get(i).mostrarCarta() + "\n";
         }
         return result;
     }
