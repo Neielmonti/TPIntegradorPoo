@@ -184,7 +184,7 @@ public class VistaConsolaSwing extends JFrame{
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    setSize(450,700);
+                    setSize(500,700);
                     setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -219,7 +219,7 @@ public class VistaConsolaSwing extends JFrame{
     }
     public void listoParaJugar() {
         estado = EstadoVista.ESPERANDO_JUGADORES;
-        println("Bienvenido! Ahora debe esperar a que se conecte el resto!");
+        println("Bienvenido/a! Ahora debe esperar a que se conecte el resto!");
     }
 
     public boolean verificarCartasJugada(String text) {

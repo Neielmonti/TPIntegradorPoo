@@ -11,18 +11,13 @@ import programa.modelo.verificadores.*;
 import programa.utils.observer.IObservable;
 import programa.utils.observer.IObservador;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Objects;
+import java.util.*;
 
 public class Juego implements IObservable {
-    private List<Jugador> jugadores = new ArrayList<>();
+    private Queue<Jugador> jugadores = new LinkedList<>();
     private int maxJugadores = 2;
     private int minJugadores = 2;
-    private List<Ronda> rondas;
-    private Jugador jugadorActual;
-    private Ronda rondaActual;
+    private Queue<Ronda> rondas = new LinkedList();
     private Mazo mazo = new Mazo();
     private Pozo pozo = new Pozo();
     private List<IObservador> observadores = new ArrayList<>();
@@ -30,19 +25,18 @@ public class Juego implements IObservable {
 
     public Juego(){
         generarRondas();
-        this.rondaActual = this.rondas.get(0);
         generarVerificadores();
     }
 
     public void pasarSiguienteJugador() {
-        int indiceSiguiente = (this.jugadores.indexOf(this.jugadorActual) + 1) % this.jugadores.size();
-        this.jugadorActual = this.jugadores.get(indiceSiguiente);
+        Jugador aux = this.jugadores.remove();
+        this.jugadores.add(aux);
         notificar(Evento.CAMBIO_DE_JUGADOR);
     }
 
     public void pasarSiguienteRonda() {
-        int indiceSiguiente = (this.rondas.indexOf(this.rondaActual) + 1) % this.rondas.size();
-        this.rondaActual = this.rondas.get(indiceSiguiente);
+        Ronda aux = this.rondas.remove();
+        this.rondas.add(aux);
     }
 
 
@@ -65,12 +59,13 @@ public class Juego implements IObservable {
     }
 
     public Ronda getRondaActual() {
-        return this.rondaActual;
+        return this.rondas.peek();
     }
 
     public boolean nombreValido(String nombre) {
         boolean salida = true;
-        for (Jugador jugador:jugadores) {
+
+        for (Jugador jugador: jugadores) {
             if (jugador.getNombre().equals(nombre)) {
                 salida = false;
             }
@@ -93,7 +88,7 @@ public class Juego implements IObservable {
     }
 
     public void verificarJugadas(Jugador jugador) {
-        if ((jugador == jugadorActual) && (!jugador.yaBajo()) && (rondaActual.verificarJugadasxRonda(jugador))) {
+        if ((jugador == jugadores.peek()) && (!jugador.yaBajo()) && (this.rondas.peek().verificarJugadasxRonda(jugador))) {
             jugador.bajar();
             notificar(Evento.JUGADOR_BAJO);
         }
@@ -131,13 +126,10 @@ public class Juego implements IObservable {
             return false;
         }
         else {
-            for (Jugador jug:jugadores) {
+            for (Jugador jug: jugadores) {
                 if (Objects.equals(jug.getNombre(), j.getNombre())) {
                     return false;
                 }
-            }
-            if (jugadores.isEmpty()) {
-                jugadorActual = j;
             }
             jugadores.add(j);
             if (jugadores.size() == maxJugadores) {
@@ -149,36 +141,38 @@ public class Juego implements IObservable {
         }
     }
     private void generarVerificadores() {
-        this.verificadoresJugada.add(new VerificarEscaleraReal());
-        this.verificadoresJugada.add(new VerificarEscaleraSucia());
-        this.verificadoresJugada.add(new VerificarEscala());
-        this.verificadoresJugada.add(new VerificarTrio());
+        if (verificadoresJugada.isEmpty()) {
+            this.verificadoresJugada.add(new VerificarEscaleraReal());
+            this.verificadoresJugada.add(new VerificarEscaleraSucia());
+            this.verificadoresJugada.add(new VerificarEscala());
+            this.verificadoresJugada.add(new VerificarTrio());
+        }
     }
     private void generarRondas(){
-        List<Formacion> f;
-        List<Ronda> rondas1 = new ArrayList<>();
-        f = new ArrayList<>(Arrays.asList(Formacion.TRIO,Formacion.TRIO));
-        rondas1.add(new Ronda(f));
-        f = new ArrayList<>(Arrays.asList(Formacion.ESCALA,Formacion.TRIO));
-        rondas1.add(new Ronda(f));
-        f = new ArrayList<>(Arrays.asList(Formacion.ESCALA,Formacion.ESCALA));
-        rondas1.add(new Ronda(f));
-        f = new ArrayList<>(Arrays.asList(Formacion.TRIO,Formacion.TRIO,Formacion.TRIO));
-        rondas1.add(new Ronda(f));
-        f = new ArrayList<>(Arrays.asList(Formacion.ESCALA,Formacion.TRIO,Formacion.TRIO));
-        rondas1.add(new Ronda(f));
-        f = new ArrayList<>(Arrays.asList(Formacion.ESCALA,Formacion.ESCALA,Formacion.TRIO));
-        rondas1.add(new Ronda(f));
-        f = new ArrayList<>(Arrays.asList(Formacion.ESCALA,Formacion.ESCALA,Formacion.ESCALA));
-        rondas1.add(new Ronda(f));
-        f = new ArrayList<>(Arrays.asList(Formacion.TRIO,Formacion.TRIO,Formacion.TRIO,Formacion.TRIO));
-        rondas1.add(new Ronda(f));
-        f = new ArrayList<>(Arrays.asList(Formacion.ESCALERA_SUCIA));
-        rondas1.add(new Ronda(f));
-        f = new ArrayList<>(Arrays.asList(Formacion.ESCALERA_REAL));
-        rondas1.add(new Ronda(f));
-        this.rondas = rondas1;
+        if (this.rondas.isEmpty()) {
+            List<Formacion> f;
+            f = new ArrayList<>(Arrays.asList(Formacion.TRIO, Formacion.TRIO));
+            this.rondas.add(new Ronda(f));
+            f = new ArrayList<>(Arrays.asList(Formacion.ESCALA, Formacion.TRIO));
+            this.rondas.add(new Ronda(f));
+            f = new ArrayList<>(Arrays.asList(Formacion.ESCALA, Formacion.ESCALA));
+            this.rondas.add(new Ronda(f));
+            f = new ArrayList<>(Arrays.asList(Formacion.TRIO, Formacion.TRIO, Formacion.TRIO));
+            this.rondas.add(new Ronda(f));
+            f = new ArrayList<>(Arrays.asList(Formacion.ESCALA, Formacion.TRIO, Formacion.TRIO));
+            this.rondas.add(new Ronda(f));
+            f = new ArrayList<>(Arrays.asList(Formacion.ESCALA, Formacion.ESCALA, Formacion.TRIO));
+            this.rondas.add(new Ronda(f));
+            f = new ArrayList<>(Arrays.asList(Formacion.ESCALA, Formacion.ESCALA, Formacion.ESCALA));
+            this.rondas.add(new Ronda(f));
+            f = new ArrayList<>(Arrays.asList(Formacion.TRIO, Formacion.TRIO, Formacion.TRIO, Formacion.TRIO));
+            this.rondas.add(new Ronda(f));
+            f = new ArrayList<>(Arrays.asList(Formacion.ESCALERA_SUCIA));
+            this.rondas.add(new Ronda(f));
+            f = new ArrayList<>(Arrays.asList(Formacion.ESCALERA_REAL));
+            this.rondas.add(new Ronda(f));
         }
+    }
 
     //public String mostrarMazo() {return this.mazo.mostrarCartas();}
 
@@ -214,9 +208,17 @@ public class Juego implements IObservable {
     }
 
     public void tirarCartaPozo(Jugador jugador, Carta carta) {
-        jugador.getMano().quitarCarta(carta);
-        this.pozo.agregarCarta(carta);
-        pasarSiguienteJugador();
+        if ((jugadores.peek() == jugador)) {
+            assert jugador != null;
+            if (jugador.getMano() != null) {
+                jugador.getMano().quitarCarta(carta);
+                this.pozo.agregarCarta(carta);
+                if (jugador.getMano().isEmpty()) {
+                    notificar(Evento.RONDA_GANADA);
+                }
+                else pasarSiguienteJugador();
+            }
+        }
         //notificar(Evento.MANO_ACTUALIZADA);
         //notificar(Evento.POZO_ACTUALIZADO);
     }
@@ -231,7 +233,7 @@ public class Juego implements IObservable {
     }
 
     public Jugador getJugadorActual() {
-        return this.jugadorActual;
+        return this.jugadores.peek();
     }
 
     public Mano getManoJugador(Jugador jugador){
