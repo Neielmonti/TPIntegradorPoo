@@ -2,6 +2,8 @@ package programa.modelo;
 
 import programa.controlador.Evento;
 import programa.modelo.commons.Formacion;
+import programa.modelo.commons.PaloCarta;
+import programa.modelo.commons.TipoCarta;
 import programa.modelo.conjuntoCarta.Carta;
 import programa.modelo.conjuntoCarta.Mano;
 import programa.modelo.conjuntoCarta.Mazo;
@@ -148,6 +150,8 @@ public class Juego implements IObservable {
             this.verificadoresJugada.add(new VerificarTrio());
         }
     }
+
+    /**
     private void generarRondas(){
         if (this.rondas.isEmpty()) {
             List<Formacion> f;
@@ -173,8 +177,46 @@ public class Juego implements IObservable {
             this.rondas.add(new Ronda(f));
         }
     }
+    **/
+    private void generarRondas(){
+        if (this.rondas.isEmpty()) {
 
-    //public String mostrarMazo() {return this.mazo.mostrarCartas();}
+            List<CantXFormacion> listaAux = new ArrayList<>();
+            /**
+            this.rondas.add(new Ronda(new CantXFormacion(Formacion.TRIO,2)));
+
+             **/
+
+            this.rondas.add(new Ronda(Formacion.ESCALA,1)); ////////
+
+            listaAux.add(new CantXFormacion(Formacion.TRIO,1));
+            listaAux.add(new CantXFormacion(Formacion.ESCALA,1));
+            this.rondas.add(new Ronda(listaAux));
+
+            this.rondas.add(new Ronda(Formacion.ESCALA,2));
+
+            this.rondas.add(new Ronda(Formacion.TRIO,3));
+
+            listaAux = new ArrayList<>();
+            listaAux.add(new CantXFormacion(Formacion.TRIO,2));
+            listaAux.add(new CantXFormacion(Formacion.ESCALA,1));
+            this.rondas.add(new Ronda(listaAux));
+
+
+            listaAux = new ArrayList<>();
+            listaAux.add(new CantXFormacion(Formacion.TRIO,1));
+            listaAux.add(new CantXFormacion(Formacion.ESCALA,2));
+            this.rondas.add(new Ronda(listaAux));
+
+            this.rondas.add(new Ronda(Formacion.ESCALA,3));
+
+            this.rondas.add(new Ronda(Formacion.TRIO,4));
+
+            this.rondas.add(new Ronda(Formacion.ESCALERA_SUCIA,1));
+
+            this.rondas.add(new Ronda(Formacion.ESCALERA_REAL,1));
+        }
+    }
 
     private void resetMazo(){
         for(Jugador jugador:this.jugadores) {
@@ -185,12 +227,33 @@ public class Juego implements IObservable {
         }
         pozo.pasarCartas(this.mazo);
     }
+
+    /**
+
     public void repartirCartas(){
         this.resetMazo();
         for(Jugador jugador:this.jugadores) {
             jugador.setMano(this.mazo.formarMano());
         }
         this.pozo.pasarCartas(this.mazo);
+        this.pozo.agregarCarta(this.mazo.tomarCarta());
+    }
+
+    **/
+
+    public void repartirCartas(){
+        this.resetMazo();
+        List<Carta> cartas = new ArrayList<>();
+        cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.NUEVE));
+        cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.DIEZ));
+        cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.J));
+        cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.JOKER));
+        cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.K));
+        cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.Q));
+        jugadores.peek().setMano(new Mano(cartas));
+        Jugador aux = jugadores.remove();
+        jugadores.add(aux);
+        jugadores.peek().setMano(new Mano(cartas));
         this.pozo.agregarCarta(this.mazo.tomarCarta());
     }
 

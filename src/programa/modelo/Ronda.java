@@ -8,8 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Ronda implements IRonda {
-    private List<CantXForma> formaciones = new ArrayList<>();
-
+    private List<CantXFormacion> formaciones = new ArrayList<>();
+    /**
     public Ronda(List<Formacion> formaciones){
         while (!formaciones.isEmpty()) {
             Formacion formaActual = formaciones.get(0);
@@ -18,15 +18,39 @@ public class Ronda implements IRonda {
                 formaciones.remove(formaActual);
             }
             if (cantidad > 0) {
-                this.formaciones.add(new CantXForma(formaActual,cantidad));
+                this.formaciones.add(new CantXFormacion(formaActual,cantidad));
             }
+        }
+    }
+    **/
+
+    public Ronda(List<CantXFormacion> formaciones) {
+        while (!formaciones.isEmpty()) {
+            Formacion formaActual = formaciones.get(0).forma();
+            this.formaciones.add(formaciones.get(0));
+            formaciones.remove(0);
+            eliminarFormacionesRepetidas(formaActual,formaciones);
+        }
+    }
+
+    public Ronda(Formacion formacion, int cantidad) {
+        this.formaciones.add(new CantXFormacion(formacion,cantidad));
+    }
+
+    private void eliminarFormacionesRepetidas(Formacion forma, List<CantXFormacion> formaciones) {
+        int i = 0;
+        while (i < formaciones.size()) {
+            if (formaciones.get(i).forma() == forma) {
+                formaciones.remove(i);
+            }
+            else i++;
         }
     }
 
     public boolean verificarJugadasxRonda(Jugador jugador) {
         List<Jugada> jugadas = jugador.getJugadas();
         boolean salida = true;
-        for (CantXForma cf:this.formaciones) {
+        for (CantXFormacion cf:this.formaciones) {
             Formacion formaActual = cf.forma();
             int cantActual = cf.cantidad();
             int contador = 0;
@@ -45,11 +69,11 @@ public class Ronda implements IRonda {
     @Override
     public String mostrarRonda() {
         String result = "";
-        CantXForma ultimaFormacion = null;
+        CantXFormacion ultimaFormacion = null;
         if (!formaciones.isEmpty()) {
             ultimaFormacion = formaciones.get(formaciones.size()-1);
         }
-        for (CantXForma forma: formaciones) {
+        for (CantXFormacion forma: formaciones) {
             result += forma.getString();
             if (forma != ultimaFormacion) {
                 result += ", ";

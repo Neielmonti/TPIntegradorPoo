@@ -25,19 +25,46 @@ public abstract class JugadaAscendiente extends Jugada{
         List<Carta> cartas = getCartas();
 
         if (alFinal) {
-            if ((this.esSiguiente(cartas.get(cartas.size()-1),carta)) ||
-                    ((carta.getTipo() == TipoCarta.JOKER) && (cartas.get(cartas.size()-1).getTipo() != TipoCarta.JOKER))) {
+            Carta cartaFinal = cartas.get(cartas.size()-1);
+            if (cartaFinal.getTipo() == TipoCarta.JOKER) {
+                cartaFinal = generarCartaAux(cartas.get(cartas.size()-2), true);
+                if (cartaFinal == null) return false;
+            }
+            if ((this.esSiguiente(cartaFinal,carta)) ||
+                    ((carta.getTipo() == TipoCarta.JOKER) && ((cartas.get(cartas.size()-1).getTipo() != TipoCarta.JOKER)))
+                            && (cartas.get(cartas.size()-1).getTipo() != TipoCarta.getMayorTipo())) {
                 agregarCarta(carta);
                 return true;
             }
         }
         else {
-            if ((this.esAnterior(cartas.get(0),carta)) ||
-                    ((carta.getTipo() == TipoCarta.JOKER) && (cartas.get(0).getTipo() != TipoCarta.JOKER))) {
+            Carta cartaPrincipio = cartas.get(0);
+            if (cartaPrincipio.getTipo() == TipoCarta.JOKER) {
+                cartaPrincipio = generarCartaAux(cartas.get(1), false);
+                if (cartaPrincipio == null) return false;
+            }
+            if ((this.esAnterior(cartaPrincipio,carta)) ||
+                    ((carta.getTipo() == TipoCarta.JOKER) && ((cartas.get(0).getTipo() != TipoCarta.JOKER)))
+                            && (cartas.get(0).getTipo() != TipoCarta.getMenorTipo())){
                 agregarCartaPrincipio(carta);
                 return true;
             }
         }
         return false;
+    }
+
+    protected Carta generarCartaAux(Carta carta, boolean siguiente) {
+        if (siguiente) {
+            if (carta.getTipo().getNext() != null) {
+                return new Carta(carta.getPalo(),carta.getTipo().getNext());
+            }
+            else return null;
+        }
+        else {
+            if (carta.getTipo().getPrevius() != null) {
+                return new Carta(carta.getPalo(),carta.getTipo().getPrevius());
+            }
+            else return null;
+        }
     }
 }
