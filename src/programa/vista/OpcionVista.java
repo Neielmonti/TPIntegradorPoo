@@ -7,7 +7,9 @@ public enum OpcionVista {
     BAJARSE("BAJAR"),
     ARMAR_JUEGO("ARMAR"),
     CANCELAR("CANCELAR"),
-    DESCARGAR("DESCARGAR");
+    DESCARGAR("DESCARGAR"),
+    INICIO("INICIO"),
+    FINAL("FINAL");
     private String label;
     OpcionVista(String label) {
         this.label = label;

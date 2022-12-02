@@ -3,10 +3,12 @@ package programa.modelo;
 import programa.modelo.conjuntoCarta.Carta;
 import programa.modelo.conjuntoCarta.Mano;
 import programa.modelo.conjuntoCarta.jugadas.Jugada;
+import programa.vista.IJugador;
+
 import java.util.ArrayList;
 import java.util.List;
 
-public class Jugador {
+public class Jugador implements IJugador {
     private String nombre;
     private int puntaje = 0;
     private boolean bajo = false;

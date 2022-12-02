@@ -158,7 +158,7 @@ public class VistaConsolaSwing extends JFrame{
                     setEstado(EstadoVista.BAJADO_DESCARGAR_O_TIRAR);
                 }
 
-                else if (jugadaCarta.length != 2)  {
+                else if (jugadaCarta.length != 3)  {
                     println("Por favor, ingrese los parametros necesarios");
                 }
 
@@ -171,8 +171,12 @@ public class VistaConsolaSwing extends JFrame{
                 }
 
                 else {
-                    System.out.println("Jugada: " + (jugadaCarta[0]-1) + ", Carta: " + (jugadaCarta[1]-1));
-                    this.controlador.agregarCartaJuego(jugadaCarta[0]-1,jugadaCarta[1]-1);
+                    if (aux[2].equals(OpcionVista.FINAL.getLabel())) {
+                        this.controlador.agregarCartaJuego(jugadaCarta[0] - 1, jugadaCarta[1] - 1, true);
+                    }
+                    else if (aux[2].equals(OpcionVista.INICIO.getLabel())) {
+                        this.controlador.agregarCartaJuego(jugadaCarta[0] - 1, jugadaCarta[1] - 1, false);
+                    }
                 }
             }
 
@@ -220,6 +224,12 @@ public class VistaConsolaSwing extends JFrame{
     public void listoParaJugar() {
         estado = EstadoVista.ESPERANDO_JUGADORES;
         println("Bienvenido/a! Ahora debe esperar a que se conecte el resto!");
+    }
+
+    public void rondaGanada() {
+        clearMemo();
+        IJugador ganador = this.controlador.getGanador();
+        println("EL JUGADOR " + ganador.getNombre() + " HA GANADO! >:)");
     }
 
     public boolean verificarCartasJugada(String text) {

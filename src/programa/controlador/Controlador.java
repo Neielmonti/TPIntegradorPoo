@@ -103,8 +103,13 @@ public class Controlador implements IObservador {
 
             case DESCARGA_RECHAZADA -> {
                 if (this.jugador == this.juego.getJugadorActual()) {
+                    vista.mostrarMano();
                     vista.setEstado(EstadoVista.BAJADO_DESCARGAR_O_TIRAR);
                 }
+            }
+
+            case RONDA_GANADA -> {
+                vista.rondaGanada();
             }
         }
     }
@@ -124,11 +129,15 @@ public class Controlador implements IObservador {
         else return true;
     }
 
-    public void agregarCartaJuego(int indiceJugada, int indiceCarta) {
+    public IJugador getGanador() {
+        return this.juego.getJugadorActual();
+    }
+
+    public void agregarCartaJuego(int indiceJugada, int indiceCarta, boolean alFinal) {
         Jugada jugada = this.juego.getAllJugadas().get(indiceJugada);
         Carta carta = this.jugador.getMano().tomarCarta(indiceCarta);
         if ((jugada != null) && (carta != null)) {
-            this.juego.agregarCartaAJuego(jugada,carta, jugador);
+            this.juego.agregarCartaAJuego(jugada,carta,jugador,alFinal);
         }
         else this.vista.setEstado(EstadoVista.BAJADO_DESCARGAR_O_TIRAR);
     }

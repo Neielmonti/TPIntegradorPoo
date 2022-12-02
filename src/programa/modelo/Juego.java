@@ -39,6 +39,7 @@ public class Juego implements IObservable {
     public void pasarSiguienteRonda() {
         Ronda aux = this.rondas.remove();
         this.rondas.add(aux);
+        notificar(Evento.RONDA_GANADA);
     }
 
 
@@ -51,10 +52,13 @@ public class Juego implements IObservable {
     }
     **/
 
-    public void agregarCartaAJuego(Jugada jugada, Carta carta, Jugador jugador){
-        if (jugada.agregarCarta(carta,true)) {
+    public void agregarCartaAJuego(Jugada jugada, Carta carta, Jugador jugador, boolean alFinal){
+        if (jugada.agregarCarta(carta,alFinal)) {
             jugador.getMano().quitarCarta(carta);
-            notificar(Evento.MANO_ACTUALIZADA);
+            if (jugador.getMano().isEmpty()) {
+                pasarSiguienteRonda();
+            }
+            else notificar(Evento.MANO_ACTUALIZADA);
             //notificar(Evento.JUGADA_MODIFICADA);
         }
         else notificar(Evento.DESCARGA_RECHAZADA);
@@ -117,7 +121,10 @@ public class Juego implements IObservable {
             }
             if (jugada != null) {
                 jugador.getMano().quitarCartas(jugada);
-                notificar(Evento.JUGADA_ARMADA);
+                if (jugador.getMano().isEmpty()) {
+                    pasarSiguienteRonda();
+                }
+                else notificar(Evento.JUGADA_ARMADA);
             }
             else {notificar(Evento.JUGADA_RECHAZADA);}
         }
@@ -150,34 +157,6 @@ public class Juego implements IObservable {
             this.verificadoresJugada.add(new VerificarTrio());
         }
     }
-
-    /**
-    private void generarRondas(){
-        if (this.rondas.isEmpty()) {
-            List<Formacion> f;
-            f = new ArrayList<>(Arrays.asList(Formacion.TRIO, Formacion.TRIO));
-            this.rondas.add(new Ronda(f));
-            f = new ArrayList<>(Arrays.asList(Formacion.ESCALA, Formacion.TRIO));
-            this.rondas.add(new Ronda(f));
-            f = new ArrayList<>(Arrays.asList(Formacion.ESCALA, Formacion.ESCALA));
-            this.rondas.add(new Ronda(f));
-            f = new ArrayList<>(Arrays.asList(Formacion.TRIO, Formacion.TRIO, Formacion.TRIO));
-            this.rondas.add(new Ronda(f));
-            f = new ArrayList<>(Arrays.asList(Formacion.ESCALA, Formacion.TRIO, Formacion.TRIO));
-            this.rondas.add(new Ronda(f));
-            f = new ArrayList<>(Arrays.asList(Formacion.ESCALA, Formacion.ESCALA, Formacion.TRIO));
-            this.rondas.add(new Ronda(f));
-            f = new ArrayList<>(Arrays.asList(Formacion.ESCALA, Formacion.ESCALA, Formacion.ESCALA));
-            this.rondas.add(new Ronda(f));
-            f = new ArrayList<>(Arrays.asList(Formacion.TRIO, Formacion.TRIO, Formacion.TRIO, Formacion.TRIO));
-            this.rondas.add(new Ronda(f));
-            f = new ArrayList<>(Arrays.asList(Formacion.ESCALERA_SUCIA));
-            this.rondas.add(new Ronda(f));
-            f = new ArrayList<>(Arrays.asList(Formacion.ESCALERA_REAL));
-            this.rondas.add(new Ronda(f));
-        }
-    }
-    **/
     private void generarRondas(){
         if (this.rondas.isEmpty()) {
 
@@ -277,7 +256,7 @@ public class Juego implements IObservable {
                 jugador.getMano().quitarCarta(carta);
                 this.pozo.agregarCarta(carta);
                 if (jugador.getMano().isEmpty()) {
-                    notificar(Evento.RONDA_GANADA);
+                    pasarSiguienteRonda();
                 }
                 else pasarSiguienteJugador();
             }
