@@ -36,21 +36,20 @@ public class VistaConsolaSwing extends JFrame{
 
     public void switchButton() {
         switch (estado) {
+            case ESPERANDO_USUARIO -> {
+                this.controlador.estaPreparado();
+            }
 
             case ESPERANDO_JUGADORES -> {
                 clearMemo();
-                println("Esperando Jugadores! Deben haber 4 para jugar!");
+                println(estado.getLabel());
             }
 
             case INICIALIZANDO -> {
                 String nombre = textbox.getText();
-                if (!controlador.nombreValido(nombre.trim())) {
-                    printError(ErrorVista.NOMBRE_TOMADO);
-                }
-                else {
-                    if (controlador.faltanJugadoes()) {controlador.agregarJugador(nombre.trim());}
-                    else {printError(ErrorVista.PARTIDA_LLENA);}
-                }
+                if (!controlador.faltanJugadoes()) {printError(ErrorVista.PARTIDA_LLENA);}
+                if (!controlador.nombreValido(nombre.trim())) {printError(ErrorVista.NOMBRE_TOMADO);}
+                else {controlador.agregarJugador(nombre.trim());}
             }
 
             case TOMAR_CARTA -> {
@@ -93,7 +92,7 @@ public class VistaConsolaSwing extends JFrame{
             case BAJAR -> {
                 String in = textbox.getText().trim();
                 if (in.equals(OpcionVista.ARMAR_JUEGO.getLabel())) {
-                    setEstado(EstadoVista.ARMANDO_JUEGO);
+                    setEstado(EstadoVista.ARMANDO_JUGADA);
                 }
                 else if (in.equals(OpcionVista.BAJARSE.getLabel())) {
                     this.controlador.verificarJuegos();
@@ -105,7 +104,7 @@ public class VistaConsolaSwing extends JFrame{
                 else printError(ErrorVista.ACCION_NO_RECONOCIDA);
             }
 
-            case ARMANDO_JUEGO -> {
+            case ARMANDO_JUGADA -> {
                 String in = textbox.getText().trim();
                 if (!verificarCartasJugada(in)) {
                     println("Por favor, solo ingrese numeros y '-' ");
@@ -221,15 +220,13 @@ public class VistaConsolaSwing extends JFrame{
         this.estado = estado;
         println(estado.getLabel());
     }
-    public void listoParaJugar() {
-        estado = EstadoVista.ESPERANDO_JUGADORES;
-        println("Bienvenido/a! Ahora debe esperar a que se conecte el resto!");
-    }
 
     public void rondaGanada() {
         clearMemo();
         IJugador ganador = this.controlador.getGanador();
+        IJugador jugador = this.controlador.getJugador();
         println("EL JUGADOR " + ganador.getNombre() + " HA GANADO! >:)");
+        println("Tu puntaje es de: " + jugador.getPuntaje());
     }
 
     public boolean verificarCartasJugada(String text) {

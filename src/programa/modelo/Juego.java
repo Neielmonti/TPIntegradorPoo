@@ -17,7 +17,7 @@ import java.util.*;
 
 public class Juego implements IObservable {
     private Queue<Jugador> jugadores = new LinkedList<>();
-    private int maxJugadores = 2;
+    private int maxJugadores = 4;
     private int minJugadores = 2;
     private Queue<Ronda> rondas = new LinkedList();
     private Mazo mazo = new Mazo();
@@ -39,6 +39,8 @@ public class Juego implements IObservable {
     public void pasarSiguienteRonda() {
         Ronda aux = this.rondas.remove();
         this.rondas.add(aux);
+        actualizarPuntajes();
+        resetearJugadores();
         notificar(Evento.RONDA_GANADA);
     }
 
@@ -52,7 +54,7 @@ public class Juego implements IObservable {
     }
     **/
 
-    public void agregarCartaAJuego(Jugada jugada, Carta carta, Jugador jugador, boolean alFinal){
+    public void agregarCartaAJugada(Jugada jugada, Carta carta, Jugador jugador, boolean alFinal){
         if (jugada.agregarCarta(carta,alFinal)) {
             jugador.getMano().quitarCarta(carta);
             if (jugador.getMano().isEmpty()) {
@@ -130,23 +132,9 @@ public class Juego implements IObservable {
         }
     }
 
-    public boolean agregarJugador(Jugador j) {
-        if ((jugadores.contains(j)) || (jugadores.size() == this.maxJugadores)) {
-            return false;
-        }
-        else {
-            for (Jugador jug: jugadores) {
-                if (Objects.equals(jug.getNombre(), j.getNombre())) {
-                    return false;
-                }
-            }
+    public void agregarJugador(Jugador j) {
+        if ((!jugadores.contains(j)) && (jugadores.size() < this.maxJugadores)) {
             jugadores.add(j);
-            if (jugadores.size() == maxJugadores) {
-                repartirCartas();
-                //notificar(Evento.LISTO_PARA_JUGAR);
-                notificar(Evento.CAMBIO_DE_JUGADOR);
-            }
-            return true;
         }
     }
     private void generarVerificadores() {
@@ -159,15 +147,11 @@ public class Juego implements IObservable {
     }
     private void generarRondas(){
         if (this.rondas.isEmpty()) {
+            List<CantXFormacion> listaAux;
 
-            List<CantXFormacion> listaAux = new ArrayList<>();
-            /**
-            this.rondas.add(new Ronda(new CantXFormacion(Formacion.TRIO,2)));
+            this.rondas.add(new Ronda(Formacion.TRIO,2));
 
-             **/
-
-            this.rondas.add(new Ronda(Formacion.ESCALA,1)); ////////
-
+            listaAux = new ArrayList<>();
             listaAux.add(new CantXFormacion(Formacion.TRIO,1));
             listaAux.add(new CantXFormacion(Formacion.ESCALA,1));
             this.rondas.add(new Ronda(listaAux));
@@ -180,7 +164,6 @@ public class Juego implements IObservable {
             listaAux.add(new CantXFormacion(Formacion.TRIO,2));
             listaAux.add(new CantXFormacion(Formacion.ESCALA,1));
             this.rondas.add(new Ronda(listaAux));
-
 
             listaAux = new ArrayList<>();
             listaAux.add(new CantXFormacion(Formacion.TRIO,1));
@@ -207,8 +190,6 @@ public class Juego implements IObservable {
         pozo.pasarCartas(this.mazo);
     }
 
-    /**
-
     public void repartirCartas(){
         this.resetMazo();
         for(Jugador jugador:this.jugadores) {
@@ -218,8 +199,9 @@ public class Juego implements IObservable {
         this.pozo.agregarCarta(this.mazo.tomarCarta());
     }
 
-    **/
 
+    /**
+     // PRUEBITA
     public void repartirCartas(){
         this.resetMazo();
         List<Carta> cartas = new ArrayList<>();
@@ -230,11 +212,22 @@ public class Juego implements IObservable {
         cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.K));
         cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.Q));
         jugadores.peek().setMano(new Mano(cartas));
+
         Jugador aux = jugadores.remove();
         jugadores.add(aux);
+
+        cartas = new ArrayList<>();
+        cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.NUEVE));
+        cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.DIEZ));
+        cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.J));
+        cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.JOKER));
+        cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.K));
+        cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.Q));
         jugadores.peek().setMano(new Mano(cartas));
+
         this.pozo.agregarCarta(this.mazo.tomarCarta());
     }
+    **/
 
     public Pozo getPozo() {
         return this.pozo;
@@ -261,8 +254,6 @@ public class Juego implements IObservable {
                 else pasarSiguienteJugador();
             }
         }
-        //notificar(Evento.MANO_ACTUALIZADA);
-        //notificar(Evento.POZO_ACTUALIZADO);
     }
 
     public void tomarDelMazo(Jugador jugador) {
@@ -277,24 +268,47 @@ public class Juego implements IObservable {
     public Jugador getJugadorActual() {
         return this.jugadores.peek();
     }
-
     public Mano getManoJugador(Jugador jugador){
         if (jugadores.contains(jugador)) {
             return jugador.getMano();
         }
         else return null;
     }
-    public Carta cartaRandom() {
-        return this.mazo.tomarCarta();
+    public void actualizarPuntajes() {
+        for(Jugador jugador: this.jugadores) {
+            jugador.actualizarPuntaje();
+        }
     }
-
+    public void JugadorPreparado(Jugador jugador) {
+        if (jugadores.contains(jugador)) {
+            jugador.estaPreparado();
+            verificarJugadoresEstanPreparados();
+        }
+    }
+    private void verificarJugadoresEstanPreparados() {
+        boolean todosListos = !jugadores.isEmpty();
+        for (Jugador jugador: jugadores) {
+            if (!jugador.getPreparado()) {
+                todosListos = false;
+                break;
+            }
+        }
+        if ((todosListos) && (jugadores.size() >= this.minJugadores)){
+            repartirCartas();
+            notificar(Evento.CAMBIO_DE_JUGADOR);
+        }
+    }
+    private void resetearJugadores() {
+        for (Jugador jugador: jugadores) {
+            jugador.resetearJugador();
+        }
+    }
     @Override
     public void notificar(Evento evento) {
         for (IObservador observador : this.observadores) {
             observador.actualizar(evento, this);
         }
     }
-
     @Override
     public void agregadorObservador(IObservador observador) {
         this.observadores.add(observador);

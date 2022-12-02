@@ -2,7 +2,6 @@ package programa.controlador;
 import programa.modelo.Juego;
 import programa.modelo.Jugador;
 import programa.modelo.conjuntoCarta.Carta;
-import programa.modelo.conjuntoCarta.Mano;
 import programa.modelo.conjuntoCarta.jugadas.Jugada;
 import programa.utils.observer.IObservable;
 import programa.utils.observer.IObservador;
@@ -69,8 +68,9 @@ public class Controlador implements IObservador {
 
             case JUGADA_ARMADA -> {
                 if (this.jugador == juego.getJugadorActual()) {
-                    this.vista.mostrarJugadasJugador();
+                    this.vista.clearMemo();
                     this.vista.mostrarMano();
+                    this.vista.mostrarJugadasJugador();
                     this.vista.setEstado(EstadoVista.BAJAR);
                 }
             }
@@ -80,11 +80,13 @@ public class Controlador implements IObservador {
             }
 
             case JUGADOR_BAJO -> {
-                this.vista.mostrarAllJugadas();
                 if (this.jugador == this.juego.getJugadorActual()) {
+                    this.vista.clearMemo();
                     this.vista.mostrarMano();
+                    this.vista.mostrarAllJugadas();
                     this.vista.setEstado(EstadoVista.BAJADO_DESCARGAR_O_TIRAR);
                 }
+                else this.vista.mostrarAllJugadas();
             }
 
             case BAJADA_RECHAZADA -> {
@@ -109,7 +111,8 @@ public class Controlador implements IObservador {
             }
 
             case RONDA_GANADA -> {
-                vista.rondaGanada();
+                this.vista.rondaGanada();
+                this.vista.setEstado(EstadoVista.ESPERANDO_USUARIO);
             }
         }
     }
@@ -132,12 +135,12 @@ public class Controlador implements IObservador {
     public IJugador getGanador() {
         return this.juego.getJugadorActual();
     }
-
+    public IJugador getJugador() {return this.jugador;}
     public void agregarCartaJuego(int indiceJugada, int indiceCarta, boolean alFinal) {
         Jugada jugada = this.juego.getAllJugadas().get(indiceJugada);
         Carta carta = this.jugador.getMano().tomarCarta(indiceCarta);
         if ((jugada != null) && (carta != null)) {
-            this.juego.agregarCartaAJuego(jugada,carta,jugador,alFinal);
+            this.juego.agregarCartaAJugada(jugada,carta,jugador,alFinal);
         }
         else this.vista.setEstado(EstadoVista.BAJADO_DESCARGAR_O_TIRAR);
     }
@@ -151,6 +154,10 @@ public class Controlador implements IObservador {
         return jugadasOut;
     }
 
+    public void estaPreparado() {
+        this.vista.setEstado(EstadoVista.ESPERANDO_JUGADORES);
+        this.juego.JugadorPreparado(this.jugador);
+    }
     public boolean faltanJugadoes() {
         return this.juego.faltanJugadores();
     }
@@ -175,8 +182,9 @@ public class Controlador implements IObservador {
     public void agregarJugador(String nombre) {
         Jugador j = new Jugador(nombre);
         this.jugador = j;
-        vista.listoParaJugar();
-        juego.agregarJugador(j);
+        //vista.listoParaJugar();
+        this.vista.setEstado(EstadoVista.ESPERANDO_USUARIO);
+        this.juego.agregarJugador(j);
     }
 
     public void armarJugada(int[] indices) {

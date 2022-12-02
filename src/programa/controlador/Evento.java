@@ -2,7 +2,6 @@ package programa.controlador;
 
 public enum Evento {
     JUGADA_ARMADA,
-    CARTA_TOMADA,
     CAMBIO_DE_JUGADOR,
     MANO_ACTUALIZADA,
     LISTO_PARA_JUGAR,
@@ -12,5 +11,6 @@ public enum Evento {
     BAJADA_RECHAZADA,
     JUGADA_MODIFICADA,
     DESCARGA_RECHAZADA,
-    RONDA_GANADA
+    RONDA_GANADA,
+    JUGADOR_AGREGADO,
 }

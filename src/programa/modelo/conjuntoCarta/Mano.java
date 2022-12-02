@@ -4,7 +4,7 @@ import programa.vista.IMano;
 import java.util.List;
 
 public class Mano extends ConjuntoCartas implements IMano {
-    private static int sizeMano = 6;
+    private static int sizeMano = 12;
 
     public Mano(List<Carta> cartas) {
         super(cartas);
@@ -27,12 +27,10 @@ public class Mano extends ConjuntoCartas implements IMano {
         }
         else return false;
     }
-
     @Override
     public int getCantidadCartas() {
         return getCartas().size();
     }
-
     public Carta tomarCarta(int indice) {
         List<Carta> c = this.getCartas();
         if ((indice >= 0) && (indice <= c.size() - 1)) {
@@ -41,5 +39,13 @@ public class Mano extends ConjuntoCartas implements IMano {
             return carta;
         }
         else return null;
+    }
+    public int calcularPuntosCartas() {
+        List<Carta> cartas = this.getCartas();
+        int resultado = 0;
+        for (Carta carta: cartas) {
+            resultado += carta.getTipo().getValor();
+        }
+        return resultado;
     }
 }
