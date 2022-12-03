@@ -26,11 +26,15 @@ public class Controlador implements IObservador {
     public void actualizar(Evento evento, IObservable observado) {
         switch (evento) {
             case CAMBIO_DE_JUGADOR -> {
+                if (!(observado instanceof Jugador)) {
+                    break;
+                }
+                Jugador j = (Jugador) (observado);
                 vista.clearMemo();
                 vista.mostrarRonda();
-                vista.mostrarMano();
-                if (this.jugador == this.juego.getJugadorActual()) {
-                    if (this.jugador.yaBajo()) {
+                vista.mostrarMano(j.getMano());
+                if (j == this.juego.getJugadorActual()) {
+                    if (j.yaBajo()) {
                         this.vista.mostrarAllJugadas();
                     }
                     vista.mostrarPozo();
@@ -43,11 +47,15 @@ public class Controlador implements IObservador {
             }
 
             case MANO_ACTUALIZADA -> {
-                if (this.jugador == this.juego.getJugadorActual()) {
+                if (!(observado instanceof Jugador)) {
+                    break;
+                }
+                Jugador j = (Jugador) (observado);
+                if (j == this.juego.getJugadorActual()) {
                     this.vista.clearMemo();
                     this.vista.mostrarRonda();
-                    this.vista.mostrarMano();
-                    if (this.jugador.yaBajo()) {
+                    this.vista.mostrarMano(j.getMano());
+                    if (j.yaBajo()) {
                         this.vista.mostrarAllJugadas();
                         this.vista.setEstado(EstadoVista.BAJADO_DESCARGAR_O_TIRAR);
                     }
@@ -67,10 +75,14 @@ public class Controlador implements IObservador {
             }
 
             case JUGADA_ARMADA -> {
-                if (this.jugador == juego.getJugadorActual()) {
+                if (!(observado instanceof Jugador)) {
+                    break;
+                }
+                Jugador j = (Jugador) (observado);
+                if (j == juego.getJugadorActual()) {
                     this.vista.clearMemo();
-                    this.vista.mostrarMano();
-                    this.vista.mostrarJugadasJugador();
+                    this.vista.mostrarMano(j.getMano());
+                    this.vista.mostrarJugadasJugador(j);
                     this.vista.setEstado(EstadoVista.BAJAR);
                 }
             }
@@ -80,9 +92,13 @@ public class Controlador implements IObservador {
             }
 
             case JUGADOR_BAJO -> {
+                if (!(observado instanceof Jugador)) {
+                    break;
+                }
+                Jugador j = (Jugador) (observado);
                 if (this.jugador == this.juego.getJugadorActual()) {
                     this.vista.clearMemo();
-                    this.vista.mostrarMano();
+                    this.vista.mostrarMano(j.getMano());
                     this.vista.mostrarAllJugadas();
                     this.vista.setEstado(EstadoVista.BAJADO_DESCARGAR_O_TIRAR);
                 }
@@ -90,10 +106,14 @@ public class Controlador implements IObservador {
             }
 
             case BAJADA_RECHAZADA -> {
-                if (this.jugador == this.juego.getJugadorActual()) {
+                if (!(observado instanceof Jugador)) {
+                    break;
+                }
+                Jugador j = (Jugador) (observado);
+                if (j == this.juego.getJugadorActual()) {
                     this.vista.bajadaRechazada();
                     this.vista.setEstado(EstadoVista.TIRAR_O_BAJAR);
-                    this.juego.deshacerJugadas(this.jugador);
+                    this.juego.deshacerJugadas(j);
                 }
             }
 
@@ -104,8 +124,12 @@ public class Controlador implements IObservador {
             }
 
             case DESCARGA_RECHAZADA -> {
-                if (this.jugador == this.juego.getJugadorActual()) {
-                    vista.mostrarMano();
+                if (!(observado instanceof Jugador)) {
+                    break;
+                }
+                Jugador j = (Jugador) (observado);
+                if (j == this.juego.getJugadorActual()) {
+                    vista.mostrarMano(j.getMano());
                     vista.setEstado(EstadoVista.BAJADO_DESCARGAR_O_TIRAR);
                 }
             }
@@ -163,7 +187,7 @@ public class Controlador implements IObservador {
     }
 
     public void tomarCartaPozo() {
-        this.juego.tomarDelPozo(this.jugador);
+        this.juego.tomarDelPozo();//this.jugador
     }
 
     public void tirarCartaAlPozo(int indice) {
@@ -180,7 +204,7 @@ public class Controlador implements IObservador {
     }
 
     public void agregarJugador(String nombre) {
-        Jugador j = new Jugador(nombre);
+        Jugador j = new Jugador(nombre,this);
         this.jugador = j;
         //vista.listoParaJugar();
         this.vista.setEstado(EstadoVista.ESPERANDO_USUARIO);
