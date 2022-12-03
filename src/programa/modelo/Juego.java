@@ -33,7 +33,7 @@ public class Juego implements IObservable {
     public void pasarSiguienteJugador() {
         Jugador aux = this.jugadores.remove();
         this.jugadores.add(aux);
-        notificar(Evento.CAMBIO_DE_JUGADOR);
+        allJugadoresNotificar(Evento.CAMBIO_DE_JUGADOR);
     }
 
     public void pasarSiguienteRonda() {
@@ -105,6 +105,12 @@ public class Juego implements IObservable {
         }
     }
 
+    public void allJugadoresNotificar(Evento evento) {
+        for (Jugador jugador: jugadores) {
+            jugador.notificar(evento);
+        }
+    }
+
     public List<Jugada> getAllJugadas() {
         List<Jugada> jugadas = new ArrayList<>();
         for (Jugador jugador: jugadores) {
@@ -149,6 +155,8 @@ public class Juego implements IObservable {
         if (this.rondas.isEmpty()) {
             List<CantXFormacion> listaAux;
 
+            this.rondas.add(new Ronda(Formacion.ESCALA,1));
+
             this.rondas.add(new Ronda(Formacion.TRIO,2));
 
             listaAux = new ArrayList<>();
@@ -190,6 +198,7 @@ public class Juego implements IObservable {
         pozo.pasarCartas(this.mazo);
     }
 
+    /**
     public void repartirCartas(){
         this.resetMazo();
         for(Jugador jugador:this.jugadores) {
@@ -198,9 +207,8 @@ public class Juego implements IObservable {
         this.pozo.pasarCartas(this.mazo);
         this.pozo.agregarCarta(this.mazo.tomarCarta());
     }
+     **/
 
-
-    /**
      // PRUEBITA
     public void repartirCartas(){
         this.resetMazo();
@@ -227,37 +235,37 @@ public class Juego implements IObservable {
 
         this.pozo.agregarCarta(this.mazo.tomarCarta());
     }
-    **/
 
     public Pozo getPozo() {
         return this.pozo;
     }
 
-    public void tomarDelPozo(Jugador jugador) {
-        jugador.getMano().agregarCarta(this.pozo.tomarCarta());
+    public void tomarDelPozo() { //Jugador jugador (en lugar de jugadores.peek)
+        this.jugadores.peek().getMano().agregarCarta(this.pozo.tomarCarta());
         if (this.pozo.isEmpty()) {
             this.pozo.agregarCarta(this.mazo.tomarCarta());
         }
-        notificar(Evento.MANO_ACTUALIZADA);
+        jugadores.peek().notificar(Evento.MANO_ACTUALIZADA);
         notificar(Evento.POZO_ACTUALIZADO);
     }
 
     public void tirarCartaPozo(Jugador jugador, Carta carta) {
-        if ((jugadores.peek() == jugador)) {
-            assert jugador != null;
-            if (jugador.getMano() != null) {
-                jugador.getMano().quitarCarta(carta);
+ //       if ((jugadores.peek() == jugador)) {
+//            assert jugador != null;
+            if (jugadores.peek().getMano() != null) {
+                jugadores.peek().getMano().quitarCarta(carta);
                 this.pozo.agregarCarta(carta);
-                if (jugador.getMano().isEmpty()) {
+                if (jugadores.peek().getMano().isEmpty()) {
                     pasarSiguienteRonda();
                 }
                 else pasarSiguienteJugador();
             }
-        }
+//        }
     }
 
     public void tomarDelMazo(Jugador jugador) {
-        jugador.getMano().agregarCarta(this.mazo.tomarCarta());
+//        jugador.getMano().agregarCarta(this.mazo.tomarCarta());
+        jugadores.peek().getMano().agregarCarta(this.mazo.tomarCarta());
         if (this.mazo.isEmpty()) {
             pozo.pasarCartas(this.mazo);
             this.pozo.agregarCarta(this.mazo.tomarCarta());
@@ -295,7 +303,8 @@ public class Juego implements IObservable {
         }
         if ((todosListos) && (jugadores.size() >= this.minJugadores)){
             repartirCartas();
-            notificar(Evento.CAMBIO_DE_JUGADOR);
+            allJugadoresNotificar(Evento.CAMBIO_DE_JUGADOR);
+            //notificar(Evento.CAMBIO_DE_JUGADOR);
         }
     }
     private void resetearJugadores() {

@@ -2,11 +2,13 @@ package programa.vista;
 import java.lang.Character;
 
 import programa.controlador.Controlador;
+import programa.modelo.conjuntoCarta.Mano;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 public class VistaConsolaSwing extends JFrame{
@@ -199,8 +201,9 @@ public class VistaConsolaSwing extends JFrame{
     public void bajadaRechazada() {
         printError(ErrorVista.JUGADAS_INVALIDAS);
     }
-    public void mostrarJugadasJugador() {
-        List<IJugada> jugadas = this.controlador.getJugadasJugador();
+    public void mostrarJugadasJugador(IJugador jugador) {
+        List<IJugada> jugadas = new ArrayList<>();
+        jugadas.addAll(jugador.getJugadas());
         for (IJugada jugada: jugadas) {
             println("[Jugada " + (jugadas.indexOf(jugada) + 1) + "] -------- \n" + jugada.mostrarCartas() + "\n");
         }
@@ -248,8 +251,8 @@ public class VistaConsolaSwing extends JFrame{
         estado = EstadoVista.JUGANDO;
     }
 
-    public void mostrarMano() {
-        IMano mano = this.controlador.getMano();
+    public void mostrarMano(IMano mano) {
+        //IMano mano = this.controlador.getMano();
         println("---------MANO---------" + "\n" + mano.mostrarCartas() + "\n");
     }
 
