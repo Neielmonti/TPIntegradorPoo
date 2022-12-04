@@ -54,16 +54,19 @@ public class Juego implements IObservable {
     }
     **/
 
-    public void agregarCartaAJugada(Jugada jugada, Carta carta, Jugador jugador, boolean alFinal){
+    public void agregarCartaAJugada(Jugada jugada, Carta carta, boolean alFinal){
         if (jugada.agregarCarta(carta,alFinal)) {
-            jugador.getMano().quitarCarta(carta);
-            if (jugador.getMano().isEmpty()) {
+            jugadores.peek().getMano().quitarCarta(carta);
+            if (jugadores.peek().getMano().isEmpty()) {
                 pasarSiguienteRonda();
             }
-            else notificar(Evento.MANO_ACTUALIZADA);
+            else {
+                jugadores.peek().notificar(Evento.MANO_ACTUALIZADA);
+                allJugadoresNotificar(Evento.JUGADA_MODIFICADA);
+            }
             //notificar(Evento.JUGADA_MODIFICADA);
         }
-        else notificar(Evento.DESCARGA_RECHAZADA);
+        else jugadores.peek().notificar(Evento.DESCARGA_RECHAZADA);
     }
 
     public Ronda getRondaActual() {
@@ -95,13 +98,13 @@ public class Juego implements IObservable {
         }
     }
 
-    public void verificarJugadas(Jugador jugador) {
-        if ((jugador == jugadores.peek()) && (!jugador.yaBajo()) && (this.rondas.peek().verificarJugadasxRonda(jugador))) {
-            jugador.bajar();
-            notificar(Evento.JUGADOR_BAJO);
+    public void verificarJugadas() {
+        if ((!jugadores.peek().yaBajo()) && (this.rondas.peek().verificarJugadasxRonda(jugadores.peek()))) {
+            jugadores.peek().bajar();
+            allJugadoresNotificar(Evento.JUGADOR_BAJO);
         }
         else {
-            notificar(Evento.BAJADA_RECHAZADA);
+            jugadores.peek().notificar(Evento.BAJADA_RECHAZADA);
         }
     }
 
@@ -132,9 +135,9 @@ public class Juego implements IObservable {
                 if (jugador.getMano().isEmpty()) {
                     pasarSiguienteRonda();
                 }
-                else notificar(Evento.JUGADA_ARMADA);
+                else jugadores.peek().notificar(Evento.JUGADA_ARMADA);
             }
-            else {notificar(Evento.JUGADA_RECHAZADA);}
+            else {jugadores.peek().notificar(Evento.JUGADA_RECHAZADA);}
         }
     }
 
@@ -245,8 +248,8 @@ public class Juego implements IObservable {
         if (this.pozo.isEmpty()) {
             this.pozo.agregarCarta(this.mazo.tomarCarta());
         }
-        jugadores.peek().notificar(Evento.MANO_ACTUALIZADA);
         notificar(Evento.POZO_ACTUALIZADO);
+        jugadores.peek().notificar(Evento.MANO_ACTUALIZADA);
     }
 
     public void tirarCartaPozo(Jugador jugador, Carta carta) {
@@ -263,24 +266,21 @@ public class Juego implements IObservable {
 //        }
     }
 
-    public void tomarDelMazo(Jugador jugador) {
+    public void tomarDelMazo() {
 //        jugador.getMano().agregarCarta(this.mazo.tomarCarta());
         jugadores.peek().getMano().agregarCarta(this.mazo.tomarCarta());
         if (this.mazo.isEmpty()) {
             pozo.pasarCartas(this.mazo);
             this.pozo.agregarCarta(this.mazo.tomarCarta());
         }
-        notificar(Evento.MANO_ACTUALIZADA);
+        jugadores.peek().notificar(Evento.MANO_ACTUALIZADA);
     }
 
     public Jugador getJugadorActual() {
         return this.jugadores.peek();
     }
-    public Mano getManoJugador(Jugador jugador){
-        if (jugadores.contains(jugador)) {
-            return jugador.getMano();
-        }
-        else return null;
+    public Mano getManoJugador(){
+        return jugadores.peek().getMano();
     }
     public void actualizarPuntajes() {
         for(Jugador jugador: this.jugadores) {

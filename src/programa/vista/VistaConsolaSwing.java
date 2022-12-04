@@ -2,7 +2,6 @@ package programa.vista;
 import java.lang.Character;
 
 import programa.controlador.Controlador;
-import programa.modelo.conjuntoCarta.Mano;
 
 import javax.swing.*;
 import java.awt.*;
@@ -16,13 +15,12 @@ public class VistaConsolaSwing extends JFrame{
     private JTextField textbox;
     private JButton buttEnter;
     private JPanel panelPrincipal;
+    private IMano manoActual;
     private EstadoVista estado = EstadoVista.INICIALIZANDO;
     private Controlador controlador;
-
     public void setControlador(Controlador controlador) {
         this.controlador = controlador;
     }
-
     public VistaConsolaSwing() {
         super("Carioca App");
         setContentPane(this.panelPrincipal);
@@ -35,7 +33,6 @@ public class VistaConsolaSwing extends JFrame{
             }
         });
     }
-
     public void switchButton() {
         switch (estado) {
             case ESPERANDO_USUARIO -> {
@@ -97,7 +94,7 @@ public class VistaConsolaSwing extends JFrame{
                     setEstado(EstadoVista.ARMANDO_JUGADA);
                 }
                 else if (in.equals(OpcionVista.BAJARSE.getLabel())) {
-                    this.controlador.verificarJuegos();
+                    this.controlador.verificarJugadas();
                 }
                 else if (in.equals(OpcionVista.CANCELAR.getLabel())) {
                     setEstado(EstadoVista.TIRAR_O_BAJAR);
@@ -118,7 +115,7 @@ public class VistaConsolaSwing extends JFrame{
                     String[] aux = in.split("-");
                     int[] indices = new int[aux.length];
                     boolean result = true;
-                    int cantCartas = this.controlador.getMano().getCantidadCartas();
+                    int cantCartas = manoActual.getCantidadCartas();
                     for (int i = 0; i < aux.length; i++) {
                         int a = Integer.parseInt(aux[i]);
                         if ((a > cantCartas) || (a < 1)) {
@@ -153,7 +150,6 @@ public class VistaConsolaSwing extends JFrame{
                 jugadaCarta[0] = Integer.parseInt(aux[0]);
                 jugadaCarta[1] = Integer.parseInt(aux[1]);
                 List<IJugada> jugadas = this.controlador.getAllJugadas();
-                IMano mano = this.controlador.getMano();
 
                 if (in.equals(OpcionVista.CANCELAR.getLabel())) {
                     setEstado(EstadoVista.BAJADO_DESCARGAR_O_TIRAR);
@@ -163,8 +159,8 @@ public class VistaConsolaSwing extends JFrame{
                     println("Por favor, ingrese los parametros necesarios");
                 }
 
-                else if ((jugadaCarta[1] > mano.getCantidadCartas()) || (jugadaCarta[1] < 1)) {
-                    println("Carta fuera de rango, la mano tiene solamente: " + mano.getCantidadCartas());
+                else if ((jugadaCarta[1] > manoActual.getCantidadCartas()) || (jugadaCarta[1] < 1)) {
+                    println("Carta fuera de rango, la mano tiene solamente: " + manoActual.getCantidadCartas());
                 }
 
                 else if ((jugadaCarta[0] < 1) || (jugadaCarta[0] > jugadas.size())) {
@@ -184,7 +180,6 @@ public class VistaConsolaSwing extends JFrame{
             case ESPERANDO_TURNO -> clearTextbox();
         }
     }
-
     public void inicioGrafico() {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -197,6 +192,9 @@ public class VistaConsolaSwing extends JFrame{
             }
         });
         println("Ingrese su nombre de jugador");
+    }
+    public void setManoActual(IMano mano) {
+        this.manoActual = mano;
     }
     public void bajadaRechazada() {
         printError(ErrorVista.JUGADAS_INVALIDAS);
@@ -251,9 +249,9 @@ public class VistaConsolaSwing extends JFrame{
         estado = EstadoVista.JUGANDO;
     }
 
-    public void mostrarMano(IMano mano) {
+    public void mostrarMano() {
         //IMano mano = this.controlador.getMano();
-        println("---------MANO---------" + "\n" + mano.mostrarCartas() + "\n");
+        println("---------MANO---------" + "\n" + manoActual.mostrarCartas() + "\n");
     }
 
     public void mostrarPozo() {
