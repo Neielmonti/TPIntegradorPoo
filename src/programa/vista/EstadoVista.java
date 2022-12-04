@@ -1,5 +1,4 @@
 package programa.vista;
-
 public enum EstadoVista {
     ESPERANDO_USUARIO("Cuando este listo, presione el boton"),
     ESPERANDO_JUGADORES("Esperando a que todos los jugadores esten preparados!"),
@@ -25,7 +24,6 @@ public enum EstadoVista {
     EstadoVista(String label) {
         this.label = label;
     }
-
     public String getLabel() {
         return label;
     }

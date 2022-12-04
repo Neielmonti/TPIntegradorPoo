@@ -6,16 +6,12 @@ import programa.modelo.conjuntoCarta.jugadas.Jugada;
 import programa.utils.observer.IObservable;
 import programa.utils.observer.IObservador;
 import programa.vista.*;
-
 import java.util.ArrayList;
 import java.util.List;
-
-//import integrador.vista.IVista;
 public class Controlador implements IObservador {
     private Juego juego;
-    private Jugador jugador;
+    private String nombre;
     private VistaConsolaSwing vista;
-
     public Controlador(Juego juego, VistaConsolaSwing vista) {
         this.juego = juego;
         this.juego.agregadorObservador(this);
@@ -25,6 +21,15 @@ public class Controlador implements IObservador {
     @Override
     public void actualizar(Evento evento, IObservable observado) {
         switch (evento) {
+            case JUGADOR_AGREGADO -> {
+                if (!(observado instanceof Jugador)) {
+                    break;
+                }
+                Jugador j = (Jugador) (observado);
+                this.nombre = j.getNombre();
+                this.vista.setEstado(EstadoVista.ESPERANDO_USUARIO);
+                this.juego.agregarJugador(j);
+            }
             case CAMBIO_DE_JUGADOR -> {
                 if (!(observado instanceof Jugador)) {
                     break;
@@ -46,7 +51,6 @@ public class Controlador implements IObservador {
                     this.vista.setEstado(EstadoVista.ESPERANDO_TURNO);
                 }
             }
-
             case MANO_ACTUALIZADA -> {
                 if (!(observado instanceof Jugador)) {
                     break;
@@ -64,18 +68,7 @@ public class Controlador implements IObservador {
                     else this.vista.setEstado(EstadoVista.TIRAR_O_BAJAR);
                 }
             }
-
-            case POZO_ACTUALIZADO -> {
-                this.vista.mostrarPozo();
-            }
-
-            case LISTO_PARA_JUGAR -> {
-                // POSIBLEMENTE INUTL
-                //vista.mostrarMano();
-                //vista.mostrarPozo();
-                //MOSTRAR 'ESPERANDO A TU TURNO'
-            }
-
+            case POZO_ACTUALIZADO -> this.vista.mostrarPozo();
             case JUGADA_ARMADA -> {
                 if (!(observado instanceof Jugador)) {
                     break;
@@ -90,7 +83,6 @@ public class Controlador implements IObservador {
                     this.vista.setEstado(EstadoVista.BAJAR);
                 }
             }
-
             case JUGADA_RECHAZADA -> {
                 if (!(observado instanceof Jugador)) {
                     break;
@@ -98,7 +90,6 @@ public class Controlador implements IObservador {
                 Jugador j = (Jugador) (observado);
                 if (j == this.juego.getJugadorActual()) {this.vista.jugadaRechazada();}
             }
-
             case JUGADOR_BAJO -> {
                 if (!(observado instanceof Jugador)) {
                     break;
@@ -112,7 +103,6 @@ public class Controlador implements IObservador {
                 }
                 else this.vista.mostrarAllJugadas();
             }
-
             case BAJADA_RECHAZADA -> {
                 if (!(observado instanceof Jugador)) {
                     break;
@@ -121,10 +111,9 @@ public class Controlador implements IObservador {
                 if (j == this.juego.getJugadorActual()) {
                     this.vista.bajadaRechazada();
                     this.vista.setEstado(EstadoVista.TIRAR_O_BAJAR);
-                    this.juego.deshacerJugadas(j);
+                    this.juego.deshacerJugadas();
                 }
             }
-
             case JUGADA_MODIFICADA -> {
                 if (!(observado instanceof Jugador)) {
                     break;
@@ -134,7 +123,6 @@ public class Controlador implements IObservador {
                     vista.mostrarAllJugadas();
                 }
             }
-
             case DESCARGA_RECHAZADA -> {
                 if (!(observado instanceof Jugador)) {
                     break;
@@ -146,33 +134,31 @@ public class Controlador implements IObservador {
                     vista.setEstado(EstadoVista.BAJADO_DESCARGAR_O_TIRAR);
                 }
             }
-
             case RONDA_GANADA -> {
-                this.vista.rondaGanada();
+                if (!(observado instanceof Jugador)) {
+                    break;
+                }
+                Jugador j = (Jugador) (observado);
+                this.vista.rondaGanada(j);
                 this.vista.setEstado(EstadoVista.ESPERANDO_USUARIO);
             }
         }
     }
-
     public void deshacerJugadas() {
-        this.juego.deshacerJugadas(this.jugador);
+        this.juego.deshacerJugadas();
     }
-
     public IMano getMano() {
         return this.juego.getManoJugador();
     }
-
     public boolean nombreValido(String nombre) {
         if ((nombre.trim().equals("")) || (!this.juego.nombreValido(nombre.trim()))) {
             return false;
         }
         else return true;
     }
-
     public IJugador getGanador() {
         return this.juego.getJugadorActual();
     }
-    public IJugador getJugador() {return this.jugador;}
     public void agregarCartaJuego(int indiceJugada, int indiceCarta, boolean alFinal) {
         Jugada jugada = this.juego.getAllJugadas().get(indiceJugada);
         Carta carta = this.juego.getJugadorActual().getMano().tomarCarta(indiceCarta);
@@ -181,66 +167,49 @@ public class Controlador implements IObservador {
         }
         else this.vista.setEstado(EstadoVista.BAJADO_DESCARGAR_O_TIRAR);
     }
-
     public List<IJugada> getJugadasJugador() {
-        List<IJugada> jugadasOut = new ArrayList<>(jugador.getJugadas());
+        List<IJugada> jugadasOut = new ArrayList<>(juego.getJugadorActual().getJugadas());
         return jugadasOut;
     }
     public List<IJugada> getAllJugadas(){
         List<IJugada> jugadasOut = new ArrayList<>(this.juego.getAllJugadas());
         return jugadasOut;
     }
-
     public void estaPreparado() {
         this.vista.setEstado(EstadoVista.ESPERANDO_JUGADORES);
-        this.juego.JugadorPreparado(this.jugador);
+        this.juego.JugadorPreparado(this.nombre);
     }
     public boolean faltanJugadoes() {
         return this.juego.faltanJugadores();
     }
-
     public void tomarCartaPozo() {
         this.juego.tomarDelPozo();//this.jugador
     }
-
     public void tirarCartaAlPozo(int indice) {
-        Carta carta = this.jugador.getMano().getCartas().get(indice);
-        this.juego.tirarCartaPozo(this.jugador,carta);
+        Carta carta = this.juego.getJugadorActual().getMano().getCartas().get(indice);
+        this.juego.tirarCartaPozo(carta);
     }
-
     public void tomarCartaMazo() {
         this.juego.tomarDelMazo();
     }
-
     public void verificarJugadas() {
         this.juego.verificarJugadas();
     }
-
     public void agregarJugador(String nombre) {
         Jugador j = new Jugador(nombre,this);
-        this.jugador = j;
-        //vista.listoParaJugar();
-        this.vista.setEstado(EstadoVista.ESPERANDO_USUARIO);
         this.juego.agregarJugador(j);
     }
-
     public void armarJugada(int[] indices) {
         List<Carta> cartasJugada = new ArrayList<>();
         List<Carta> cartasMano = this.juego.getJugadorActual().getMano().getCartas();
         for (int index : indices) {
             cartasJugada.add(cartasMano.get(index));
         }
-        this.juego.armarJugada(cartasJugada,this.jugador);
+        this.juego.armarJugada(cartasJugada);
     }
-
     public IRonda getRonda(){
         return this.juego.getRondaActual();
     }
-
-    public boolean yaBajado() {
-        return this.jugador.yaBajo();
-    }
-
     public IConjuntoCartas getPozo() {
         return this.juego.getPozo();
     }

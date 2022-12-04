@@ -23,7 +23,6 @@ public abstract class JugadaAscendiente extends Jugada{
     @Override
     public boolean agregarCarta(Carta carta, boolean alFinal) {
         List<Carta> cartas = getCartas();
-
         if (alFinal) {
             Carta cartaFinal = cartas.get(cartas.size()-1);
             if (cartaFinal.getTipo() == TipoCarta.JOKER) {
@@ -52,7 +51,6 @@ public abstract class JugadaAscendiente extends Jugada{
         }
         return false;
     }
-
     protected Carta generarCartaAux(Carta carta, boolean siguiente) {
         if (siguiente) {
             if (carta.getTipo().getNext() != null) {

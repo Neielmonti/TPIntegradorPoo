@@ -1,5 +1,4 @@
 package programa.modelo.commons;
-
 public enum PaloCarta {
     PICAS("Picas"),
     CORAZONES("Corazones"),
@@ -10,7 +9,6 @@ public enum PaloCarta {
     PaloCarta(String label) {
         this.label = label;
     }
-
     public String getLabel() {
         return this.label;
     }

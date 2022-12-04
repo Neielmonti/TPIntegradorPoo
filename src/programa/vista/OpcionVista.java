@@ -1,5 +1,4 @@
 package programa.vista;
-
 public enum OpcionVista {
     MAZO("MAZO"),
     POZO("POZO"),
@@ -14,7 +13,6 @@ public enum OpcionVista {
     OpcionVista(String label) {
         this.label = label;
     }
-
     public String getLabel() {
         return this.label;
     }

@@ -1,14 +1,10 @@
 package programa.modelo.conjuntoCarta;
-
 import java.util.ArrayList;
 import java.util.List;
-
 public class Pozo extends ConjuntoCartas {
-
     public Pozo() {
         super(new ArrayList<>());
     }
-
     @Override
     public String mostrarCartas() {
         List<Carta> cartas = getCartas();
@@ -18,5 +14,4 @@ public class Pozo extends ConjuntoCartas {
         }
         return result;
     }
-
 }

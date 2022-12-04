@@ -1,12 +1,10 @@
 package programa.modelo.conjuntoCarta;
-
 import programa.modelo.commons.PaloCarta;
 import programa.modelo.commons.TipoCarta;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
-
 public class Mazo extends ConjuntoCartas{
     public Mazo() {super(crearMazo());}
     private static List<Carta> crearMazo() {
@@ -41,7 +39,6 @@ public class Mazo extends ConjuntoCartas{
         }
         else return null;
     }
-
     public Mano formarMano(){
         if (this.getCartas().size() >= Mano.getSizeMano()) {
             List<Carta> cartas = new ArrayList<>();
