@@ -1,21 +1,18 @@
 package programa.modelo;
-
+import ar.edu.unlu.rmimvc.observer.ObservableRemoto;
 import programa.controlador.Evento;
 import programa.modelo.commons.Formacion;
-import programa.modelo.commons.PaloCarta;
-import programa.modelo.commons.TipoCarta;
 import programa.modelo.conjuntoCarta.Carta;
 import programa.modelo.conjuntoCarta.Mano;
 import programa.modelo.conjuntoCarta.Mazo;
 import programa.modelo.conjuntoCarta.Pozo;
 import programa.modelo.conjuntoCarta.jugadas.Jugada;
 import programa.modelo.verificadores.*;
-import programa.utils.observer.IObservable;
 import programa.utils.observer.IObservador;
-
+import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.util.*;
-
-public class Juego implements IObservable {
+public class Juego extends ObservableRemoto implements IJuego, Serializable{
     private Queue<Jugador> jugadores = new LinkedList<>();
     private int maxJugadores = 4;
     private int minJugadores = 2;
@@ -24,117 +21,123 @@ public class Juego implements IObservable {
     private Pozo pozo = new Pozo();
     private List<IObservador> observadores = new ArrayList<>();
     private List<VerificarJugada> verificadoresJugada = new ArrayList<>();
-
     public Juego(){
         generarRondas();
         generarVerificadores();
     }
-
-    public void pasarSiguienteJugador() {
+    private void pasarSiguienteJugador() throws RemoteException {
         Jugador aux = this.jugadores.remove();
         this.jugadores.add(aux);
-        notificar(Evento.CAMBIO_DE_JUGADOR);
+        allJugadoresNotificar(Evento.CAMBIO_DE_JUGADOR);
     }
-
-    public void pasarSiguienteRonda() {
+    private void pasarSiguienteRonda() throws RemoteException{
         Ronda aux = this.rondas.remove();
         this.rondas.add(aux);
         actualizarPuntajes();
         resetearJugadores();
-        notificar(Evento.RONDA_GANADA);
+        allJugadoresNotificar(Evento.RONDA_GANADA);
     }
-
-
-    /**
-    public boolean getPreparadoParaJugar() {
-        if (this.jugadores.size() >= this.minJugadores) {
-            return true;
+    @Override
+    public void agregarCartaAJugada(Jugada jugada, Carta carta, boolean alFinal) throws RemoteException {
+        Mano mano = jugadores.peek().getMano();
+        //Primero se verifica que la mano del jugador actual contenga la carta pasada
+        if (mano.getCartas().contains(carta)) {
+            if (jugada.agregarCarta(carta, alFinal)) {
+                // Si se pudo agregar la carta a la jugada, se le quita la carta al jugador
+                mano.quitarCarta(carta);
+                // Si el jugador se quedo sin cartas, se pasa de ronda (el jugador gano)
+                if (mano.isEmpty()) {
+                    pasarSiguienteRonda();
+                } else {
+                    notificarObservadores(Evento.MANO_ACTUALIZADA);
+                    allJugadoresNotificar(Evento.JUGADA_MODIFICADA);
+                }
+            } else notificarObservadores(Evento.DESCARGA_RECHAZADA);
         }
-        else return false;
     }
-    **/
-
-    public void agregarCartaAJugada(Jugada jugada, Carta carta, Jugador jugador, boolean alFinal){
-        if (jugada.agregarCarta(carta,alFinal)) {
-            jugador.getMano().quitarCarta(carta);
-            if (jugador.getMano().isEmpty()) {
-                pasarSiguienteRonda();
-            }
-            else notificar(Evento.MANO_ACTUALIZADA);
-            //notificar(Evento.JUGADA_MODIFICADA);
-        }
-        else notificar(Evento.DESCARGA_RECHAZADA);
-    }
-
-    public Ronda getRondaActual() {
+    @Override
+    public Ronda getRondaActual() throws RemoteException {
         return this.rondas.peek();
     }
-
-    public boolean nombreValido(String nombre) {
-        boolean salida = true;
-
+    @Override
+    public boolean nombreValido(String nombre) throws RemoteException {
         for (Jugador jugador: jugadores) {
             if (jugador.getNombre().equals(nombre)) {
-                salida = false;
+                return false;
             }
         }
-        return salida;
+        return true;
     }
-
-    public boolean faltanJugadores() {
-        if (this.jugadores.size() < maxJugadores) {
-            return true;
-        }
-        else return false;
+    @Override
+    public boolean faltanJugadores() throws RemoteException {
+        return this.jugadores.size() < maxJugadores;
     }
-
-    public void deshacerJugadas(Jugador jugador) {
-        if (jugadores.contains(jugador)) {
-            jugador.deshacerJugadas();
-            notificar(Evento.MANO_ACTUALIZADA);
-        }
+    @Override
+    public void deshacerJugadas() throws RemoteException {
+        // Se deshacen todas las jugadas del jugador actual
+        jugadores.peek().deshacerJugadas();
+        notificarObservadores(Evento.MANO_ACTUALIZADA);
     }
-
-    public void verificarJugadas(Jugador jugador) {
-        if ((jugador == jugadores.peek()) && (!jugador.yaBajo()) && (this.rondas.peek().verificarJugadasxRonda(jugador))) {
-            jugador.bajar();
-            notificar(Evento.JUGADOR_BAJO);
+    @Override
+    public void verificarJugadas() throws RemoteException {
+        if ((!jugadores.peek().yaBajo()) && (this.rondas.peek().verificarJugadasxRonda(jugadores.peek()))) {
+            // Si el jugador actual aun no bajo, y sus jugadas coincides con las pedidas en la ronda, se lo baja y se notifica a todos
+            jugadores.peek().bajar();
+            allJugadoresNotificar(Evento.JUGADOR_BAJO);
         }
         else {
-            notificar(Evento.BAJADA_RECHAZADA);
+            // Caso contrario, se le notifica solo a este jugador que sus jugadas fueron rechazadas (no puede bajarse)
+            notificarObservadores(Evento.BAJADA_RECHAZADA);
         }
     }
-
-    public List<Jugada> getAllJugadas() {
+    @Override
+    public void allJugadoresNotificar(Evento evento) throws RemoteException{
+        // Se utiliza en ocaciones donde la notificacion debe llegar a todos los jugadores, pero deben comprobar si es su turno
+        for (Jugador jugador: jugadores) {
+            notificarObservadores(evento);
+        }
+    }
+    @Override
+    public List<Jugada> getAllJugadas() throws RemoteException {
+        // Se devuelven todas las jugadas de todos los jugadores en forma de lista
         List<Jugada> jugadas = new ArrayList<>();
         for (Jugador jugador: jugadores) {
             jugadas.addAll(jugador.getJugadas());
         }
         return jugadas;
     }
-
-    public void armarJugada(List<Carta> cartas, Jugador jugador) {
-        if (jugadores.contains(jugador)) {
-            int i = 0;
-            Jugada jugada = null;
-            while ((i < verificadoresJugada.size()) && (jugada == null)) {
-                jugada = verificadoresJugada.get(i).formarJugada(cartas,jugador);
-                i++;
+    @Override
+    public void armarJugada(List<Carta> cartas) throws RemoteException {
+        Jugada jugada = armandoJugada(cartas);
+        if (jugada != null) {
+            // Si se pudo formar una jugada, se le quitan las cartas de la mano del jugador
+            jugadores.peek().getMano().quitarCartas(jugada);
+            if (jugadores.peek().getMano().isEmpty()) {
+                // Si el jugador se quedo sin cartas, se pasa de ronda (el jugador gano)
+                pasarSiguienteRonda();
             }
-            if (jugada != null) {
-                jugador.getMano().quitarCartas(jugada);
-                if (jugador.getMano().isEmpty()) {
-                    pasarSiguienteRonda();
-                }
-                else notificar(Evento.JUGADA_ARMADA);
-            }
-            else {notificar(Evento.JUGADA_RECHAZADA);}
+            // Caso contrario se le avisa al jugador que la jugada fue armada
+            else notificarObservadores(Evento.JUGADA_ARMADA);
         }
+        // Si no se pudo formar la jugada, se le avisa al jugador
+        else notificarObservadores(Evento.JUGADA_RECHAZADA);
     }
-
-    public void agregarJugador(Jugador j) {
+    @Override
+    public Jugada armandoJugada(List<Carta> cartas) throws RemoteException {
+        int i = 0;
+        Jugada jugada = null;
+        while ((i < verificadoresJugada.size()) && (jugada == null)) {
+            jugada = verificadoresJugada.get(i).formarJugada(cartas,jugadores.peek());
+            i++;
+        }
+        return jugada;
+    }
+    @Override
+    public void agregarJugador(Jugador j) throws RemoteException {
         if ((!jugadores.contains(j)) && (jugadores.size() < this.maxJugadores)) {
+            // Si el jugador es nuevo en el juego, y hay espacio, se lo agrega
             jugadores.add(j);
+            //j.notificarObservadores(Evento.JUGADOR_AGREGADO);
         }
     }
     private void generarVerificadores() {
@@ -145,41 +148,32 @@ public class Juego implements IObservable {
             this.verificadoresJugada.add(new VerificarTrio());
         }
     }
-    private void generarRondas(){
+    private void generarRondas() {
         if (this.rondas.isEmpty()) {
             List<CantXFormacion> listaAux;
-
+            // En el caso de rondas complejas (de varios tipos de jugadas) se utiliza una lista auxiliar para crearlas
+            //this.rondas.add(new Ronda(Formacion.ESCALA,1));// ESTE ES SOLO PARA PRUEBAS
             this.rondas.add(new Ronda(Formacion.TRIO,2));
-
             listaAux = new ArrayList<>();
             listaAux.add(new CantXFormacion(Formacion.TRIO,1));
             listaAux.add(new CantXFormacion(Formacion.ESCALA,1));
             this.rondas.add(new Ronda(listaAux));
-
             this.rondas.add(new Ronda(Formacion.ESCALA,2));
-
             this.rondas.add(new Ronda(Formacion.TRIO,3));
-
             listaAux = new ArrayList<>();
             listaAux.add(new CantXFormacion(Formacion.TRIO,2));
             listaAux.add(new CantXFormacion(Formacion.ESCALA,1));
             this.rondas.add(new Ronda(listaAux));
-
             listaAux = new ArrayList<>();
             listaAux.add(new CantXFormacion(Formacion.TRIO,1));
             listaAux.add(new CantXFormacion(Formacion.ESCALA,2));
             this.rondas.add(new Ronda(listaAux));
-
             this.rondas.add(new Ronda(Formacion.ESCALA,3));
-
             this.rondas.add(new Ronda(Formacion.TRIO,4));
-
             this.rondas.add(new Ronda(Formacion.ESCALERA_SUCIA,1));
-
             this.rondas.add(new Ronda(Formacion.ESCALERA_REAL,1));
         }
     }
-
     private void resetMazo(){
         for(Jugador jugador:this.jugadores) {
             Mano manoActual = jugador.getMano();
@@ -189,17 +183,14 @@ public class Juego implements IObservable {
         }
         pozo.pasarCartas(this.mazo);
     }
-
-    public void repartirCartas(){
-        this.resetMazo();
+    private void repartirCartas() {
+        resetMazo();
         for(Jugador jugador:this.jugadores) {
             jugador.setMano(this.mazo.formarMano());
         }
         this.pozo.pasarCartas(this.mazo);
         this.pozo.agregarCarta(this.mazo.tomarCarta());
     }
-
-
     /**
      // PRUEBITA
     public void repartirCartas(){
@@ -224,70 +215,75 @@ public class Juego implements IObservable {
         cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.K));
         cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.Q));
         jugadores.peek().setMano(new Mano(cartas));
-
         this.pozo.agregarCarta(this.mazo.tomarCarta());
     }
     **/
-
+    @Override
     public Pozo getPozo() {
         return this.pozo;
     }
-
-    public void tomarDelPozo(Jugador jugador) {
-        jugador.getMano().agregarCarta(this.pozo.tomarCarta());
+    @Override
+    public void tomarDelPozo() throws RemoteException {
+        this.jugadores.peek().getMano().agregarCarta(this.pozo.tomarCarta());
         if (this.pozo.isEmpty()) {
             this.pozo.agregarCarta(this.mazo.tomarCarta());
         }
-        notificar(Evento.MANO_ACTUALIZADA);
-        notificar(Evento.POZO_ACTUALIZADO);
+        notificarObservadores(Evento.POZO_ACTUALIZADO);
+        notificarObservadores(Evento.MANO_ACTUALIZADA);
     }
-
-    public void tirarCartaPozo(Jugador jugador, Carta carta) {
-        if ((jugadores.peek() == jugador)) {
-            assert jugador != null;
-            if (jugador.getMano() != null) {
-                jugador.getMano().quitarCarta(carta);
-                this.pozo.agregarCarta(carta);
-                if (jugador.getMano().isEmpty()) {
-                    pasarSiguienteRonda();
-                }
-                else pasarSiguienteJugador();
+    @Override
+    public void tirarCartaPozo(Carta carta) throws RemoteException {
+        if (jugadores.peek().getMano() != null) {
+            jugadores.peek().getMano().quitarCarta(carta);
+            this.pozo.agregarCarta(carta);
+            if (jugadores.peek().getMano().isEmpty()) {
+                pasarSiguienteRonda();
             }
+            else pasarSiguienteJugador();
         }
     }
-
-    public void tomarDelMazo(Jugador jugador) {
-        jugador.getMano().agregarCarta(this.mazo.tomarCarta());
+    @Override
+    public void tomarDelMazo() throws RemoteException{
+//        jugador.getMano().agregarCarta(this.mazo.tomarCarta());
+        jugadores.peek().getMano().agregarCarta(this.mazo.tomarCarta());
         if (this.mazo.isEmpty()) {
             pozo.pasarCartas(this.mazo);
             this.pozo.agregarCarta(this.mazo.tomarCarta());
         }
-        notificar(Evento.MANO_ACTUALIZADA);
+        notificarObservadores(Evento.MANO_ACTUALIZADA);
     }
-
+    @Override
     public Jugador getJugadorActual() {
         return this.jugadores.peek();
     }
-    public Mano getManoJugador(Jugador jugador){
-        if (jugadores.contains(jugador)) {
-            return jugador.getMano();
+    @Override
+    public Jugador getJugador(String nombre) {
+        for (Jugador jugador: jugadores) {
+            if (jugador.getNombre().equals(nombre)) {
+                return jugador;
+            }
         }
-        else return null;
+        return null;
     }
-    public void actualizarPuntajes() {
+    private void actualizarPuntajes() {
         for(Jugador jugador: this.jugadores) {
             jugador.actualizarPuntaje();
         }
     }
-    public void JugadorPreparado(Jugador jugador) {
-        if (jugadores.contains(jugador)) {
-            jugador.estaPreparado();
-            verificarJugadoresEstanPreparados();
+    @Override
+    public void JugadorPreparado(String nombre) throws RemoteException {
+        for (Jugador jugador: jugadores) {
+            if (jugador.getNombre().equals(nombre)) {
+                jugador.estaPreparado();
+                verificarJugadoresEstanPreparados();
+                break;
+            }
         }
     }
-    private void verificarJugadoresEstanPreparados() {
+    private void verificarJugadoresEstanPreparados() throws RemoteException{
         boolean todosListos = !jugadores.isEmpty();
         for (Jugador jugador: jugadores) {
+            System.out.println(jugador.getNombre() + jugador.getPreparado());
             if (!jugador.getPreparado()) {
                 todosListos = false;
                 break;
@@ -295,22 +291,15 @@ public class Juego implements IObservable {
         }
         if ((todosListos) && (jugadores.size() >= this.minJugadores)){
             repartirCartas();
-            notificar(Evento.CAMBIO_DE_JUGADOR);
+            System.out.println("SE LLEGA HASTA EL NOTIFICAR TODOS LOS JUGADORES"); ///////---------------------------
+            //allJugadoresNotificar(Evento.CAMBIO_DE_JUGADOR);
+            notificarObservadores(Evento.CAMBIO_DE_JUGADOR);
         }
     }
-    private void resetearJugadores() {
+    @Override
+    public void resetearJugadores() {
         for (Jugador jugador: jugadores) {
             jugador.resetearJugador();
         }
-    }
-    @Override
-    public void notificar(Evento evento) {
-        for (IObservador observador : this.observadores) {
-            observador.actualizar(evento, this);
-        }
-    }
-    @Override
-    public void agregadorObservador(IObservador observador) {
-        this.observadores.add(observador);
     }
 }

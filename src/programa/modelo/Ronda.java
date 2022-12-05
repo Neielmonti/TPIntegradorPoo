@@ -1,29 +1,16 @@
 package programa.modelo;
-
 import programa.modelo.commons.Formacion;
 import programa.modelo.conjuntoCarta.jugadas.Jugada;
 import programa.vista.IRonda;
-
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Ronda implements IRonda {
+public class Ronda implements IRonda, Serializable{
     private List<CantXFormacion> formaciones = new ArrayList<>();
-    /**
-    public Ronda(List<Formacion> formaciones){
-        while (!formaciones.isEmpty()) {
-            Formacion formaActual = formaciones.get(0);
-            int cantidad = getCantForm(formaciones,formaActual);
-            while (formaciones.contains(formaActual)) {
-                formaciones.remove(formaActual);
-            }
-            if (cantidad > 0) {
-                this.formaciones.add(new CantXFormacion(formaActual,cantidad));
-            }
-        }
+    public Ronda(Formacion formacion, int cantidad) {
+        this.formaciones.add(new CantXFormacion(formacion,cantidad));
     }
-    **/
-
     public Ronda(List<CantXFormacion> formaciones) {
         while (!formaciones.isEmpty()) {
             Formacion formaActual = formaciones.get(0).forma();
@@ -32,11 +19,6 @@ public class Ronda implements IRonda {
             eliminarFormacionesRepetidas(formaActual,formaciones);
         }
     }
-
-    public Ronda(Formacion formacion, int cantidad) {
-        this.formaciones.add(new CantXFormacion(formacion,cantidad));
-    }
-
     private void eliminarFormacionesRepetidas(Formacion forma, List<CantXFormacion> formaciones) {
         int i = 0;
         while (i < formaciones.size()) {
@@ -46,7 +28,6 @@ public class Ronda implements IRonda {
             else i++;
         }
     }
-
     public boolean verificarJugadasxRonda(Jugador jugador) {
         List<Jugada> jugadas = jugador.getJugadas();
         boolean salida = true;
@@ -65,7 +46,6 @@ public class Ronda implements IRonda {
         }
         return salida;
     }
-
     @Override
     public String mostrarRonda() {
         String result = "";
@@ -80,13 +60,5 @@ public class Ronda implements IRonda {
             }
         }
         return result;
-    }
-
-    private int getCantForm(List<Formacion> formaciones, Formacion forma) {
-        int contador = 0;
-        for (Formacion f:formaciones) {
-            if (f == forma) {contador++;}
-        }
-        return contador;
     }
 }

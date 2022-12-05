@@ -3,17 +3,20 @@ import programa.modelo.conjuntoCarta.Carta;
 import programa.modelo.conjuntoCarta.Mano;
 import programa.modelo.conjuntoCarta.jugadas.Jugada;
 import programa.vista.IJugador;
+import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
-public class Jugador implements IJugador {
-    private String nombre;
+public class Jugador implements IJugador, Serializable {
+    private final String nombre;
     private int puntaje = 0;
     private boolean bajo = false;
     private boolean preparado = false;
     private List<Jugada> jugadas = new ArrayList<>();
     private Mano mano;
-    public Jugador(String nombre) {
+    public Jugador(String nombre) throws RemoteException {
         this.nombre = nombre;
+        //agregarObservador(controlador);
     }
     public int getPuntaje() {
         return this.puntaje;
