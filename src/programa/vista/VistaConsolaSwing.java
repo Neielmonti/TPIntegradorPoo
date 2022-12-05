@@ -1,13 +1,15 @@
 package programa.vista;
 import java.lang.Character;
 import programa.controlador.Controlador;
+import programa.modelo.Ronda;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
-
 public class VistaConsolaSwing extends JFrame{
     private JTextArea memoPrincipal;
     private JTextField textbox;
@@ -26,7 +28,12 @@ public class VistaConsolaSwing extends JFrame{
         buttEnter.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                switchButton();
+                try {
+                    switchButton();
+                }
+                catch (RemoteException a) {
+                    printError(ErrorVista.CONEXION);
+                }
             }
         });
     }
@@ -43,19 +50,20 @@ public class VistaConsolaSwing extends JFrame{
         });
         println("Ingrese su nombre de jugador \n");
     }
-    public void switchButton() {
+    public void switchButton() throws RemoteException {
         switch (estado) {
             case ESPERANDO_TURNO -> clearTextbox();
             case ESPERANDO_USUARIO -> this.controlador.estaPreparado();
             case ESPERANDO_JUGADORES -> {
-                clearMemo();
-                println(estado.getLabel());
+                //clearMemo();                              //<----------------------------------
+                println(this.estado.getLabel());
             }
             case INICIALIZANDO -> {
-                String nombre = textbox.getText();
+                String nombre = textbox.getText().trim();
                 if (!controlador.faltanJugadoes()) {printError(ErrorVista.PARTIDA_LLENA);}
                 else if (!controlador.nombreValido(nombre.trim())) {printError(ErrorVista.NOMBRE_TOMADO);}
                 else {controlador.agregarJugador(nombre.trim());}
+                clearTextbox();
             }
             case TOMAR_CARTA -> {
                 String in = textbox.getText().trim();
@@ -192,14 +200,19 @@ public class VistaConsolaSwing extends JFrame{
         }
     }
     public void mostrarAllJugadas() {
-        List<IJugada> jugadas = this.controlador.getAllJugadas();
-        String jugadorAnterior = null;
-        for (IJugada jugada: jugadas) {
-            if (jugada.getNombreJugador() != jugadorAnterior) {
-                jugadorAnterior = jugada.getNombreJugador();
-                println("------------Jugador " + jugada.getNombreJugador() + "------------");
+        try {
+            List<IJugada> jugadas = this.controlador.getAllJugadas();
+            String jugadorAnterior = null;
+            for (IJugada jugada : jugadas) {
+                if (jugada.getNombreJugador() != jugadorAnterior) {
+                    jugadorAnterior = jugada.getNombreJugador();
+                    println("------------Jugador " + jugada.getNombreJugador() + "------------");
+                }
+                println("{Jugada " + (jugadas.indexOf(jugada) + 1) + "} -------- \n" + jugada.mostrarCartas() + "\n");
             }
-            println("{Jugada " + (jugadas.indexOf(jugada) + 1) + "} -------- \n" + jugada.mostrarCartas() + "\n");
+        }
+        catch (RemoteException e) {
+            printError(ErrorVista.CONEXION);
         }
     }
     public void setEstado(EstadoVista estado) {
@@ -207,10 +220,15 @@ public class VistaConsolaSwing extends JFrame{
         println(estado.getLabel() + "\n");
     }
     public void rondaGanada(IJugador jugador) {
-        clearMemo();
-        IJugador ganador = this.controlador.getGanador();
-        println("EL JUGADOR " + ganador.getNombre() + " HA GANADO! >:)");
-        println("Tu puntaje es de: " + jugador.getPuntaje());
+        try {
+            clearMemo();
+            IJugador ganador = this.controlador.getGanador();
+            println("EL JUGADOR " + ganador.getNombre() + " HA GANADO! >:)");
+            println("Tu puntaje es de: " + jugador.getPuntaje());
+        }
+        catch (RemoteException e) {
+            printError(ErrorVista.CONEXION);
+        }
     }
     public boolean verificarCartasJugada(String text) {
         boolean salida = true;
@@ -235,7 +253,11 @@ public class VistaConsolaSwing extends JFrame{
     }
     public void mostrarRonda() {
         println("---------RONDA---------");
-        println("Jugadas a armar: " + this.controlador.getRonda().mostrarRonda() + "\n");
+        IRonda ronda = this.controlador.getRonda();
+        if (ronda != null) {
+            println("Jugadas a armar: " + this.controlador.getRonda().mostrarRonda() + "\n");
+        }
+        else println("SISI AMIGASO LA RONDA ES NULA PUTA MADRE");
     }
     public void clearMemo() {
         memoPrincipal.setText("");
@@ -243,11 +265,11 @@ public class VistaConsolaSwing extends JFrame{
     private void clearTextbox() {
         textbox.setText("");
     }
-    private void println(String texto) {
+    public void println(String texto) {
         clearTextbox();
         memoPrincipal.append(texto + "\n");
     }
-    private void printError(ErrorVista error) {
+    public void printError(ErrorVista error) {
         println(error.getLabel());
     }
 }

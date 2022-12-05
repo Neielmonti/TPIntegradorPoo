@@ -5,7 +5,8 @@ public enum ErrorVista {
     PARTIDA_LLENA("Partida llena :("),
     FUERA_DE_RANGO("Valor/es fuera de rango"),
     JUGADAS_INVALIDAS("Las jugadas no cumplen con las pedidas en la ronda"),
-    JUGADA_RECHAZADA("Jugada rechazada");
+    JUGADA_RECHAZADA("Jugada rechazada"),
+    CONEXION("Error de conexion");
     private String df = "||ERROR||: ";
     private String label;
     ErrorVista(String label) {

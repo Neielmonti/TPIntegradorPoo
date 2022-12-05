@@ -2,7 +2,7 @@ package programa.modelo.conjuntoCarta;
 import programa.vista.IMano;
 import java.util.List;
 public class Mano extends ConjuntoCartas implements IMano {
-    private static int sizeMano = 6;
+    private static int sizeMano = 12;
     public Mano(List<Carta> cartas) {
         super(cartas);
     }

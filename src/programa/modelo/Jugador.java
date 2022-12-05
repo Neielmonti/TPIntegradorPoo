@@ -1,27 +1,22 @@
 package programa.modelo;
-import programa.controlador.Controlador;
-import programa.controlador.Evento;
 import programa.modelo.conjuntoCarta.Carta;
 import programa.modelo.conjuntoCarta.Mano;
 import programa.modelo.conjuntoCarta.jugadas.Jugada;
-import programa.utils.observer.IObservable;
-import programa.utils.observer.IObservador;
 import programa.vista.IJugador;
+import java.io.Serializable;
+import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
-public class Jugador implements IJugador, IObservable {
-    private String nombre;
+public class Jugador implements IJugador, Serializable {
+    private final String nombre;
     private int puntaje = 0;
-    private Controlador controlador;
     private boolean bajo = false;
     private boolean preparado = false;
     private List<Jugada> jugadas = new ArrayList<>();
-    private List<IObservador> observadores = new ArrayList<>();
     private Mano mano;
-    public Jugador(String nombre, Controlador controlador) {
+    public Jugador(String nombre) throws RemoteException {
         this.nombre = nombre;
-        this.controlador = controlador;
-        agregadorObservador(controlador);
+        //agregarObservador(controlador);
     }
     public int getPuntaje() {
         return this.puntaje;
@@ -69,14 +64,4 @@ public class Jugador implements IJugador, IObservable {
     public void addJugada(Jugada jugada) {this.jugadas.add(jugada);}
     public void estaPreparado() {this.preparado = true;}
     public boolean getPreparado() {return this.preparado;}
-    @Override
-    public void notificar(Evento evento) {
-        for (IObservador observador: observadores) {
-            observador.actualizar(evento,this);
-        }
-    }
-    @Override
-    public void agregadorObservador(IObservador observador) {
-        this.observadores.add(observador);
-    }
 }

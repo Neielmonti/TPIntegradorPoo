@@ -1,6 +1,6 @@
 package programa.controlador;
-
-public enum Evento {
+import java.io.Serializable;
+public enum Evento implements Serializable {
     JUGADA_ARMADA,
     CAMBIO_DE_JUGADOR,
     MANO_ACTUALIZADA,

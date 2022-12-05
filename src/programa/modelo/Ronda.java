@@ -1,13 +1,12 @@
 package programa.modelo;
-
 import programa.modelo.commons.Formacion;
 import programa.modelo.conjuntoCarta.jugadas.Jugada;
 import programa.vista.IRonda;
-
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Ronda implements IRonda {
+public class Ronda implements IRonda, Serializable{
     private List<CantXFormacion> formaciones = new ArrayList<>();
     public Ronda(Formacion formacion, int cantidad) {
         this.formaciones.add(new CantXFormacion(formacion,cantidad));
