@@ -1,5 +1,8 @@
 package programa.modelo.commons;
-public enum PaloCarta {
+
+import java.io.Serializable;
+
+public enum PaloCarta implements Serializable {
     PICAS("Picas"),
     CORAZONES("Corazones"),
     ROMBOS("Rombos"),

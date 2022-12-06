@@ -1,8 +1,10 @@
 package programa.modelo.conjuntoCarta;
 import programa.vista.IConjuntoCartas;
+
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-public abstract class ConjuntoCartas implements IConjuntoCartas {
+public abstract class ConjuntoCartas implements IConjuntoCartas, Serializable {
     private List<Carta> cartas = new ArrayList<>();
     public ConjuntoCartas(List <Carta> cartas) {
         this.cartas = cartas;

@@ -10,7 +10,7 @@ import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
-public class VistaConsolaSwing extends JFrame{
+public class VistaConsolaSwing extends JFrame implements IVista {
     private JTextArea memoPrincipal;
     private JTextField textbox;
     private JButton buttEnter;
@@ -18,6 +18,7 @@ public class VistaConsolaSwing extends JFrame{
     private IMano manoActual;
     private EstadoVista estado = EstadoVista.INICIALIZANDO;
     private Controlador controlador;
+    @Override
     public void setControlador(Controlador controlador) {
         this.controlador = controlador;
     }
@@ -37,6 +38,7 @@ public class VistaConsolaSwing extends JFrame{
             }
         });
     }
+    @Override
     public void inicioGrafico() {
         EventQueue.invokeLater(new Runnable() {
             public void run() {
@@ -186,19 +188,22 @@ public class VistaConsolaSwing extends JFrame{
         }
         return indices;
     }
+    @Override
     public void setManoActual(IMano mano) {
         this.manoActual = mano;
     }
+    @Override
     public void bajadaRechazada() {
         printError(ErrorVista.JUGADAS_INVALIDAS);
     }
-    public void mostrarJugadasJugador(IJugador jugador) {
-        List<IJugada> jugadas = new ArrayList<>();
-        jugadas.addAll(jugador.getJugadas());
+    @Override
+    public void mostrarJugadasJugador() {
+        List<IJugada> jugadas = new ArrayList<>(this.controlador.getJugadasJugador());
         for (IJugada jugada: jugadas) {
             println("[Jugada " + (jugadas.indexOf(jugada) + 1) + "] -------- \n" + jugada.mostrarCartas() + "\n");
         }
     }
+    @Override
     public void mostrarAllJugadas() {
         try {
             List<IJugada> jugadas = this.controlador.getAllJugadas();
@@ -215,10 +220,12 @@ public class VistaConsolaSwing extends JFrame{
             printError(ErrorVista.CONEXION);
         }
     }
+    @Override
     public void setEstado(EstadoVista estado) {
         this.estado = estado;
         println(estado.getLabel() + "\n");
     }
+    @Override
     public void rondaGanada(IJugador jugador) {
         try {
             clearMemo();
@@ -240,35 +247,43 @@ public class VistaConsolaSwing extends JFrame{
         }
         return salida;
     }
+    @Override
     public void jugadaRechazada() {
         printError(ErrorVista.JUGADA_RECHAZADA);
     }
+    @Override
     public void mostrarMano() {
         //IMano mano = this.controlador.getMano();
         println("---------MANO---------" + "\n" + manoActual.mostrarCartas() + "\n");
     }
+    @Override
     public void mostrarPozo() {
         println("---------POZO---------");
         println(this.controlador.getPozo().mostrarCartas() + "\n");
     }
+    @Override
     public void mostrarRonda() {
         println("---------RONDA---------");
         IRonda ronda = this.controlador.getRonda();
         if (ronda != null) {
             println("Jugadas a armar: " + this.controlador.getRonda().mostrarRonda() + "\n");
         }
-        else println("SISI AMIGASO LA RONDA ES NULA PUTA MADRE");
+        else println("SISI AMIGASO LA RONDA ES NULA PUTA MADRE"); //<---------------------------------------------------
     }
+    @Override
     public void clearMemo() {
         memoPrincipal.setText("");
     }
-    private void clearTextbox() {
-        textbox.setText("");
+    @Override
+    public void clearTextbox() {
+        this.textbox.setText("");
     }
+    @Override
     public void println(String texto) {
         clearTextbox();
         memoPrincipal.append(texto + "\n");
     }
+    @Override
     public void printError(ErrorVista error) {
         println(error.getLabel());
     }

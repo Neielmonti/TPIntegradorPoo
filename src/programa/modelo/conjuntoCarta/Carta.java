@@ -1,7 +1,10 @@
 package programa.modelo.conjuntoCarta;
 import programa.modelo.commons.PaloCarta;
 import programa.modelo.commons.TipoCarta;
-public class Carta {
+
+import java.io.Serializable;
+
+public class Carta implements Serializable {
     private PaloCarta palo;
     private TipoCarta tipo;
     public Carta(PaloCarta palo, TipoCarta tipo) {

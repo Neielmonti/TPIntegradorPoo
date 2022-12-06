@@ -1,5 +1,8 @@
 package programa.modelo.commons;
-public enum TipoCarta {
+
+import java.io.Serializable;
+
+public enum TipoCarta implements Serializable {
     A(20,"A"),
     DOS(2,"2"),
     TRES(3,"3"),

@@ -38,9 +38,11 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         allJugadoresNotificar(Evento.RONDA_GANADA);
     }
     @Override
-    public void agregarCartaAJugada(Jugada jugada, Carta carta, boolean alFinal) throws RemoteException {
+    public void agregarCartaAJugada(int indiceJugada,int indiceCarta, boolean alFinal) throws RemoteException {
         Mano mano = jugadores.peek().getMano();
         //Primero se verifica que la mano del jugador actual contenga la carta pasada
+        Carta carta = mano.tomarCarta(indiceCarta);
+        Jugada jugada = jugadores.peek().getJugadas().get(indiceJugada);
         if (mano.getCartas().contains(carta)) {
             if (jugada.agregarCarta(carta, alFinal)) {
                 // Si se pudo agregar la carta a la jugada, se le quita la carta al jugador
@@ -107,8 +109,13 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         return jugadas;
     }
     @Override
-    public void armarJugada(List<Carta> cartas) throws RemoteException {
-        Jugada jugada = armandoJugada(cartas);
+    public void armarJugada(int[] indices) throws RemoteException {
+        List<Carta> cartasMano = jugadores.peek().getMano().getCartas();
+        List<Carta> cartasJugada = new ArrayList<>();
+        for (int index : indices) {
+            cartasJugada.add(cartasMano.get(index));
+        }
+        Jugada jugada = armandoJugada(cartasJugada);
         if (jugada != null) {
             // Si se pudo formar una jugada, se le quitan las cartas de la mano del jugador
             jugadores.peek().getMano().quitarCartas(jugada);
@@ -232,8 +239,9 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         notificarObservadores(Evento.MANO_ACTUALIZADA);
     }
     @Override
-    public void tirarCartaPozo(Carta carta) throws RemoteException {
+    public void tirarCartaPozo(int indice) throws RemoteException {
         if (jugadores.peek().getMano() != null) {
+            Carta carta = jugadores.peek().getMano().tomarCarta(indice);
             jugadores.peek().getMano().quitarCarta(carta);
             this.pozo.agregarCarta(carta);
             if (jugadores.peek().getMano().isEmpty()) {
@@ -283,7 +291,6 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
     private void verificarJugadoresEstanPreparados() throws RemoteException{
         boolean todosListos = !jugadores.isEmpty();
         for (Jugador jugador: jugadores) {
-            System.out.println(jugador.getNombre() + jugador.getPreparado());
             if (!jugador.getPreparado()) {
                 todosListos = false;
                 break;
@@ -291,8 +298,6 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         }
         if ((todosListos) && (jugadores.size() >= this.minJugadores)){
             repartirCartas();
-            System.out.println("SE LLEGA HASTA EL NOTIFICAR TODOS LOS JUGADORES"); ///////---------------------------
-            //allJugadoresNotificar(Evento.CAMBIO_DE_JUGADOR);
             notificarObservadores(Evento.CAMBIO_DE_JUGADOR);
         }
     }

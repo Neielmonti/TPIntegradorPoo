@@ -1,5 +1,8 @@
 package programa.modelo.commons;
-public enum Formacion {
+
+import java.io.Serializable;
+
+public enum Formacion implements Serializable {
     TRIO(3,"Trio"),
     ESCALA(4, "Escala"),
     ESCALERA_SUCIA(13,"Escalera Sucia"),

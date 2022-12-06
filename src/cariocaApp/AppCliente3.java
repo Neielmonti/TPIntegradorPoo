@@ -1,14 +1,17 @@
 package cariocaApp;
+
 import ar.edu.unlu.rmimvc.RMIMVCException;
 import ar.edu.unlu.rmimvc.Util;
 import ar.edu.unlu.rmimvc.cliente.Cliente;
 import programa.controlador.Controlador;
 import programa.vista.IVista;
 import programa.vista.VistaConsolaSwing;
+
 import javax.swing.*;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
-public class AppCliente {
+
+public class AppCliente3 {
     public static void main(String[] args) {
         ArrayList<String> ips = Util.getIpDisponibles();
         String ip = (String) JOptionPane.showInputDialog(

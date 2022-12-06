@@ -10,11 +10,11 @@ import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
-public class Controlador implements IControladorRemoto, Serializable {
+public class Controlador implements IControladorRemoto, Serializable{
     private IJuego juego;
     private String nombre;
-    private VistaConsolaSwing vista;
-    public Controlador(VistaConsolaSwing vista){
+    private IVista vista;
+    public Controlador(IVista vista){
         super();
         this.vista = vista;
         this.vista.setControlador(this);
@@ -26,18 +26,11 @@ public class Controlador implements IControladorRemoto, Serializable {
             Evento aux = (Evento) o;
             switch (aux) {
                 case JUGADOR_AGREGADO -> {
-                    if (!(iObservableRemoto instanceof Jugador)) {
-                        break;
-                    }
-                    Jugador j = (Jugador) (iObservableRemoto);
-                    //this.nombre = j.getNombre();
                     this.vista.setEstado(EstadoVista.ESPERANDO_USUARIO);
                 }
                 case CAMBIO_DE_JUGADOR -> {
-                    //vista.clearMemo();                 //<------------------------------------
-                    System.out.println("Post clear");
+                    vista.clearMemo();
                     vista.mostrarRonda();
-                    System.out.println("Post mostrarRonda");
                     this.vista.setManoActual(this.juego.getJugador(this.nombre).getMano());
                     vista.mostrarMano();
                     if (this.juego.getJugadorActual().getNombre().equals(this.nombre)) {
@@ -52,50 +45,42 @@ public class Controlador implements IControladorRemoto, Serializable {
                     }
                 }
                 case MANO_ACTUALIZADA -> {
-                    if (!(iObservableRemoto instanceof Jugador)) {
-                        break;
-                    }
-                    Jugador j = (Jugador) (iObservableRemoto);
-                    if (this.juego.getJugadorActual().getNombre().equals(j.getNombre())) {
+                    if (this.juego.getJugadorActual().getNombre().equals(this.nombre)) {
                         this.vista.clearMemo();
                         this.vista.mostrarRonda();
-                        this.vista.setManoActual(j.getMano());
+                        this.vista.setManoActual(this.juego.getJugador(this.nombre).getMano());
                         this.vista.mostrarMano();
-                        if (j.yaBajo()) {
+                        if (this.juego.getJugador(this.nombre).yaBajo()) {
                             this.vista.mostrarAllJugadas();
                             this.vista.setEstado(EstadoVista.BAJADO_DESCARGAR_O_TIRAR);
                         } else this.vista.setEstado(EstadoVista.TIRAR_O_BAJAR);
                     }
                 }
-                case POZO_ACTUALIZADO -> this.vista.mostrarPozo();
-                case JUGADA_ARMADA -> {
-                    if (!(iObservableRemoto instanceof Jugador)) {
-                        break;
+                case POZO_ACTUALIZADO -> {
+                    if (!this.juego.getJugadorActual().getNombre().equals(this.nombre)) {
+                        vista.clearMemo();
+                        vista.mostrarRonda();
+                        vista.mostrarMano();
                     }
-                    Jugador j = (Jugador) (iObservableRemoto);
-                    if (this.juego.getJugadorActual().getNombre().equals(j.getNombre())) {
+                    this.vista.mostrarPozo();
+                }
+                case JUGADA_ARMADA -> {
+                    if (this.juego.getJugadorActual().getNombre().equals(this.nombre)) {
                         this.vista.clearMemo();
                         this.vista.mostrarRonda();
+                        this.vista.setManoActual(this.juego.getJugador(this.nombre).getMano());
                         this.vista.mostrarMano();
-                        this.vista.mostrarJugadasJugador(j);
+                        this.vista.mostrarJugadasJugador();
                         this.vista.setEstado(EstadoVista.BAJAR);
                     }
                 }
                 case JUGADA_RECHAZADA -> {
-                    if (!(iObservableRemoto instanceof Jugador)) {
-                        break;
-                    }
-                    Jugador j = (Jugador) (iObservableRemoto);
-                    if (j == this.juego.getJugadorActual()) {
+                    if (this.juego.getJugadorActual().getNombre().equals(this.nombre)) {
                         this.vista.jugadaRechazada();
                     }
                 }
                 case JUGADOR_BAJO -> {
-                    if (!(iObservableRemoto instanceof Jugador)) {
-                        break;
-                    }
-                    Jugador j = (Jugador) (iObservableRemoto);
-                    if (this.juego.getJugadorActual().getNombre().equals(j.getNombre())) {
+                    if (this.juego.getJugadorActual().getNombre().equals(this.nombre)) {
                         this.vista.clearMemo();
                         this.vista.mostrarMano();
                         this.vista.mostrarAllJugadas();
@@ -103,42 +88,27 @@ public class Controlador implements IControladorRemoto, Serializable {
                     } else this.vista.mostrarAllJugadas();
                 }
                 case BAJADA_RECHAZADA -> {
-                    if (!(iObservableRemoto instanceof Jugador)) {
-                        break;
-                    }
-                    Jugador j = (Jugador) (iObservableRemoto);
-                    if (this.juego.getJugadorActual().getNombre().equals(j.getNombre())) {
+                    if (this.juego.getJugadorActual().getNombre().equals(this.nombre)) {
                         this.vista.bajadaRechazada();
                         this.vista.setEstado(EstadoVista.TIRAR_O_BAJAR);
+                        this.vista.printError(ErrorVista.BAJADA_RECHAZADA);
                         this.juego.deshacerJugadas();
                     }
                 }
                 case JUGADA_MODIFICADA -> {
-                    if (!(iObservableRemoto instanceof Jugador)) {
-                        break;
-                    }
-                    Jugador j = (Jugador) (iObservableRemoto);
-                    if (!this.juego.getJugadorActual().getNombre().equals(j.getNombre())) {
+                    if (!this.juego.getJugadorActual().getNombre().equals(this.nombre)) {
                         vista.mostrarAllJugadas();
                     }
                 }
                 case DESCARGA_RECHAZADA -> {
-                    if (!(iObservableRemoto instanceof Jugador)) {
-                        break;
-                    }
-                    Jugador j = (Jugador) (iObservableRemoto);
-                    if (this.juego.getJugadorActual().getNombre().equals(j.getNombre())) {
-                        this.vista.setManoActual(j.getMano());
+                    if (this.juego.getJugadorActual().getNombre().equals(this.nombre)) {
+                        this.vista.setManoActual(this.juego.getJugador(this.nombre).getMano());
                         vista.mostrarMano();
                         vista.setEstado(EstadoVista.BAJADO_DESCARGAR_O_TIRAR);
                     }
                 }
                 case RONDA_GANADA -> {
-                    if (!(iObservableRemoto instanceof Jugador)) {
-                        break;
-                    }
-                    Jugador j = (Jugador) (iObservableRemoto);
-                    this.vista.rondaGanada(j);
+                    this.vista.rondaGanada(this.juego.getJugador(this.nombre));
                     this.vista.setEstado(EstadoVista.ESPERANDO_USUARIO);
                 }
             }
@@ -153,11 +123,20 @@ public class Controlador implements IControladorRemoto, Serializable {
     public IJugador getGanador() throws RemoteException {
         return this.juego.getJugadorActual();
     }
+    public List<Jugada> getJugadasJugador(){
+        try {
+            return this.juego.getJugador(nombre).getJugadas();
+        }
+        catch (RemoteException e) {
+            this.vista.printError(ErrorVista.CONEXION);
+        }
+        return null;
+    }
     public void agregarCartaJuego(int indiceJugada, int indiceCarta, boolean alFinal) throws RemoteException {
         Jugada jugada = this.juego.getAllJugadas().get(indiceJugada);
         Carta carta = this.juego.getJugadorActual().getMano().tomarCarta(indiceCarta);
         if ((jugada != null) && (carta != null)) {
-            this.juego.agregarCartaAJugada(jugada,carta,alFinal);
+            this.juego.agregarCartaAJugada(indiceJugada,indiceCarta,alFinal);
         }
         else this.vista.setEstado(EstadoVista.BAJADO_DESCARGAR_O_TIRAR);
     }
@@ -195,7 +174,7 @@ public class Controlador implements IControladorRemoto, Serializable {
     public void tirarCartaAlPozo(int indice) {
         try {
             Carta carta = this.juego.getJugadorActual().getMano().getCartas().get(indice);
-            this.juego.tirarCartaPozo(carta);
+            this.juego.tirarCartaPozo(indice);
         }
         catch (RemoteException e) {
             this.vista.printError(ErrorVista.CONEXION);
@@ -235,7 +214,7 @@ public class Controlador implements IControladorRemoto, Serializable {
             for (int index : indices) {
                 cartasJugada.add(cartasMano.get(index));
             }
-            this.juego.armarJugada(cartasJugada);
+            this.juego.armarJugada(indices);
         }
         catch (RemoteException e) {
             this.vista.printError(ErrorVista.CONEXION);

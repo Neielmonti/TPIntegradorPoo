@@ -11,7 +11,7 @@ import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
 public interface IJuego extends Remote, IObservableRemoto{
-    void agregarCartaAJugada(Jugada jugada, Carta carta, boolean alFinal) throws RemoteException;
+    void agregarCartaAJugada(int indiceJugada, int indiceCarta, boolean alFinal) throws RemoteException;
     Ronda getRondaActual() throws RemoteException;
     boolean nombreValido(String nombre) throws RemoteException;
     boolean faltanJugadores() throws RemoteException;
@@ -19,12 +19,12 @@ public interface IJuego extends Remote, IObservableRemoto{
     void verificarJugadas() throws RemoteException;
     void allJugadoresNotificar(Evento evento) throws RemoteException;
     List<Jugada> getAllJugadas() throws RemoteException;
-    void armarJugada(List<Carta> cartas) throws RemoteException;
+    void armarJugada(int[] indices) throws RemoteException;
     Jugada armandoJugada(List<Carta> cartas) throws RemoteException;
     void agregarJugador(Jugador j) throws RemoteException;
     Pozo getPozo() throws RemoteException;
     void tomarDelPozo() throws RemoteException;
-    void tirarCartaPozo(Carta carta) throws RemoteException;
+    void tirarCartaPozo(int indice) throws RemoteException;
     void tomarDelMazo() throws RemoteException;
     Jugador getJugadorActual() throws RemoteException;
     Jugador getJugador(String nombre) throws RemoteException;
