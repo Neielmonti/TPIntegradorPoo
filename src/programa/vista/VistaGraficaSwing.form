@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="programa.vista.VistaGraficaSwing">
+  <grid id="27dc6" binding="panelPrincipal" layout-manager="GridLayoutManager" row-count="2" column-count="2" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+    <margin top="0" left="0" bottom="0" right="0"/>
+    <constraints>
+      <xy x="20" y="20" width="1323" height="400"/>
+    </constraints>
+    <properties/>
+    <border type="none"/>
+    <children>
+      <scrollpane id="e18e1">
+        <constraints>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="7" hsize-policy="7" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="c2c88" class="javax.swing.JTextArea" binding="memoTextArea" default-binding="true">
+            <constraints/>
+            <properties>
+              <text value=""/>
+            </properties>
+          </component>
+        </children>
+      </scrollpane>
+      <grid id="bee02" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+        <constraints>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <component id="831b7" class="javax.swing.JToggleButton" binding="c1ToggleButton" default-binding="true">
+            <constraints/>
+            <properties>
+              <text value="C1"/>
+            </properties>
+          </component>
+          <component id="d260a" class="javax.swing.JToggleButton" binding="c2ToggleButton" default-binding="true">
+            <constraints/>
+            <properties>
+              <text value="C2"/>
+            </properties>
+          </component>
+          <component id="ee152" class="javax.swing.JToggleButton" binding="c3ToggleButton" default-binding="true">
+            <constraints/>
+            <properties>
+              <text value="C3"/>
+            </properties>
+          </component>
+          <component id="7490b" class="javax.swing.JToggleButton" binding="c4ToggleButton" default-binding="true">
+            <constraints/>
+            <properties>
+              <text value="C4"/>
+            </properties>
+          </component>
+          <component id="a0849" class="javax.swing.JToggleButton" binding="c5ToggleButton" default-binding="true">
+            <constraints/>
+            <properties>
+              <text value="C5"/>
+            </properties>
+          </component>
+          <component id="4cc7" class="javax.swing.JToggleButton" binding="c6ToggleButton" default-binding="true">
+            <constraints/>
+            <properties>
+              <text value="C6"/>
+            </properties>
+          </component>
+          <component id="aae60" class="javax.swing.JToggleButton" binding="c7ToggleButton" default-binding="true">
+            <constraints/>
+            <properties>
+              <text value="C7"/>
+            </properties>
+          </component>
+          <component id="8e05b" class="javax.swing.JToggleButton" binding="c8ToggleButton" default-binding="true">
+            <constraints/>
+            <properties>
+              <text value="C8"/>
+            </properties>
+          </component>
+          <component id="5c87b" class="javax.swing.JToggleButton" binding="c9ToggleButton" default-binding="true">
+            <constraints/>
+            <properties>
+              <text value="C9"/>
+            </properties>
+          </component>
+          <component id="34c8f" class="javax.swing.JToggleButton" binding="c10ToggleButton" default-binding="true">
+            <constraints/>
+            <properties>
+              <text value="C10"/>
+            </properties>
+          </component>
+          <component id="af642" class="javax.swing.JToggleButton" binding="c11ToggleButton" default-binding="true">
+            <constraints/>
+            <properties>
+              <text value="C11"/>
+            </properties>
+          </component>
+          <component id="8e1d9" class="javax.swing.JToggleButton" binding="c12ToggleButton" default-binding="true">
+            <constraints/>
+            <properties>
+              <text value="C12"/>
+            </properties>
+          </component>
+          <component id="599bc" class="javax.swing.JToggleButton" binding="c13ToggleButton" default-binding="true">
+            <constraints/>
+            <properties>
+              <text value="C13"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <grid id="e87ca" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+        <margin top="0" left="0" bottom="0" right="0"/>
+        <constraints>
+          <grid row="0" column="1" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties/>
+        <border type="none"/>
+        <children>
+          <grid id="2062" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="b616a" class="javax.swing.JButton" binding="pozoButton" default-binding="true">
+                <constraints/>
+                <properties>
+                  <text value="Pozo"/>
+                </properties>
+              </component>
+              <component id="7cba3" class="javax.swing.JButton" binding="mazoButton" default-binding="true">
+                <constraints/>
+                <properties>
+                  <text value="Mazo"/>
+                </properties>
+              </component>
+            </children>
+          </grid>
+          <grid id="851f1" layout-manager="GridLayoutManager" row-count="5" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+            <margin top="0" left="0" bottom="0" right="0"/>
+            <constraints>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties/>
+            <border type="none"/>
+            <children>
+              <component id="cdc2c" class="javax.swing.JButton" binding="tirarCartaButton" default-binding="true">
+                <constraints>
+                  <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties>
+                  <text value="TirarCarta"/>
+                </properties>
+              </component>
+              <grid id="84194" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="0" left="0" bottom="0" right="0"/>
+                <constraints>
+                  <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="f5d92" class="javax.swing.JButton" binding="armarJugadaButton" default-binding="true">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value="ArmarJugada"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+              <grid id="882a8" layout-manager="GridLayoutManager" row-count="1" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="0" left="0" bottom="0" right="0"/>
+                <constraints>
+                  <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="23615" class="javax.swing.JButton" binding="bajarseButton" default-binding="true">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value="Bajarse"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+              <grid id="c6256" layout-manager="FlowLayout" hgap="5" vgap="5" flow-align="1">
+                <constraints>
+                  <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="3fb35" class="javax.swing.JButton" binding="alFinalButton" default-binding="true">
+                    <constraints/>
+                    <properties>
+                      <text value="Al Final"/>
+                    </properties>
+                  </component>
+                  <component id="661b0" class="javax.swing.JButton" binding="alInicioButton" default-binding="true">
+                    <constraints/>
+                    <properties>
+                      <text value="Al Inicio"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+              <grid id="d0e2c" layout-manager="GridLayoutManager" row-count="2" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+                <margin top="0" left="0" bottom="0" right="0"/>
+                <constraints>
+                  <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+                </constraints>
+                <properties/>
+                <border type="none"/>
+                <children>
+                  <component id="1d64c" class="javax.swing.JTextField" binding="textbox">
+                    <constraints>
+                      <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="6" anchor="8" fill="1" indent="0" use-parent-layout="false">
+                        <preferred-size width="150" height="-1"/>
+                      </grid>
+                    </constraints>
+                    <properties>
+                      <text value=""/>
+                    </properties>
+                  </component>
+                  <component id="c1e36" class="javax.swing.JButton" binding="setNombreButton" default-binding="true">
+                    <constraints>
+                      <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+                    </constraints>
+                    <properties>
+                      <text value="Set Nombre"/>
+                    </properties>
+                  </component>
+                </children>
+              </grid>
+            </children>
+          </grid>
+        </children>
+      </grid>
+    </children>
+  </grid>
+</form>

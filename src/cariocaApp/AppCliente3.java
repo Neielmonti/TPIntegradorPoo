@@ -6,6 +6,7 @@ import ar.edu.unlu.rmimvc.cliente.Cliente;
 import programa.controlador.Controlador;
 import programa.vista.IVista;
 import programa.vista.VistaConsolaSwing;
+import programa.vista.VistaGraficaSwing;
 
 import javax.swing.*;
 import java.rmi.RemoteException;
@@ -46,7 +47,7 @@ public class AppCliente3 {
                 null,
                 8888
         );
-        IVista vista = new VistaConsolaSwing();
+        IVista vista = new VistaGraficaSwing();
         Controlador controlador = new Controlador(vista);
         Cliente c = new Cliente(ip, Integer.parseInt(port), ipServidor, Integer.parseInt(portServidor));
         try {

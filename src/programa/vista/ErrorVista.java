@@ -7,6 +7,7 @@ public enum ErrorVista {
     JUGADAS_INVALIDAS("Las jugadas no cumplen con las pedidas en la ronda"),
     JUGADA_RECHAZADA("Jugada invalida"),
     BAJADA_RECHAZADA("No se cumple con las jugadas pedidas en la ronda"),
+    CANTIDAD_INCORRECTA_CARTAS("Cantidad incorrecta de cartas, solo puede tirar una y solo una"),
     CONEXION("Error de conexion");
     private String df = "||ERROR||: ";
     private String label;

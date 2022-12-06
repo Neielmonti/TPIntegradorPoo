@@ -132,7 +132,7 @@ public class Controlador implements IControladorRemoto, Serializable{
         }
         return null;
     }
-    public void agregarCartaJuego(int indiceJugada, int indiceCarta, boolean alFinal) throws RemoteException {
+    public void agregarCartaJugada(int indiceJugada, int indiceCarta, boolean alFinal) throws RemoteException {
         Jugada jugada = this.juego.getAllJugadas().get(indiceJugada);
         Carta carta = this.juego.getJugadorActual().getMano().tomarCarta(indiceCarta);
         if ((jugada != null) && (carta != null)) {

@@ -1,7 +1,6 @@
 package programa.vista;
 import java.lang.Character;
 import programa.controlador.Controlador;
-import programa.modelo.Ronda;
 
 import javax.swing.*;
 import java.awt.*;
@@ -57,7 +56,7 @@ public class VistaConsolaSwing extends JFrame implements IVista {
             case ESPERANDO_TURNO -> clearTextbox();
             case ESPERANDO_USUARIO -> this.controlador.estaPreparado();
             case ESPERANDO_JUGADORES -> {
-                //clearMemo();                              //<----------------------------------
+                clearMemo();
                 println(this.estado.getLabel());
             }
             case INICIALIZANDO -> {
@@ -165,9 +164,9 @@ public class VistaConsolaSwing extends JFrame implements IVista {
                         println("Jugada fuera de rango");
                     } else {
                         if (aux[2].equals(OpcionVista.FINAL.getLabel())) {
-                            this.controlador.agregarCartaJuego(indiceJugada - 1, indiceCarta - 1, true);
+                            this.controlador.agregarCartaJugada(indiceJugada - 1, indiceCarta - 1, true);
                         } else if (aux[2].equals(OpcionVista.INICIO.getLabel())) {
-                            this.controlador.agregarCartaJuego(indiceJugada - 1, indiceCarta - 1, false);
+                            this.controlador.agregarCartaJugada(indiceJugada - 1, indiceCarta - 1, false);
                         }
                     }
                 }
@@ -268,7 +267,7 @@ public class VistaConsolaSwing extends JFrame implements IVista {
         if (ronda != null) {
             println("Jugadas a armar: " + this.controlador.getRonda().mostrarRonda() + "\n");
         }
-        else println("SISI AMIGASO LA RONDA ES NULA PUTA MADRE"); //<---------------------------------------------------
+        printError(ErrorVista.CONEXION);
     }
     @Override
     public void clearMemo() {
