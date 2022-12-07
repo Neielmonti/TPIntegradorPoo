@@ -1,4 +1,10 @@
 package programa.vista;
+
+import programa.modelo.conjuntoCarta.Carta;
+
+import java.util.List;
+
 public interface IConjuntoCartas {
-    public String mostrarCartas();
+    String mostrarCartas();
+    List<Carta> getCartas();
 }

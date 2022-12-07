@@ -2,6 +2,8 @@ package programa.modelo;
 import ar.edu.unlu.rmimvc.observer.ObservableRemoto;
 import programa.controlador.Evento;
 import programa.modelo.commons.Formacion;
+import programa.modelo.commons.PaloCarta;
+import programa.modelo.commons.TipoCarta;
 import programa.modelo.conjuntoCarta.Carta;
 import programa.modelo.conjuntoCarta.Mano;
 import programa.modelo.conjuntoCarta.Mazo;
@@ -159,7 +161,7 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         if (this.rondas.isEmpty()) {
             List<CantXFormacion> listaAux;
             // En el caso de rondas complejas (de varios tipos de jugadas) se utiliza una lista auxiliar para crearlas
-            //this.rondas.add(new Ronda(Formacion.ESCALA,1));// ESTE ES SOLO PARA PRUEBAS
+            this.rondas.add(new Ronda(Formacion.ESCALA,1));// ESTE ES SOLO PARA PRUEBAS
             this.rondas.add(new Ronda(Formacion.TRIO,2));
             listaAux = new ArrayList<>();
             listaAux.add(new CantXFormacion(Formacion.TRIO,1));
@@ -190,6 +192,7 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         }
         pozo.pasarCartas(this.mazo);
     }
+    /**
     private void repartirCartas() {
         resetMazo();
         for(Jugador jugador:this.jugadores) {
@@ -198,7 +201,8 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         this.pozo.pasarCartas(this.mazo);
         this.pozo.agregarCarta(this.mazo.tomarCarta());
     }
-    /**
+     **/
+
      // PRUEBITA
     public void repartirCartas(){
         this.resetMazo();
@@ -224,7 +228,6 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         jugadores.peek().setMano(new Mano(cartas));
         this.pozo.agregarCarta(this.mazo.tomarCarta());
     }
-    **/
     @Override
     public Pozo getPozo() {
         return this.pozo;

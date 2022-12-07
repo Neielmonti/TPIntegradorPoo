@@ -2,6 +2,7 @@ package programa.vista;
 import programa.controlador.Controlador;
 import programa.modelo.conjuntoCarta.Carta;
 import programa.modelo.conjuntoCarta.Mano;
+import programa.modelo.conjuntoCarta.Pozo;
 
 import javax.swing.*;
 import java.awt.*;
@@ -73,7 +74,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (mano.getCantidadCartas() >= 2) {
-                    indicesCartasSeleccionadas[1] = c1ToggleButton.isSelected();
+                    indicesCartasSeleccionadas[1] = c2ToggleButton.isSelected();
                 }
             }
         });
@@ -81,7 +82,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (mano.getCantidadCartas() >= 3) {
-                    indicesCartasSeleccionadas[2] = c1ToggleButton.isSelected();
+                    indicesCartasSeleccionadas[2] = c3ToggleButton.isSelected();
                 }
             }
         });
@@ -89,7 +90,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (mano.getCantidadCartas() >= 4) {
-                    indicesCartasSeleccionadas[3] = c1ToggleButton.isSelected();
+                    indicesCartasSeleccionadas[3] = c4ToggleButton.isSelected();
                 }
             }
         });
@@ -97,7 +98,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (mano.getCantidadCartas() >= 5) {
-                    indicesCartasSeleccionadas[4] = c1ToggleButton.isSelected();
+                    indicesCartasSeleccionadas[4] = c5ToggleButton.isSelected();
                 }
             }
         });
@@ -105,7 +106,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (mano.getCantidadCartas() >= 6) {
-                    indicesCartasSeleccionadas[5] = c1ToggleButton.isSelected();
+                    indicesCartasSeleccionadas[5] = c6ToggleButton.isSelected();
                 }
             }
         });
@@ -113,7 +114,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (mano.getCantidadCartas() >= 7) {
-                    indicesCartasSeleccionadas[6] = c1ToggleButton.isSelected();
+                    indicesCartasSeleccionadas[6] = c7ToggleButton.isSelected();
                 }
             }
         });
@@ -121,7 +122,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (mano.getCantidadCartas() >= 8) {
-                    indicesCartasSeleccionadas[7] = c1ToggleButton.isSelected();
+                    indicesCartasSeleccionadas[7] = c8ToggleButton.isSelected();
                 }
             }
         });
@@ -129,7 +130,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (mano.getCantidadCartas() >= 9) {
-                    indicesCartasSeleccionadas[8] = c1ToggleButton.isSelected();
+                    indicesCartasSeleccionadas[8] = c9ToggleButton.isSelected();
                 }
             }
         });
@@ -137,7 +138,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (mano.getCantidadCartas() >= 10) {
-                    indicesCartasSeleccionadas[9] = c1ToggleButton.isSelected();
+                    indicesCartasSeleccionadas[9] = c10ToggleButton.isSelected();
                 }
             }
         });
@@ -145,7 +146,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (mano.getCantidadCartas() >= 11) {
-                    indicesCartasSeleccionadas[10] = c1ToggleButton.isSelected();
+                    indicesCartasSeleccionadas[10] = c11ToggleButton.isSelected();
                 }
             }
         });
@@ -153,7 +154,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (mano.getCantidadCartas() >= 12) {
-                    indicesCartasSeleccionadas[11] = c1ToggleButton.isSelected();
+                    indicesCartasSeleccionadas[11] = c12ToggleButton.isSelected();
                 }
             }
         });
@@ -161,7 +162,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (mano.getCantidadCartas() >= 13) {
-                    indicesCartasSeleccionadas[12] = c1ToggleButton.isSelected();
+                    indicesCartasSeleccionadas[12] = c13ToggleButton.isSelected();
                 }
             }
         });
@@ -270,18 +271,6 @@ public class VistaGraficaSwing extends JFrame implements IVista{
         }
         return cartasSeleccionadas;
     }
-    private void agregarCartaJugada(boolean alFinal) {
-        String aux = textbox.getText();
-        int indiceJugada = convertirANumero(aux);
-        int[] indicesCartas = sacarCartasNulas();
-        try {
-            if (((indiceJugada <= 0) || (indiceJugada >= controlador.getAllJugadas().size())) || (indicesCartas.length != 1)) {
-                printError(ErrorVista.JUGADA_RECHAZADA);
-            } else controlador.agregarCartaJugada(indiceJugada, indicesCartas[0], alFinal);
-        } catch (RemoteException e) {
-            printError(ErrorVista.CONEXION);
-        }
-    }
     private int cantidadCartasSeleccionadas() {
         int cantidad = 0;
         for (boolean indiceCartaSeleccionada : indicesCartasSeleccionadas) {
@@ -291,12 +280,31 @@ public class VistaGraficaSwing extends JFrame implements IVista{
         }
         return cantidad;
     }
+    private void agregarCartaJugada(boolean alFinal) {
+        String aux = textbox.getText();
+        clearTextbox();
+        int indiceJugada = convertirANumero(aux);
+        int[] indicesCartas = sacarCartasNulas();
+        try {
+            if (((indiceJugada <= 0) || (indiceJugada > controlador.getAllJugadas().size())) || (indicesCartas.length != 1)) {
+                printError(ErrorVista.JUGADA_RECHAZADA);
+            } else controlador.agregarCartaJugada(indiceJugada-1, indicesCartas[0], alFinal);
+        } catch (RemoteException e) {
+            printError(ErrorVista.CONEXION);
+        }
+    }
     private int convertirANumero(String texto) {
         try {
             return Integer.parseInt(texto);
         }
         catch (NumberFormatException e) {
             return 0;
+        }
+    }
+    private void resetBotonesCartas() {
+        for (JToggleButton boton: botonesCarta) {
+            boton.setSelected(false);
+            Arrays.fill(indicesCartasSeleccionadas, false);
         }
     }
     @Override
@@ -318,10 +326,38 @@ public class VistaGraficaSwing extends JFrame implements IVista{
     }
     @Override
     public void mostrarAllJugadas() {
+        try {
+            List<IJugada> jugadas = this.controlador.getAllJugadas();
+            String jugadorAnterior = null;
+            for (IJugada jugada : jugadas) {
+                if (jugada.getNombreJugador() != jugadorAnterior) {
+                    jugadorAnterior = jugada.getNombreJugador();
+                    println("------------Jugador " + jugada.getNombreJugador() + "------------");
+                }
+                println("{Jugada " + (jugadas.indexOf(jugada) + 1) + "} -------- \n" + jugada.mostrarCartas() + "\n");
+            }
+        }
+        catch (RemoteException e) {
+            printError(ErrorVista.CONEXION);
+        }
     }
     @Override
     public void setEstado(EstadoVista estado) {
         switch (estado) {
+            case ESPERANDO_TURNO -> {
+                setEnabledBotonesCarta(false);
+                pozoButton.setEnabled(false);
+                mazoButton.setEnabled(false);
+                alFinalButton.setEnabled(false);
+                alInicioButton.setEnabled(false);
+                tirarCartaButton.setEnabled(false);
+                armarJugadaButton.setEnabled(false);
+                bajarseButton.setEnabled(false);
+                textbox.setEnabled(false);
+                setNombreButton.setEnabled(false);
+                this.estado = estado;
+                println(estado.getLabel());
+            }
             case INICIALIZANDO -> {
                 setEnabledBotonesCarta(false);
                 pozoButton.setEnabled(false);
@@ -346,7 +382,9 @@ public class VistaGraficaSwing extends JFrame implements IVista{
                 bajarseButton.setEnabled(false);
                 textbox.setEnabled(false);
                 setNombreButton.setEnabled(true);
+                setNombreButton.setText("Estoy listo!");
                 this.estado = estado;
+                println(estado.getLabel());
             }
             case TOMAR_CARTA -> {
                 setEnabledBotonesCarta(false);
@@ -374,6 +412,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
                 bajarseButton.setEnabled(true);
                 textbox.setEnabled(false);
                 setNombreButton.setEnabled(false);
+                resetBotonesCartas();
                 this.estado = estado;
             }
             case BAJADO_DESCARGAR_O_TIRAR -> {
@@ -387,6 +426,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
                 bajarseButton.setEnabled(false);
                 textbox.setEnabled(true);
                 setNombreButton.setEnabled(false);
+                resetBotonesCartas();
                 this.estado = estado;
             }
 
@@ -415,13 +455,21 @@ public class VistaGraficaSwing extends JFrame implements IVista{
     @Override
     public void mostrarMano() {
         List<Carta> cartas = mano.getCartas();
-        for (int i = 0; i < cartas.size(); i ++) {
-            botonesCarta.get(i).setText(cartas.get(i).mostrarCarta());
+        for (int i = 0; i < botonesCarta.size(); i ++) {
+            if (i < cartas.size()) {
+                Carta carta = cartas.get(i);
+                botonesCarta.get(i).setText(carta.getTipo().getLabel() + carta.getPalo().getSimbol());
+            }
+            else botonesCarta.get(i).setText("");
         }
     }
     @Override
     public void mostrarPozo() {
-        pozoButton.setText(this.controlador.getPozo().mostrarCartas());
+        List<Carta> cartasPozo = this.controlador.getPozo().getCartas();
+        if ((cartasPozo != null) && (cartasPozo.size() > 0)) {
+            Carta carta = cartasPozo.get(cartasPozo.size()-1);
+            pozoButton.setText(carta.getTipo().getLabel() + carta.getPalo().getSimbol());
+        }
     }
     @Override
     public void mostrarRonda() {
@@ -430,7 +478,6 @@ public class VistaGraficaSwing extends JFrame implements IVista{
         if (ronda != null) {
             println("Jugadas a armar: " + this.controlador.getRonda().mostrarRonda() + "\n");
         }
-        printError(ErrorVista.CONEXION);
     }
     @Override
     public void clearMemo() {

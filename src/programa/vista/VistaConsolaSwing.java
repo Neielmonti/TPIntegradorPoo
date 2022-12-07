@@ -267,7 +267,6 @@ public class VistaConsolaSwing extends JFrame implements IVista {
         if (ronda != null) {
             println("Jugadas a armar: " + this.controlador.getRonda().mostrarRonda() + "\n");
         }
-        printError(ErrorVista.CONEXION);
     }
     @Override
     public void clearMemo() {
