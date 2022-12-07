@@ -30,33 +30,41 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
     private void pasarSiguienteJugador() throws RemoteException {
         Jugador aux = this.jugadores.remove();
         this.jugadores.add(aux);
-        allJugadoresNotificar(Evento.CAMBIO_DE_JUGADOR);
+        notificarObservadores(Evento.CAMBIO_DE_JUGADOR);
     }
     private void pasarSiguienteRonda() throws RemoteException{
         Ronda aux = this.rondas.remove();
         this.rondas.add(aux);
         actualizarPuntajes();
         resetearJugadores();
-        allJugadoresNotificar(Evento.RONDA_GANADA);
+        notificarObservadores(Evento.RONDA_GANADA);
     }
     @Override
     public void agregarCartaAJugada(int indiceJugada,int indiceCarta, boolean alFinal) throws RemoteException {
+
         Mano mano = jugadores.peek().getMano();
         //Primero se verifica que la mano del jugador actual contenga la carta pasada
         Carta carta = mano.tomarCarta(indiceCarta);
         Jugada jugada = jugadores.peek().getJugadas().get(indiceJugada);
-        if (mano.getCartas().contains(carta)) {
+
+        System.out.println("Mano: \n" + mano.mostrarCartas() + "\n" + "Jugada: \n" + jugada.mostrarCartas() + "\nCarta:\n" + carta.mostrarCarta());/// <-----------------------
+
+        if (carta != null) {
             if (jugada.agregarCarta(carta, alFinal)) {
+                System.out.println("La jugada fue aceptada, con alFinal:" + alFinal);
                 // Si se pudo agregar la carta a la jugada, se le quita la carta al jugador
-                mano.quitarCarta(carta);
+                //mano.quitarCarta(carta);
                 // Si el jugador se quedo sin cartas, se pasa de ronda (el jugador gano)
                 if (mano.isEmpty()) {
                     pasarSiguienteRonda();
                 } else {
                     notificarObservadores(Evento.MANO_ACTUALIZADA);
-                    allJugadoresNotificar(Evento.JUGADA_MODIFICADA);
+                    notificarObservadores(Evento.JUGADA_MODIFICADA);
                 }
-            } else notificarObservadores(Evento.DESCARGA_RECHAZADA);
+            } else {
+                mano.agregarCarta(carta);
+                notificarObservadores(Evento.DESCARGA_RECHAZADA);
+            }
         }
     }
     @Override
@@ -87,18 +95,11 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         if ((!jugadores.peek().yaBajo()) && (this.rondas.peek().verificarJugadasxRonda(jugadores.peek()))) {
             // Si el jugador actual aun no bajo, y sus jugadas coincides con las pedidas en la ronda, se lo baja y se notifica a todos
             jugadores.peek().bajar();
-            allJugadoresNotificar(Evento.JUGADOR_BAJO);
+            notificarObservadores(Evento.JUGADOR_BAJO);
         }
         else {
             // Caso contrario, se le notifica solo a este jugador que sus jugadas fueron rechazadas (no puede bajarse)
             notificarObservadores(Evento.BAJADA_RECHAZADA);
-        }
-    }
-    @Override
-    public void allJugadoresNotificar(Evento evento) throws RemoteException{
-        // Se utiliza en ocaciones donde la notificacion debe llegar a todos los jugadores, pero deben comprobar si es su turno
-        for (Jugador jugador: jugadores) {
-            notificarObservadores(evento);
         }
     }
     @Override

@@ -17,7 +17,6 @@ public interface IJuego extends Remote, IObservableRemoto{
     boolean faltanJugadores() throws RemoteException;
     void deshacerJugadas() throws RemoteException;
     void verificarJugadas() throws RemoteException;
-    void allJugadoresNotificar(Evento evento) throws RemoteException;
     List<Jugada> getAllJugadas() throws RemoteException;
     void armarJugada(int[] indices) throws RemoteException;
     Jugada armandoJugada(List<Carta> cartas) throws RemoteException;

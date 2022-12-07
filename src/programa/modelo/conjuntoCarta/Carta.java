@@ -18,9 +18,6 @@ public class Carta implements Serializable {
         return this.tipo;
     }
     public String mostrarCarta() {
-        if (this.tipo == TipoCarta.JOKER) {
-            return ("(" + this.tipo.getLabel() + ")");
-        }
-        else return ("(" + this.palo.getLabel() + " - " + this.tipo.getLabel() + ")");
+        return (this.tipo.getLabel() + " " + this.palo.getSimbol());
     }
 }

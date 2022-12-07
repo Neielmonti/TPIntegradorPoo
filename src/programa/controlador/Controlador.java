@@ -76,10 +76,11 @@ public class Controlador implements IControladorRemoto, Serializable{
                 }
                 case JUGADA_RECHAZADA -> {
                     if (this.juego.getJugadorActual().getNombre().equals(this.nombre)) {
-                        this.vista.jugadaRechazada();
+                        this.vista.printError(ErrorVista.JUGADA_RECHAZADA);
                     }
                 }
                 case JUGADOR_BAJO -> {
+                    System.out.println("Bandera");
                     if (this.juego.getJugadorActual().getNombre().equals(this.nombre)) {
                         this.vista.clearMemo();
                         this.vista.mostrarMano();

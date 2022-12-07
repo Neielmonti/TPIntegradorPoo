@@ -14,9 +14,8 @@ public class Jugador implements IJugador, Serializable {
     private boolean preparado = false;
     private List<Jugada> jugadas = new ArrayList<>();
     private Mano mano;
-    public Jugador(String nombre) throws RemoteException {
+    public Jugador(String nombre){
         this.nombre = nombre;
-        //agregarObservador(controlador);
     }
     public int getPuntaje() {
         return this.puntaje;

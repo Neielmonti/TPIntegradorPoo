@@ -170,6 +170,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
             @Override
             public void actionPerformed(ActionEvent e) {
                 int[] indicesCartas = sacarCartasNulas();
+                resetBotonesCartas();
                 controlador.armarJugada(indicesCartas);
             }
         });
@@ -285,6 +286,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
         clearTextbox();
         int indiceJugada = convertirANumero(aux);
         int[] indicesCartas = sacarCartasNulas();
+        resetBotonesCartas();
         try {
             if (((indiceJugada <= 0) || (indiceJugada > controlador.getAllJugadas().size())) || (indicesCartas.length != 1)) {
                 printError(ErrorVista.JUGADA_RECHAZADA);
@@ -304,24 +306,14 @@ public class VistaGraficaSwing extends JFrame implements IVista{
     private void resetBotonesCartas() {
         for (JToggleButton boton: botonesCarta) {
             boton.setSelected(false);
-            Arrays.fill(indicesCartasSeleccionadas, false);
         }
+        Arrays.fill(indicesCartasSeleccionadas, false);
     }
     @Override
     public void mostrarJugadasJugador() {
-        try {
-            List<IJugada> jugadas = this.controlador.getAllJugadas();
-            String jugadorAnterior = null;
-            for (IJugada jugada : jugadas) {
-                if (jugada.getNombreJugador() != jugadorAnterior) {
-                    jugadorAnterior = jugada.getNombreJugador();
-                    println("------------Jugador " + jugada.getNombreJugador() + "------------");
-                }
-                println("{Jugada " + (jugadas.indexOf(jugada) + 1) + "} -------- \n" + jugada.mostrarCartas() + "\n");
-            }
-        }
-        catch (RemoteException e) {
-            printError(ErrorVista.CONEXION);
+        List<IJugada> jugadas = new ArrayList<>(this.controlador.getJugadasJugador());
+        for (IJugada jugada: jugadas) {
+            println("[Jugada " + (jugadas.indexOf(jugada) + 1) + "] -------- \n" + jugada.mostrarCartas() + "\n");
         }
     }
     @Override
@@ -370,6 +362,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
                 textbox.setEnabled(true);
                 setNombreButton.setEnabled(true);
                 this.estado = estado;
+                println("Ingrese su nombre de usuario");
             }
             case ESPERANDO_USUARIO -> {
                 setEnabledBotonesCarta(false);
@@ -387,7 +380,6 @@ public class VistaGraficaSwing extends JFrame implements IVista{
                 println(estado.getLabel());
             }
             case TOMAR_CARTA -> {
-                setEnabledBotonesCarta(false);
                 mostrarMano();
                 mostrarPozo();
                 pozoButton.setEnabled(true);
@@ -399,10 +391,11 @@ public class VistaGraficaSwing extends JFrame implements IVista{
                 bajarseButton.setEnabled(false);
                 textbox.setEnabled(false);
                 setNombreButton.setEnabled(false);
+                resetBotonesCartas();
+                setEnabledBotonesCarta(false);
                 this.estado = estado;
             }
             case TIRAR_O_BAJAR -> {
-                setEnabledBotonesCarta(true);
                 mazoButton.setEnabled(false);
                 pozoButton.setEnabled(false);
                 alFinalButton.setEnabled(false);
@@ -412,11 +405,14 @@ public class VistaGraficaSwing extends JFrame implements IVista{
                 bajarseButton.setEnabled(true);
                 textbox.setEnabled(false);
                 setNombreButton.setEnabled(false);
+                //setEnabledBotonesCarta(true);
                 resetBotonesCartas();
+                mostrarMano();
+                setEnabledBotonesCarta(true);
                 this.estado = estado;
+                println("Tire una carta o bajese");
             }
             case BAJADO_DESCARGAR_O_TIRAR -> {
-                setEnabledBotonesCarta(true);
                 mazoButton.setEnabled(false);
                 pozoButton.setEnabled(false);
                 alFinalButton.setEnabled(true);
@@ -427,14 +423,16 @@ public class VistaGraficaSwing extends JFrame implements IVista{
                 textbox.setEnabled(true);
                 setNombreButton.setEnabled(false);
                 resetBotonesCartas();
+                setEnabledBotonesCarta(true);
                 this.estado = estado;
+                println("Ingrese el nro de la jugada donde va a descargar, la carta a descargar, y elija si al principio o al final de la jugada");
             }
 
         }
     }
     private void setEnabledBotonesCarta(boolean valor) {
         for (JToggleButton boton: botonesCarta) {
-            boton.setEnabled(valor);
+            boton.setEnabled((valor) && (!boton.getText().equals("")));
         }
     }
     @Override
@@ -451,6 +449,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
     }
     @Override
     public void jugadaRechazada() {
+        printError(ErrorVista.JUGADA_RECHAZADA);
     }
     @Override
     public void mostrarMano() {
@@ -458,17 +457,19 @@ public class VistaGraficaSwing extends JFrame implements IVista{
         for (int i = 0; i < botonesCarta.size(); i ++) {
             if (i < cartas.size()) {
                 Carta carta = cartas.get(i);
-                botonesCarta.get(i).setText(carta.getTipo().getLabel() + carta.getPalo().getSimbol());
+                botonesCarta.get(i).setText(carta.mostrarCarta());
             }
-            else botonesCarta.get(i).setText("");
+            else {
+                botonesCarta.get(i).setText("");
+            }
         }
+        resetBotonesCartas();
     }
     @Override
     public void mostrarPozo() {
-        List<Carta> cartasPozo = this.controlador.getPozo().getCartas();
-        if ((cartasPozo != null) && (cartasPozo.size() > 0)) {
-            Carta carta = cartasPozo.get(cartasPozo.size()-1);
-            pozoButton.setText(carta.getTipo().getLabel() + carta.getPalo().getSimbol());
+        IConjuntoCartas pozo = this.controlador.getPozo();
+        if (pozo != null) {
+            pozoButton.setText(pozo.mostrarCartas());
         }
     }
     @Override
