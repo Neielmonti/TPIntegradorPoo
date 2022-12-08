@@ -7,6 +7,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
+import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 public class VistaConsolaSwing extends JFrame implements IVista {
@@ -90,16 +91,22 @@ public class VistaConsolaSwing extends JFrame implements IVista {
             }
             case TIRAR_CARTA -> {
                 String in = textbox.getText().trim();
-                try {
-                    if (in.equals(OpcionVista.CANCELAR.getLabel())) {
-                        setEstado(EstadoVista.TIRAR_O_BAJAR);
-                    } else {
-                        clearTextbox();
-                        this.controlador.tirarCartaAlPozo(Integer.parseInt(in) - 1);
+                if (in.equals(OpcionVista.CANCELAR.getLabel())) {
+                    if (this.controlador.jugadorYaBajo()) {
+                        setEstado(EstadoVista.BAJADO_DESCARGAR_O_TIRAR);
                     }
-                }
-                catch (Exception e) {
-                    printError(ErrorVista.ACCION_NO_RECONOCIDA);
+                    else setEstado(EstadoVista.TIRAR_O_BAJAR);
+                } else {
+                    try {
+                        int indiceCarta = Integer.parseInt(in);
+                        if ((indiceCarta <= 0) || (indiceCarta > this.manoActual.getCantidadCartas())) {
+                            println("Carta fuera de rango");
+                        }
+                        else this.controlador.tirarCartaAlPozo(indiceCarta - 1);
+                    }
+                    catch (NumberFormatException e) {
+                        println("Por favor, ingrese el indice de la carta a tirar");
+                    }
                 }
             }
             case BAJAR -> {

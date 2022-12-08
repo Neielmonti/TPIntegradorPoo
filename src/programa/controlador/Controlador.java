@@ -80,7 +80,6 @@ public class Controlador implements IControladorRemoto, Serializable{
                     }
                 }
                 case JUGADOR_BAJO -> {
-                    System.out.println("Bandera");
                     if (this.juego.getJugadorActual().getNombre().equals(this.nombre)) {
                         this.vista.clearMemo();
                         this.vista.mostrarMano();
@@ -106,6 +105,7 @@ public class Controlador implements IControladorRemoto, Serializable{
                         this.vista.setManoActual(this.juego.getJugador(this.nombre).getMano());
                         vista.mostrarMano();
                         vista.setEstado(EstadoVista.BAJADO_DESCARGAR_O_TIRAR);
+                        vista.printError(ErrorVista.DESCARGA_INVALIDA);
                     }
                 }
                 case RONDA_GANADA -> {
@@ -132,6 +132,9 @@ public class Controlador implements IControladorRemoto, Serializable{
             this.vista.printError(ErrorVista.CONEXION);
         }
         return null;
+    }
+    public boolean jugadorYaBajo() throws RemoteException {
+        return this.juego.getJugador(this.nombre).yaBajo();
     }
     public void agregarCartaJugada(int indiceJugada, int indiceCarta, boolean alFinal) throws RemoteException {
         Jugada jugada = this.juego.getAllJugadas().get(indiceJugada);

@@ -288,7 +288,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
         int[] indicesCartas = sacarCartasNulas();
         resetBotonesCartas();
         try {
-            if (((indiceJugada <= 0) || (indiceJugada > controlador.getAllJugadas().size())) || (indicesCartas.length != 1)) {
+            if ((indiceJugada <= 0) || (indiceJugada > controlador.getAllJugadas().size()) || (indicesCartas.length != 1)) {
                 printError(ErrorVista.JUGADA_RECHAZADA);
             } else controlador.agregarCartaJugada(indiceJugada-1, indicesCartas[0], alFinal);
         } catch (RemoteException e) {
