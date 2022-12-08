@@ -10,8 +10,8 @@ import programa.vista.VistaGraficaSwing;
 import java.rmi.RemoteException;
 public class AppClientePrueba1 {
     public static void main(String[] args) {
-        //VistaGraficaSwing vista = new VistaGraficaSwing();
-        VistaConsolaSwing vista = new VistaConsolaSwing();
+        VistaGraficaSwing vista = new VistaGraficaSwing();
+        //VistaConsolaSwing vista = new VistaConsolaSwing();
        IControladorRemoto controlador = new Controlador(vista);
         Cliente cliente = new Cliente("127.0.0.1",9998,"127.0.0.1",8888);
         try {

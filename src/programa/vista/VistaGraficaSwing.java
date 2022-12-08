@@ -8,9 +8,10 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.*;
 import java.util.List;
 
 public class VistaGraficaSwing extends JFrame implements IVista{
@@ -42,7 +43,8 @@ public class VistaGraficaSwing extends JFrame implements IVista{
     private EstadoVista estado = EstadoVista.INICIALIZANDO;
     private IMano mano;
     private List<JToggleButton> botonesCarta = new ArrayList<>();
-    private boolean[] indicesCartasSeleccionadas = new boolean[Mano.getSizeMano() + 1];
+//    private boolean[] indicesCartasSeleccionadas = new boolean[Mano.getSizeMano() + 1];
+    private Queue<String> indiceCartasSeleccionadas = new LinkedList<>();
 
     public VistaGraficaSwing() {
         super("Carioca App");
@@ -61,108 +63,186 @@ public class VistaGraficaSwing extends JFrame implements IVista{
         botonesCarta.add(c11ToggleButton);
         botonesCarta.add(c12ToggleButton);
         botonesCarta.add(c13ToggleButton);
-        Arrays.fill(indicesCartasSeleccionadas, false);
-        c1ToggleButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+//        Arrays.fill(indicesCartasSeleccionadas, false);
+        c1ToggleButton.setFocusable(false);
+        c1ToggleButton.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent ev) {
                 if (mano.getCantidadCartas() >= 1) {
-                    indicesCartasSeleccionadas[0] = c1ToggleButton.isSelected();
+                    if (ev.getStateChange() == ItemEvent.SELECTED) {
+                        indiceCartasSeleccionadas.add("0");
+                    } else {
+                        if (ev.getStateChange() == ItemEvent.DESELECTED) {
+                            indiceCartasSeleccionadas.remove("0");
+                        }
+                    }
                 }
             }
         });
-        c2ToggleButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        c2ToggleButton.setFocusable(false);
+        c2ToggleButton.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent ev) {
                 if (mano.getCantidadCartas() >= 2) {
-                    indicesCartasSeleccionadas[1] = c2ToggleButton.isSelected();
+                    if (ev.getStateChange() == ItemEvent.SELECTED) {
+                        indiceCartasSeleccionadas.add("1");
+                    } else {
+                        if (ev.getStateChange() == ItemEvent.DESELECTED) {
+                            indiceCartasSeleccionadas.remove("1");
+                        }
+                    }
                 }
             }
         });
-        c3ToggleButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        c3ToggleButton.setFocusable(false);
+        c3ToggleButton.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent ev) {
                 if (mano.getCantidadCartas() >= 3) {
-                    indicesCartasSeleccionadas[2] = c3ToggleButton.isSelected();
+                    if (ev.getStateChange() == ItemEvent.SELECTED) {
+                        indiceCartasSeleccionadas.add("2");
+                    } else {
+                        if (ev.getStateChange() == ItemEvent.DESELECTED) {
+                            indiceCartasSeleccionadas.remove("2");
+                        }
+                    }
                 }
             }
         });
-        c4ToggleButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        c4ToggleButton.setFocusable(false);
+        c4ToggleButton.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent ev) {
                 if (mano.getCantidadCartas() >= 4) {
-                    indicesCartasSeleccionadas[3] = c4ToggleButton.isSelected();
+                    if (ev.getStateChange() == ItemEvent.SELECTED) {
+                        indiceCartasSeleccionadas.add("3");
+                    } else {
+                        if (ev.getStateChange() == ItemEvent.DESELECTED) {
+                            indiceCartasSeleccionadas.remove("3");
+                        }
+                    }
                 }
             }
         });
-        c5ToggleButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        c5ToggleButton.setFocusable(false);
+        c5ToggleButton.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent ev) {
                 if (mano.getCantidadCartas() >= 5) {
-                    indicesCartasSeleccionadas[4] = c5ToggleButton.isSelected();
+                    if (ev.getStateChange() == ItemEvent.SELECTED) {
+                        indiceCartasSeleccionadas.add("4");
+                    } else {
+                        if (ev.getStateChange() == ItemEvent.DESELECTED) {
+                            indiceCartasSeleccionadas.remove("4");
+                        }
+                    }
                 }
             }
         });
-        c6ToggleButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        c6ToggleButton.setFocusable(false);
+        c6ToggleButton.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent ev) {
                 if (mano.getCantidadCartas() >= 6) {
-                    indicesCartasSeleccionadas[5] = c6ToggleButton.isSelected();
+                    if (ev.getStateChange() == ItemEvent.SELECTED) {
+                        indiceCartasSeleccionadas.add("5");
+                    } else {
+                        if (ev.getStateChange() == ItemEvent.DESELECTED) {
+                            indiceCartasSeleccionadas.remove("5");
+                        }
+                    }
                 }
             }
         });
-        c7ToggleButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        c7ToggleButton.setFocusable(false);
+        c7ToggleButton.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent ev) {
                 if (mano.getCantidadCartas() >= 7) {
-                    indicesCartasSeleccionadas[6] = c7ToggleButton.isSelected();
+                    if (ev.getStateChange() == ItemEvent.SELECTED) {
+                        indiceCartasSeleccionadas.add("6");
+                    } else {
+                        if (ev.getStateChange() == ItemEvent.DESELECTED) {
+                            indiceCartasSeleccionadas.remove("6");
+                        }
+                    }
                 }
             }
         });
-        c8ToggleButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        c8ToggleButton.setFocusable(false);
+        c8ToggleButton.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent ev) {
                 if (mano.getCantidadCartas() >= 8) {
-                    indicesCartasSeleccionadas[7] = c8ToggleButton.isSelected();
+                    if (ev.getStateChange() == ItemEvent.SELECTED) {
+                        indiceCartasSeleccionadas.add("7");
+                    } else {
+                        if (ev.getStateChange() == ItemEvent.DESELECTED) {
+                            indiceCartasSeleccionadas.remove("7");
+                        }
+                    }
                 }
             }
         });
-        c9ToggleButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        c9ToggleButton.setFocusable(false);
+        c9ToggleButton.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent ev) {
                 if (mano.getCantidadCartas() >= 9) {
-                    indicesCartasSeleccionadas[8] = c9ToggleButton.isSelected();
+                    if (ev.getStateChange() == ItemEvent.SELECTED) {
+                        indiceCartasSeleccionadas.add("8");
+                    } else {
+                        if (ev.getStateChange() == ItemEvent.DESELECTED) {
+                            indiceCartasSeleccionadas.remove("8");
+                        }
+                    }
                 }
             }
         });
-        c10ToggleButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        c10ToggleButton.setFocusable(false);
+        c10ToggleButton.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent ev) {
                 if (mano.getCantidadCartas() >= 10) {
-                    indicesCartasSeleccionadas[9] = c10ToggleButton.isSelected();
+                    if (ev.getStateChange() == ItemEvent.SELECTED) {
+                        indiceCartasSeleccionadas.add("9");
+                    } else {
+                        if (ev.getStateChange() == ItemEvent.DESELECTED) {
+                            indiceCartasSeleccionadas.remove("9");
+                        }
+                    }
                 }
             }
         });
-        c11ToggleButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        c11ToggleButton.setFocusable(false);
+        c11ToggleButton.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent ev) {
                 if (mano.getCantidadCartas() >= 11) {
-                    indicesCartasSeleccionadas[10] = c11ToggleButton.isSelected();
+                    if (ev.getStateChange() == ItemEvent.SELECTED) {
+                        indiceCartasSeleccionadas.add("10");
+                    } else {
+                        if (ev.getStateChange() == ItemEvent.DESELECTED) {
+                            indiceCartasSeleccionadas.remove("10");
+                        }
+                    }
                 }
             }
         });
-        c12ToggleButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        c12ToggleButton.setFocusable(false);
+        c12ToggleButton.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent ev) {
                 if (mano.getCantidadCartas() >= 12) {
-                    indicesCartasSeleccionadas[11] = c12ToggleButton.isSelected();
+                    if (ev.getStateChange() == ItemEvent.SELECTED) {
+                        indiceCartasSeleccionadas.add("11");
+                    } else {
+                        if (ev.getStateChange() == ItemEvent.DESELECTED) {
+                            indiceCartasSeleccionadas.remove("11");
+                        }
+                    }
                 }
             }
         });
-        c13ToggleButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
+        c13ToggleButton.setFocusable(false);
+        c13ToggleButton.addItemListener(new ItemListener() {
+            public void itemStateChanged(ItemEvent ev) {
                 if (mano.getCantidadCartas() >= 13) {
-                    indicesCartasSeleccionadas[12] = c13ToggleButton.isSelected();
+                    if (ev.getStateChange() == ItemEvent.SELECTED) {
+                        indiceCartasSeleccionadas.add("12");
+                    } else {
+                        if (ev.getStateChange() == ItemEvent.DESELECTED) {
+                            indiceCartasSeleccionadas.remove("12");
+                        }
+                    }
                 }
             }
         });
@@ -261,6 +341,17 @@ public class VistaGraficaSwing extends JFrame implements IVista{
         printError(ErrorVista.CONEXION);
         setEstado(EstadoVista.TIRAR_O_BAJAR);
     }
+    private int[] sacarCartasNulas() {
+        int[] retorno = new int[indiceCartasSeleccionadas.size()];
+        System.out.println("CARTAS: \n");
+        for (int i = 0; i < retorno.length; i++) {
+            System.out.println(indiceCartasSeleccionadas.peek());
+            retorno[i] = Integer.parseInt(indiceCartasSeleccionadas.remove());
+        }
+        System.out.println("\n");
+        return retorno;
+    }
+    /**
     private int[] sacarCartasNulas(){
         int[] cartasSeleccionadas = new int[cantidadCartasSeleccionadas()];
         int i = 0;
@@ -281,6 +372,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
         }
         return cantidad;
     }
+     **/
     private void agregarCartaJugada(boolean alFinal) {
         String aux = textbox.getText();
         clearTextbox();
@@ -307,7 +399,8 @@ public class VistaGraficaSwing extends JFrame implements IVista{
         for (JToggleButton boton: botonesCarta) {
             boton.setSelected(false);
         }
-        Arrays.fill(indicesCartasSeleccionadas, false);
+        //Arrays.fill(indicesCartasSeleccionadas, false);
+        indiceCartasSeleccionadas = new LinkedList<>();
     }
     @Override
     public void mostrarJugadasJugador() {

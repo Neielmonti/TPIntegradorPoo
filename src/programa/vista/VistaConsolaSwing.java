@@ -133,11 +133,15 @@ public class VistaConsolaSwing extends JFrame implements IVista {
                 }
                 else {
                     String[] aux = in.split("-");
-                    int[] indices = convertirAIndices(aux);
-                    if (indices != null) {
-                        this.controlador.armarJugada(indices);
+                    try {
+                        int[] indices = convertirAIndices(aux);
+                        if (indices != null) {
+                            this.controlador.armarJugada(indices);
+                        } else printError(ErrorVista.FUERA_DE_RANGO);
                     }
-                    else printError(ErrorVista.FUERA_DE_RANGO);
+                    catch (NumberFormatException e) {
+                        printError(ErrorVista.ACCION_NO_RECONOCIDA);
+                    }
                 }
             }
             case BAJADO_DESCARGAR_O_TIRAR -> {
@@ -177,7 +181,7 @@ public class VistaConsolaSwing extends JFrame implements IVista {
                         }
                     }
                 }
-                catch (Exception e) {
+                catch (NumberFormatException e) {
                     printError(ErrorVista.ACCION_NO_RECONOCIDA);
                 }
             }

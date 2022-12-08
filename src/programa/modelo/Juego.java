@@ -10,7 +10,6 @@ import programa.modelo.conjuntoCarta.Mazo;
 import programa.modelo.conjuntoCarta.Pozo;
 import programa.modelo.conjuntoCarta.jugadas.Jugada;
 import programa.modelo.verificadores.*;
-import programa.utils.observer.IObservador;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.*;
@@ -21,7 +20,6 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
     private Queue<Ronda> rondas = new LinkedList();
     private Mazo mazo = new Mazo();
     private Pozo pozo = new Pozo();
-    private List<IObservador> observadores = new ArrayList<>();
     private List<VerificarJugada> verificadoresJugada = new ArrayList<>();
     public Juego(){
         generarRondas();
@@ -193,6 +191,7 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         }
         pozo.pasarCartas(this.mazo);
     }
+
     /**
     private void repartirCartas() {
         resetMazo();
@@ -202,7 +201,7 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         this.pozo.pasarCartas(this.mazo);
         this.pozo.agregarCarta(this.mazo.tomarCarta());
     }
-     **/
+    **/
 
      // PRUEBITA
     public void repartirCartas(){
@@ -211,7 +210,7 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.NUEVE));
         cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.DIEZ));
         cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.J));
-        cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.JOKER));
+        cartas.add(new Carta(PaloCarta.JOKER, TipoCarta.JOKER));
         cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.K));
         cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.Q));
         jugadores.peek().setMano(new Mano(cartas));
@@ -220,15 +219,16 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         jugadores.add(aux);
 
         cartas = new ArrayList<>();
-        cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.NUEVE));
         cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.DIEZ));
+        cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.NUEVE));
         cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.J));
-        cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.JOKER));
+        cartas.add(new Carta(PaloCarta.JOKER, TipoCarta.JOKER));
         cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.K));
         cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.Q));
         jugadores.peek().setMano(new Mano(cartas));
         this.pozo.agregarCarta(this.mazo.tomarCarta());
     }
+
     @Override
     public Pozo getPozo() {
         return this.pozo;
@@ -248,6 +248,9 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
             Carta carta = jugadores.peek().getMano().tomarCarta(indice);
             jugadores.peek().getMano().quitarCarta(carta);
             this.pozo.agregarCarta(carta);
+            if ((jugadores.peek().getJugadas().size() > 0) && (!jugadores.peek().yaBajo())) {
+                jugadores.peek().deshacerJugadas();
+            }
             if (jugadores.peek().getMano().isEmpty()) {
                 pasarSiguienteRonda();
             }
