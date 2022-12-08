@@ -45,7 +45,7 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         Mano mano = jugadores.peek().getMano();
         //Primero se verifica que la mano del jugador actual contenga la carta pasada
         Carta carta = mano.tomarCarta(indiceCarta);
-        Jugada jugada = jugadores.peek().getJugadas().get(indiceJugada);
+        Jugada jugada = getAllJugadas().get(indiceJugada);
 
         System.out.println("Mano: \n" + mano.mostrarCartas() + "\n" + "Jugada: \n" + jugada.mostrarCartas() + "\nCarta:\n" + carta.mostrarCarta());/// <-----------------------
 

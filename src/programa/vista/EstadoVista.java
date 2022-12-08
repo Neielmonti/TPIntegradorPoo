@@ -16,8 +16,8 @@ public enum EstadoVista {
             "o escriba [" + OpcionVista.CANCELAR.getLabel() + "] para cancelar"),
     BAJADO_DESCARGAR_O_TIRAR("Quiere [" + OpcionVista.DESCARGAR.getLabel() + "] cartas en las jugadas o quiere [" + OpcionVista.TIRAR_CARTA.getLabel() + "]?\n" +
             "Ingrese su opcion"),
-    BAJADO_DESCARGAR("En que jugada quiere descargar? Y que carta? \n" +
-            "Ingrese el nro. de jugada, el nro. de carta, e [" + OpcionVista.INICIO.getLabel() + "] o [" + OpcionVista.FINAL.getLabel()
+    BAJADO_DESCARGAR("Que carta quiere descargar? Y en que jugada? \n" +
+            "Ingrese el nro. de carta, el nro. de jugada, e [" + OpcionVista.INICIO.getLabel() + "] o [" + OpcionVista.FINAL.getLabel()
             + "] separados por un guion,\n" +
             "o escriba [" + OpcionVista.CANCELAR.getLabel() + "] para cancelar");
     private String label;

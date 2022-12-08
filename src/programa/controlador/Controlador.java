@@ -76,36 +76,40 @@ public class Controlador implements IControladorRemoto, Serializable{
                 }
                 case JUGADA_RECHAZADA -> {
                     if (this.juego.getJugadorActual().getNombre().equals(this.nombre)) {
+                        vista.clearMemo();
+                        vista.mostrarMano();
+                        vista.mostrarAllJugadas();
                         this.vista.printError(ErrorVista.JUGADA_RECHAZADA);
+                        vista.setEstado(EstadoVista.BAJAR);
                     }
                 }
-                case JUGADOR_BAJO -> {
+                case JUGADOR_BAJO, JUGADA_MODIFICADA -> {
+                    this.vista.clearMemo();
+                    if (!this.juego.getJugadorActual().getNombre().equals(this.nombre)) {
+                        this.vista.mostrarRonda();
+                    }
+                    this.vista.mostrarMano();
+                    this.vista.mostrarAllJugadas();
                     if (this.juego.getJugadorActual().getNombre().equals(this.nombre)) {
-                        this.vista.clearMemo();
-                        this.vista.mostrarMano();
-                        this.vista.mostrarAllJugadas();
                         this.vista.setEstado(EstadoVista.BAJADO_DESCARGAR_O_TIRAR);
-                    } else this.vista.mostrarAllJugadas();
+                    }
                 }
                 case BAJADA_RECHAZADA -> {
                     if (this.juego.getJugadorActual().getNombre().equals(this.nombre)) {
                         this.vista.bajadaRechazada();
-                        this.vista.setEstado(EstadoVista.TIRAR_O_BAJAR);
                         this.vista.printError(ErrorVista.BAJADA_RECHAZADA);
+                        this.vista.setEstado(EstadoVista.TIRAR_O_BAJAR);
                         this.juego.deshacerJugadas();
-                    }
-                }
-                case JUGADA_MODIFICADA -> {
-                    if (!this.juego.getJugadorActual().getNombre().equals(this.nombre)) {
-                        vista.mostrarAllJugadas();
                     }
                 }
                 case DESCARGA_RECHAZADA -> {
                     if (this.juego.getJugadorActual().getNombre().equals(this.nombre)) {
+                        this.vista.clearMemo();
                         this.vista.setManoActual(this.juego.getJugador(this.nombre).getMano());
                         vista.mostrarMano();
-                        vista.setEstado(EstadoVista.BAJADO_DESCARGAR_O_TIRAR);
+                        vista.mostrarAllJugadas();
                         vista.printError(ErrorVista.DESCARGA_INVALIDA);
+                        vista.setEstado(EstadoVista.BAJADO_DESCARGAR_O_TIRAR);
                     }
                 }
                 case RONDA_GANADA -> {
@@ -137,12 +141,15 @@ public class Controlador implements IControladorRemoto, Serializable{
         return this.juego.getJugador(this.nombre).yaBajo();
     }
     public void agregarCartaJugada(int indiceJugada, int indiceCarta, boolean alFinal) throws RemoteException {
-        Jugada jugada = this.juego.getAllJugadas().get(indiceJugada);
-        Carta carta = this.juego.getJugadorActual().getMano().tomarCarta(indiceCarta);
-        if ((jugada != null) && (carta != null)) {
+        int cantidadJugadas = this.juego.getAllJugadas().size();
+        int cantidadCartas = this.juego.getJugadorActual().getMano().getCantidadCartas();
+        if ((indiceCarta >= 0) && (indiceCarta < cantidadCartas) && (indiceJugada >= 0) && (indiceJugada < cantidadJugadas)) {
             this.juego.agregarCartaAJugada(indiceJugada,indiceCarta,alFinal);
         }
-        else this.vista.setEstado(EstadoVista.BAJADO_DESCARGAR_O_TIRAR);
+        else {
+            this.vista.printError(ErrorVista.DESCARGA_INVALIDA);
+            this.vista.setEstado(EstadoVista.BAJADO_DESCARGAR_O_TIRAR);
+        }
     }
     public List<IJugada> getAllJugadas() throws RemoteException {
         List<IJugada> jugadasOut = new ArrayList<>(this.juego.getAllJugadas());
