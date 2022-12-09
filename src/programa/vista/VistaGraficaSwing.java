@@ -43,13 +43,16 @@ public class VistaGraficaSwing extends JFrame implements IVista{
     private EstadoVista estado = EstadoVista.INICIALIZANDO;
     private IMano mano;
     private List<JToggleButton> botonesCarta = new ArrayList<>();
-//    private boolean[] indicesCartasSeleccionadas = new boolean[Mano.getSizeMano() + 1];
     private Queue<String> indiceCartasSeleccionadas = new LinkedList<>();
-
     public VistaGraficaSwing() {
         super("Carioca App");
         setContentPane(this.panelPrincipal);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                controlador.quitarJugador();
+            }
+        });
         botonesCarta.add(c1ToggleButton);
         botonesCarta.add(c2ToggleButton);
         botonesCarta.add(c3ToggleButton);

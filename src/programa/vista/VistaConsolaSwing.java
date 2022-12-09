@@ -26,6 +26,11 @@ public class VistaConsolaSwing extends JFrame implements IVista {
         super("Carioca App");
         setContentPane(this.panelPrincipal);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                controlador.quitarJugador();
+            }
+        });
         buttEnter.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

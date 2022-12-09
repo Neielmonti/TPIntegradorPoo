@@ -77,6 +77,7 @@ public class Controlador implements IControladorRemoto, Serializable{
                 case JUGADA_RECHAZADA -> {
                     if (this.juego.getJugadorActual().getNombre().equals(this.nombre)) {
                         vista.clearMemo();
+                        vista.mostrarRonda();
                         vista.mostrarMano();
                         vista.mostrarAllJugadas();
                         this.vista.printError(ErrorVista.JUGADA_RECHAZADA);
@@ -117,6 +118,15 @@ public class Controlador implements IControladorRemoto, Serializable{
                     this.vista.setEstado(EstadoVista.ESPERANDO_USUARIO);
                 }
             }
+        }
+    }
+    public void quitarJugador() {
+        try {
+            this.juego.quitarJugador(this.nombre,this);
+        }
+        catch (RemoteException e) {
+            e.printStackTrace();
+            //vista.printError(ErrorVista.CONEXION);
         }
     }
     public void deshacerJugadas() throws RemoteException{

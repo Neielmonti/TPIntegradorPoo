@@ -1,4 +1,5 @@
 package programa.modelo;
+import ar.edu.unlu.rmimvc.cliente.IControladorRemoto;
 import ar.edu.unlu.rmimvc.observer.ObservableRemoto;
 import programa.controlador.Evento;
 import programa.modelo.commons.Formacion;
@@ -21,6 +22,7 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
     private Mazo mazo = new Mazo();
     private Pozo pozo = new Pozo();
     private List<VerificarJugada> verificadoresJugada = new ArrayList<>();
+    private boolean onGame = false;
     public Juego(){
         generarRondas();
         generarVerificadores();
@@ -28,6 +30,11 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
     private void pasarSiguienteJugador() throws RemoteException {
         Jugador aux = this.jugadores.remove();
         this.jugadores.add(aux);
+        int i = 0;
+        while ((!jugadores.peek().getPreparado()) && (i < jugadores.size())) {
+            aux = this.jugadores.remove();
+            this.jugadores.add(aux);
+        }
         notificarObservadores(Evento.CAMBIO_DE_JUGADOR);
     }
     private void pasarSiguienteRonda() throws RemoteException{
@@ -35,6 +42,7 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         this.rondas.add(aux);
         actualizarPuntajes();
         resetearJugadores();
+        onGame = false;
         notificarObservadores(Evento.RONDA_GANADA);
     }
     @Override
@@ -144,6 +152,9 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
     public void agregarJugador(Jugador j) throws RemoteException {
         if ((!jugadores.contains(j)) && (jugadores.size() < this.maxJugadores)) {
             // Si el jugador es nuevo en el juego, y hay espacio, se lo agrega
+            if (onGame) {
+
+            }
             jugadores.add(j);
             //j.notificarObservadores(Evento.JUGADOR_AGREGADO);
         }
@@ -192,17 +203,15 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         pozo.pasarCartas(this.mazo);
     }
 
-    /**
     private void repartirCartas() {
         resetMazo();
         for(Jugador jugador:this.jugadores) {
-            jugador.setMano(this.mazo.formarMano());
+            if (jugador.getPreparado()) {jugador.setMano(this.mazo.formarMano());}
         }
         this.pozo.pasarCartas(this.mazo);
         this.pozo.agregarCarta(this.mazo.tomarCarta());
     }
-    **/
-
+    /**
      // PRUEBITA
     public void repartirCartas(){
         this.resetMazo();
@@ -228,7 +237,33 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         jugadores.peek().setMano(new Mano(cartas));
         this.pozo.agregarCarta(this.mazo.tomarCarta());
     }
-
+    **/
+    @Override
+    public void quitarJugador(String nombre, IControladorRemoto controlador) throws RemoteException{
+        boolean eliminoJugadorActual = jugadores.peek().getNombre().equals(nombre);
+        for (int i = 0; i < jugadores.size(); i ++) {
+            Jugador jugador = jugadores.remove();
+            if (!jugador.getNombre().equals(nombre)) {
+                jugadores.add(jugador);
+            }
+            else {
+                jugador.getMano().pasarCartas(this.mazo);
+                for (Jugada j: jugador.getJugadas()) {
+                    j.pasarCartas(this.mazo);
+                }
+                i++;
+            }
+        }
+        System.out.println("PreRemove");
+        removerObservador(controlador);
+        System.out.println("PostRemove");
+        if (jugadores.size() == 1) {
+            notificarObservadores(Evento.RONDA_GANADA);
+        }
+        else if (eliminoJugadorActual) {
+            notificarObservadores(Evento.CAMBIO_DE_JUGADOR);
+        }
+    }
     @Override
     public Pozo getPozo() {
         return this.pozo;
@@ -303,8 +338,9 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
                 break;
             }
         }
-        if ((todosListos) && (jugadores.size() >= this.minJugadores)){
+        if ((todosListos) && (jugadores.size() >= this.minJugadores) && (!onGame)){
             repartirCartas();
+            onGame = true;
             notificarObservadores(Evento.CAMBIO_DE_JUGADOR);
         }
     }

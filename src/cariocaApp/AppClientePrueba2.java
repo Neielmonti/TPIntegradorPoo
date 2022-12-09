@@ -14,7 +14,7 @@ public class AppClientePrueba2 {
         VistaGraficaSwing vista = new VistaGraficaSwing();
         //VistaConsolaSwing vista = new VistaConsolaSwing();
        IControladorRemoto controlador = new Controlador(vista);
-        Cliente cliente = new Cliente("127.0.0.1",9999,"127.0.0.1",8888);
+        Cliente cliente = new Cliente("127.0.0.1",9998,"127.0.0.1",8888);
         try {
             cliente.iniciar(controlador);
         } catch (RemoteException e) {

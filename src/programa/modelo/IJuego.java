@@ -1,4 +1,5 @@
 package programa.modelo;
+import ar.edu.unlu.rmimvc.cliente.IControladorRemoto;
 import ar.edu.unlu.rmimvc.observer.IObservableRemoto;
 import programa.controlador.Evento;
 import programa.modelo.conjuntoCarta.Carta;
@@ -21,6 +22,7 @@ public interface IJuego extends Remote, IObservableRemoto{
     void armarJugada(int[] indices) throws RemoteException;
     Jugada armandoJugada(List<Carta> cartas) throws RemoteException;
     void agregarJugador(Jugador j) throws RemoteException;
+    void quitarJugador(String nombre, IControladorRemoto controlador) throws RemoteException;
     Pozo getPozo() throws RemoteException;
     void tomarDelPozo() throws RemoteException;
     void tirarCartaPozo(int indice) throws RemoteException;

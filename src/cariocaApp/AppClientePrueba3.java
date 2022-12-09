@@ -4,16 +4,16 @@ import ar.edu.unlu.rmimvc.cliente.Cliente;
 import ar.edu.unlu.rmimvc.cliente.IControladorRemoto;
 import programa.controlador.Controlador;
 import programa.vista.ErrorVista;
-import programa.vista.VistaConsolaSwing;
 import programa.vista.VistaGraficaSwing;
 
 import java.rmi.RemoteException;
-public class AppClientePrueba1 {
+
+public class AppClientePrueba3 {
     public static void main(String[] args) {
         VistaGraficaSwing vista = new VistaGraficaSwing();
         //VistaConsolaSwing vista = new VistaConsolaSwing();
        IControladorRemoto controlador = new Controlador(vista);
-        Cliente cliente = new Cliente("127.0.0.1",9999,"127.0.0.1",8888);
+        Cliente cliente = new Cliente("127.0.0.1",9997,"127.0.0.1",8888);
         try {
             cliente.iniciar(controlador);
         } catch (RemoteException e) {
