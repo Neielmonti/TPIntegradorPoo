@@ -31,8 +31,12 @@ public class Controlador implements IControladorRemoto, Serializable{
                 case CAMBIO_DE_JUGADOR -> {
                     vista.clearMemo();
                     vista.mostrarRonda();
-                    this.vista.setManoActual(this.juego.getJugador(this.nombre).getMano());
-                    vista.mostrarMano();
+                    if (this.juego.getJugador(this.nombre) != null) {
+                        if (this.juego.getJugador(this.nombre).getMano() != null) {
+                            this.vista.setManoActual(this.juego.getJugador(this.nombre).getMano());
+                            vista.mostrarMano();
+                        }
+                    }
                     if (this.juego.getJugadorActual().getNombre().equals(this.nombre)) {
                         if (this.juego.getJugadorActual().yaBajo()) {
                             this.vista.mostrarAllJugadas();
@@ -194,8 +198,11 @@ public class Controlador implements IControladorRemoto, Serializable{
     }
     public void tirarCartaAlPozo(int indice) {
         try {
-            Carta carta = this.juego.getJugadorActual().getMano().getCartas().get(indice);
-            this.juego.tirarCartaPozo(indice);
+            int cantidadCartasMano = this.juego.getJugadorActual().getMano().getCantidadCartas();
+            if ((indice >= 0) && (indice < cantidadCartasMano)) {
+                this.juego.tirarCartaPozo(indice);
+            }
+            else this.vista.printError(ErrorVista.FUERA_DE_RANGO);
         }
         catch (RemoteException e) {
             this.vista.printError(ErrorVista.CONEXION);

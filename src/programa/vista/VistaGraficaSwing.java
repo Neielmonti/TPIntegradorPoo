@@ -261,6 +261,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
             @Override
             public void actionPerformed(ActionEvent e) {
                 int[] indicesCartas = sacarCartasNulas();
+                resetBotonesCartas();
                 if (indicesCartas.length != 1) {
                     printError(ErrorVista.CANTIDAD_INCORRECTA_CARTAS);
                 }
@@ -549,17 +550,22 @@ public class VistaGraficaSwing extends JFrame implements IVista{
     }
     @Override
     public void mostrarMano() {
-        List<Carta> cartas = mano.getCartas();
-        for (int i = 0; i < botonesCarta.size(); i ++) {
-            if (i < cartas.size()) {
-                Carta carta = cartas.get(i);
-                botonesCarta.get(i).setText(carta.mostrarCarta());
-            }
-            else {
-                botonesCarta.get(i).setText("");
-            }
+        if (mano == null) {
+            println("MANO NULA MANO NULA MANO NULA");
+            System.out.println("MANO NULA MANO NULA MANO NULA");
         }
-        resetBotonesCartas();
+        else {
+            List<Carta> cartas = mano.getCartas();
+            for (int i = 0; i < botonesCarta.size(); i++) {
+                if (i < cartas.size()) {
+                    Carta carta = cartas.get(i);
+                    botonesCarta.get(i).setText(carta.mostrarCarta());
+                } else {
+                    botonesCarta.get(i).setText("");
+                }
+            }
+            resetBotonesCartas();
+        }
     }
     @Override
     public void mostrarPozo() {

@@ -27,7 +27,9 @@ public class Jugador implements IJugador, Serializable {
         this.bajo = true;
     }
     public void actualizarPuntaje() {
-        this.puntaje += this.mano.calcularPuntosCartas();
+        if (this.mano != null) {
+            this.puntaje += this.mano.calcularPuntosCartas();
+        }
     }
     public Mano tomarMano(){
         Mano m = this.mano;

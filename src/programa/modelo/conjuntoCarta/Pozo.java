@@ -9,8 +9,13 @@ public class Pozo extends ConjuntoCartas {
     public String mostrarCartas() {
         List<Carta> cartas = getCartas();
         String result = "";
-        if (!cartas.isEmpty()) {
-            result = cartas.get(cartas.size() - 1).mostrarCarta();
+        try {
+            if (!cartas.isEmpty()) {
+                result = cartas.get(cartas.size() - 1).mostrarCarta();
+            }
+        }
+        catch (NullPointerException e) {
+            result = "";
         }
         return result;
     }

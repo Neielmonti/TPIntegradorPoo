@@ -31,7 +31,7 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         Jugador aux = this.jugadores.remove();
         this.jugadores.add(aux);
         int i = 0;
-        while ((!jugadores.peek().getPreparado()) && (i < jugadores.size())) {
+        while (((!jugadores.peek().getPreparado()) || (jugadores.peek().getMano() == null)) && (i < jugadores.size())) {
             aux = this.jugadores.remove();
             this.jugadores.add(aux);
         }
@@ -51,15 +51,10 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         Mano mano = jugadores.peek().getMano();
         //Primero se verifica que la mano del jugador actual contenga la carta pasada
         Carta carta = mano.tomarCarta(indiceCarta);
-        Jugada jugada = getAllJugadas().get(indiceJugada);
 
-        System.out.println("Mano: \n" + mano.mostrarCartas() + "\n" + "Jugada: \n" + jugada.mostrarCartas() + "\nCarta:\n" + carta.mostrarCarta());/// <-----------------------
-
-        if (carta != null) {
+        if ((carta != null) && (indiceJugada >= 0) && (indiceJugada < getAllJugadas().size())) {
+            Jugada jugada = getAllJugadas().get(indiceJugada);
             if (jugada.agregarCarta(carta, alFinal)) {
-                System.out.println("La jugada fue aceptada, con alFinal:" + alFinal);
-                // Si se pudo agregar la carta a la jugada, se le quita la carta al jugador
-                //mano.quitarCarta(carta);
                 // Si el jugador se quedo sin cartas, se pasa de ronda (el jugador gano)
                 if (mano.isEmpty()) {
                     pasarSiguienteRonda();
@@ -152,9 +147,6 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
     public void agregarJugador(Jugador j) throws RemoteException {
         if ((!jugadores.contains(j)) && (jugadores.size() < this.maxJugadores)) {
             // Si el jugador es nuevo en el juego, y hay espacio, se lo agrega
-            if (onGame) {
-
-            }
             jugadores.add(j);
             //j.notificarObservadores(Evento.JUGADOR_AGREGADO);
         }
@@ -203,6 +195,7 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         pozo.pasarCartas(this.mazo);
     }
 
+    /**
     private void repartirCartas() {
         resetMazo();
         for(Jugador jugador:this.jugadores) {
@@ -211,7 +204,7 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         this.pozo.pasarCartas(this.mazo);
         this.pozo.agregarCarta(this.mazo.tomarCarta());
     }
-    /**
+    **/
      // PRUEBITA
     public void repartirCartas(){
         this.resetMazo();
@@ -236,32 +229,50 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.Q));
         jugadores.peek().setMano(new Mano(cartas));
         this.pozo.agregarCarta(this.mazo.tomarCarta());
+
+        aux = jugadores.remove();
+        jugadores.add(aux);
+
+        if (aux.getMano() == null) {
+            cartas = new ArrayList<>();
+            cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.DIEZ));
+            cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.NUEVE));
+            cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.J));
+            cartas.add(new Carta(PaloCarta.JOKER, TipoCarta.JOKER));
+            cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.K));
+            cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.Q));
+            jugadores.peek().setMano(new Mano(cartas));
+            this.pozo.agregarCarta(this.mazo.tomarCarta());
+        }
     }
-    **/
     @Override
     public void quitarJugador(String nombre, IControladorRemoto controlador) throws RemoteException{
-        boolean eliminoJugadorActual = jugadores.peek().getNombre().equals(nombre);
-        for (int i = 0; i < jugadores.size(); i ++) {
-            Jugador jugador = jugadores.remove();
-            if (!jugador.getNombre().equals(nombre)) {
-                jugadores.add(jugador);
-            }
-            else {
-                jugador.getMano().pasarCartas(this.mazo);
-                for (Jugada j: jugador.getJugadas()) {
-                    j.pasarCartas(this.mazo);
+        if (!jugadores.isEmpty()) {
+            boolean eliminoJugadorActual = jugadores.peek().getNombre().equals(nombre);
+            boolean eliminado = false;
+            for (int i = 0; i < jugadores.size(); i++) {
+                Jugador jugador = jugadores.remove();
+                if (!jugador.getNombre().equals(nombre)) {
+                    jugadores.add(jugador);
+                } else {
+                    eliminado = true;
+                    if (jugador.getMano() != null) {
+                        jugador.getMano().pasarCartas(this.mazo);
+                    }
+                    for (Jugada j : jugador.getJugadas()) {
+                        j.pasarCartas(this.mazo);
+                    }
+                    i++;
                 }
-                i++;
             }
-        }
-        System.out.println("PreRemove");
-        removerObservador(controlador);
-        System.out.println("PostRemove");
-        if (jugadores.size() == 1) {
-            notificarObservadores(Evento.RONDA_GANADA);
-        }
-        else if (eliminoJugadorActual) {
-            notificarObservadores(Evento.CAMBIO_DE_JUGADOR);
+            if (eliminado) {
+                removerObservador(controlador);
+                if (jugadores.size() == 1) {
+                    notificarObservadores(Evento.RONDA_GANADA);
+                } else if ((eliminoJugadorActual) && (!jugadores.isEmpty())) {
+                    notificarObservadores(Evento.CAMBIO_DE_JUGADOR);
+                }
+            }
         }
     }
     @Override
@@ -270,6 +281,7 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
     }
     @Override
     public void tomarDelPozo() throws RemoteException {
+        System.out.println("JUGADOR ACTUAL: " + jugadores.peek().getNombre());
         this.jugadores.peek().getMano().agregarCarta(this.pozo.tomarCarta());
         if (this.pozo.isEmpty()) {
             this.pozo.agregarCarta(this.mazo.tomarCarta());
