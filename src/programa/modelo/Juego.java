@@ -195,8 +195,6 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         }
         pozo.pasarCartas(this.mazo);
     }
-
-    /**
     private void repartirCartas() {
         resetMazo();
         for(Jugador jugador:this.jugadores) {
@@ -205,8 +203,8 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         this.pozo.pasarCartas(this.mazo);
         this.pozo.agregarCarta(this.mazo.tomarCarta());
     }
-    **/
      // PRUEBITA
+    /**
     public void repartirCartas(){
         this.resetMazo();
         List<Carta> cartas;
@@ -223,6 +221,7 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         this.pozo.pasarCartas(this.mazo);
         this.pozo.agregarCarta(this.mazo.tomarCarta());
     }
+     **/
     @Override
     public void quitarJugador(String nombre, IControladorRemoto controlador) throws RemoteException{
         if (!jugadores.isEmpty()) {
