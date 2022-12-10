@@ -4,7 +4,7 @@ import programa.modelo.commons.Formacion;
 import programa.modelo.conjuntoCarta.Carta;
 import programa.modelo.conjuntoCarta.jugadas.JugadaEscaleraReal;
 import java.util.List;
-public class VerificarEscaleraReal extends VerificarAscendiente{
+public class VerificarEscaleraReal extends VerificarAscendienteMismoPalo{
     public VerificarEscaleraReal() {
         super(Formacion.ESCALERA_REAL);
     }
@@ -14,12 +14,5 @@ public class VerificarEscaleraReal extends VerificarAscendiente{
             return new JugadaEscaleraReal(cartas, jugador);
         }
         else return null;
-    }
-    @Override
-    protected boolean esSiguiente(Carta c1, Carta siguiente) {
-        if (super.esSiguiente(c1,siguiente) && (siguiente.getPalo() == c1.getPalo())) {
-            return true;
-        }
-        else return false;
     }
 }
