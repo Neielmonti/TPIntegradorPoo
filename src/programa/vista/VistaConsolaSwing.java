@@ -7,7 +7,6 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.rmi.RemoteException;
-import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
 public class VistaConsolaSwing extends JFrame implements IVista {
@@ -25,7 +24,7 @@ public class VistaConsolaSwing extends JFrame implements IVista {
     public VistaConsolaSwing() {
         super("Carioca App");
         setContentPane(this.panelPrincipal);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent e) {
                 controlador.quitarJugador();
@@ -68,7 +67,7 @@ public class VistaConsolaSwing extends JFrame implements IVista {
             case INICIALIZANDO -> {
                 String nombre = textbox.getText().trim();
                 if (nombre.equals("")) {printError(ErrorVista.NOMBRE_INVALIDO);}
-                else if (!controlador.faltanJugadoes()) {printError(ErrorVista.PARTIDA_LLENA);}
+                else if (!controlador.faltanJugadores()) {printError(ErrorVista.PARTIDA_LLENA);}
                 else if (!controlador.nombreValido(nombre.trim())) {printError(ErrorVista.NOMBRE_TOMADO);}
                 else {controlador.agregarJugador(nombre.trim());}
                 clearTextbox();

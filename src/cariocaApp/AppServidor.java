@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 public class AppServidor {
-    public static void main(String[] args) {
+    public void iniciar() {
         ArrayList<String> ips = Util.getIpDisponibles();
         String ip = (String) JOptionPane.showInputDialog(
                 null,

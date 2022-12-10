@@ -187,7 +187,7 @@ public class Controlador implements IControladorRemoto, Serializable{
             this.vista.printError(ErrorVista.CONEXION);
         }
     }
-    public boolean faltanJugadoes() {
+    public boolean faltanJugadores() {
         try {
             return this.juego.faltanJugadores();
         }

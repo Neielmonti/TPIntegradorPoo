@@ -1,8 +1,6 @@
 package programa.vista;
 import programa.controlador.Controlador;
 import programa.modelo.conjuntoCarta.Carta;
-import programa.modelo.conjuntoCarta.Mano;
-import programa.modelo.conjuntoCarta.Pozo;
 
 import javax.swing.*;
 import java.awt.*;
@@ -47,7 +45,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
     public VistaGraficaSwing() {
         super("Carioca App");
         setContentPane(this.panelPrincipal);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         addWindowListener(new java.awt.event.WindowAdapter() {
             public void windowClosing(java.awt.event.WindowEvent e) {
                 controlador.quitarJugador();
@@ -308,7 +306,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
                     try {
                         String nombre = textbox.getText().trim();
                         if (nombre.equals("")) {printError(ErrorVista.NOMBRE_INVALIDO);}
-                        else if (!controlador.faltanJugadoes()) {printError(ErrorVista.PARTIDA_LLENA);}
+                        else if (!controlador.faltanJugadores()) {printError(ErrorVista.PARTIDA_LLENA);}
                         else if (!controlador.nombreValido(nombre)) {printError(ErrorVista.NOMBRE_TOMADO);}
                         else controlador.agregarJugador(nombre);
                     }
@@ -329,7 +327,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    setSize(1000,500);
+                    setSize(940,300);
                     setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
