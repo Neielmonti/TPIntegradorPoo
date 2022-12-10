@@ -148,6 +148,7 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         if ((!jugadores.contains(j)) && (jugadores.size() < this.maxJugadores)) {
             // Si el jugador es nuevo en el juego, y hay espacio, se lo agrega
             jugadores.add(j);
+            System.out.println("Jugador agregado: " + j.getNombre());
             //j.notificarObservadores(Evento.JUGADOR_AGREGADO);
         }
     }
@@ -208,42 +209,19 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
      // PRUEBITA
     public void repartirCartas(){
         this.resetMazo();
-        List<Carta> cartas = new ArrayList<>();
-        cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.NUEVE));
-        cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.DIEZ));
-        cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.J));
-        cartas.add(new Carta(PaloCarta.JOKER, TipoCarta.JOKER));
-        cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.K));
-        cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.Q));
-        jugadores.peek().setMano(new Mano(cartas));
-
-        Jugador aux = jugadores.remove();
-        jugadores.add(aux);
-
-        cartas = new ArrayList<>();
-        cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.DIEZ));
-        cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.NUEVE));
-        cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.J));
-        cartas.add(new Carta(PaloCarta.JOKER, TipoCarta.JOKER));
-        cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.K));
-        cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.Q));
-        jugadores.peek().setMano(new Mano(cartas));
-        this.pozo.agregarCarta(this.mazo.tomarCarta());
-
-        aux = jugadores.remove();
-        jugadores.add(aux);
-
-        if (aux.getMano() == null) {
+        List<Carta> cartas;
+        for (Jugador jugador: jugadores) {
             cartas = new ArrayList<>();
-            cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.DIEZ));
             cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.NUEVE));
+            cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.DIEZ));
             cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.J));
             cartas.add(new Carta(PaloCarta.JOKER, TipoCarta.JOKER));
             cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.K));
             cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.Q));
-            jugadores.peek().setMano(new Mano(cartas));
-            this.pozo.agregarCarta(this.mazo.tomarCarta());
+            jugador.setMano(new Mano(cartas));
         }
+        this.pozo.pasarCartas(this.mazo);
+        this.pozo.agregarCarta(this.mazo.tomarCarta());
     }
     @Override
     public void quitarJugador(String nombre, IControladorRemoto controlador) throws RemoteException{
@@ -269,9 +247,11 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
                 removerObservador(controlador);
                 if (jugadores.size() == 1) {
                     notificarObservadores(Evento.RONDA_GANADA);
-                } else if ((eliminoJugadorActual) && (!jugadores.isEmpty())) {
+                }
+                else if ((eliminoJugadorActual) && (!jugadores.isEmpty()) && (onGame)) {
                     notificarObservadores(Evento.CAMBIO_DE_JUGADOR);
                 }
+                else if (!jugadores.isEmpty()) {verificarJugadoresEstanPreparados();}
             }
         }
     }

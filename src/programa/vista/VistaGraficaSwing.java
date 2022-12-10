@@ -307,7 +307,8 @@ public class VistaGraficaSwing extends JFrame implements IVista{
                 else {
                     try {
                         String nombre = textbox.getText().trim();
-                        if (!controlador.faltanJugadoes()) {printError(ErrorVista.PARTIDA_LLENA);}
+                        if (nombre.equals("")) {printError(ErrorVista.NOMBRE_INVALIDO);}
+                        else if (!controlador.faltanJugadoes()) {printError(ErrorVista.PARTIDA_LLENA);}
                         else if (!controlador.nombreValido(nombre)) {printError(ErrorVista.NOMBRE_TOMADO);}
                         else controlador.agregarJugador(nombre);
                     }

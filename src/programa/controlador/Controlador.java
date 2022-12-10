@@ -29,6 +29,13 @@ public class Controlador implements IControladorRemoto, Serializable{
                     this.vista.setEstado(EstadoVista.ESPERANDO_USUARIO);
                 }
                 case CAMBIO_DE_JUGADOR -> {
+                    Jugador j = this.juego.getJugador(this.nombre);
+                    if (j == null) {
+                        break;
+                    }
+                    if (j.getMano() == null) {
+                        break;
+                    }
                     vista.clearMemo();
                     vista.mostrarRonda();
                     if (this.juego.getJugador(this.nombre) != null) {
@@ -126,11 +133,12 @@ public class Controlador implements IControladorRemoto, Serializable{
     }
     public void quitarJugador() {
         try {
-            this.juego.quitarJugador(this.nombre,this);
+            if (this.juego != null) {
+                this.juego.quitarJugador(this.nombre, this);
+            }
         }
         catch (RemoteException e) {
-            e.printStackTrace();
-            //vista.printError(ErrorVista.CONEXION);
+            vista.printError(ErrorVista.CONEXION);
         }
     }
     public void deshacerJugadas() throws RemoteException{
