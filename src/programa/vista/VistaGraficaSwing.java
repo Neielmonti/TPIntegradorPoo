@@ -12,6 +12,9 @@ import java.rmi.RemoteException;
 import java.util.*;
 import java.util.List;
 
+import static javax.swing.JOptionPane.ERROR_MESSAGE;
+import static javax.swing.JOptionPane.showMessageDialog;
+
 public class VistaGraficaSwing extends JFrame implements IVista{
     private JPanel panelPrincipal;
     private JToggleButton c1ToggleButton;
@@ -41,7 +44,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
     private EstadoVista estado = EstadoVista.INICIALIZANDO;
     private IMano mano;
     private List<JToggleButton> botonesCarta = new ArrayList<>();
-    private Queue<String> indiceCartasSeleccionadas = new LinkedList<>();
+    private Queue<Integer> indiceCartasSeleccionadas = new LinkedList<>();
     public VistaGraficaSwing() {
         super("Carioca App");
         setContentPane(this.panelPrincipal);
@@ -70,10 +73,10 @@ public class VistaGraficaSwing extends JFrame implements IVista{
             public void itemStateChanged(ItemEvent ev) {
                 if (mano.getCantidadCartas() >= 1) {
                     if (ev.getStateChange() == ItemEvent.SELECTED) {
-                        indiceCartasSeleccionadas.add("0");
+                        indiceCartasSeleccionadas.add(0);
                     } else {
                         if (ev.getStateChange() == ItemEvent.DESELECTED) {
-                            indiceCartasSeleccionadas.remove("0");
+                            indiceCartasSeleccionadas.remove(0);
                         }
                     }
                 }
@@ -84,10 +87,10 @@ public class VistaGraficaSwing extends JFrame implements IVista{
             public void itemStateChanged(ItemEvent ev) {
                 if (mano.getCantidadCartas() >= 2) {
                     if (ev.getStateChange() == ItemEvent.SELECTED) {
-                        indiceCartasSeleccionadas.add("1");
+                        indiceCartasSeleccionadas.add(1);
                     } else {
                         if (ev.getStateChange() == ItemEvent.DESELECTED) {
-                            indiceCartasSeleccionadas.remove("1");
+                            indiceCartasSeleccionadas.remove(1);
                         }
                     }
                 }
@@ -98,10 +101,10 @@ public class VistaGraficaSwing extends JFrame implements IVista{
             public void itemStateChanged(ItemEvent ev) {
                 if (mano.getCantidadCartas() >= 3) {
                     if (ev.getStateChange() == ItemEvent.SELECTED) {
-                        indiceCartasSeleccionadas.add("2");
+                        indiceCartasSeleccionadas.add(2);
                     } else {
                         if (ev.getStateChange() == ItemEvent.DESELECTED) {
-                            indiceCartasSeleccionadas.remove("2");
+                            indiceCartasSeleccionadas.remove(2);
                         }
                     }
                 }
@@ -112,10 +115,10 @@ public class VistaGraficaSwing extends JFrame implements IVista{
             public void itemStateChanged(ItemEvent ev) {
                 if (mano.getCantidadCartas() >= 4) {
                     if (ev.getStateChange() == ItemEvent.SELECTED) {
-                        indiceCartasSeleccionadas.add("3");
+                        indiceCartasSeleccionadas.add(3);
                     } else {
                         if (ev.getStateChange() == ItemEvent.DESELECTED) {
-                            indiceCartasSeleccionadas.remove("3");
+                            indiceCartasSeleccionadas.remove(3);
                         }
                     }
                 }
@@ -126,10 +129,10 @@ public class VistaGraficaSwing extends JFrame implements IVista{
             public void itemStateChanged(ItemEvent ev) {
                 if (mano.getCantidadCartas() >= 5) {
                     if (ev.getStateChange() == ItemEvent.SELECTED) {
-                        indiceCartasSeleccionadas.add("4");
+                        indiceCartasSeleccionadas.add(4);
                     } else {
                         if (ev.getStateChange() == ItemEvent.DESELECTED) {
-                            indiceCartasSeleccionadas.remove("4");
+                            indiceCartasSeleccionadas.remove(4);
                         }
                     }
                 }
@@ -140,10 +143,10 @@ public class VistaGraficaSwing extends JFrame implements IVista{
             public void itemStateChanged(ItemEvent ev) {
                 if (mano.getCantidadCartas() >= 6) {
                     if (ev.getStateChange() == ItemEvent.SELECTED) {
-                        indiceCartasSeleccionadas.add("5");
+                        indiceCartasSeleccionadas.add(5);
                     } else {
                         if (ev.getStateChange() == ItemEvent.DESELECTED) {
-                            indiceCartasSeleccionadas.remove("5");
+                            indiceCartasSeleccionadas.remove(5);
                         }
                     }
                 }
@@ -154,10 +157,10 @@ public class VistaGraficaSwing extends JFrame implements IVista{
             public void itemStateChanged(ItemEvent ev) {
                 if (mano.getCantidadCartas() >= 7) {
                     if (ev.getStateChange() == ItemEvent.SELECTED) {
-                        indiceCartasSeleccionadas.add("6");
+                        indiceCartasSeleccionadas.add(6);
                     } else {
                         if (ev.getStateChange() == ItemEvent.DESELECTED) {
-                            indiceCartasSeleccionadas.remove("6");
+                            indiceCartasSeleccionadas.remove(6);
                         }
                     }
                 }
@@ -168,10 +171,10 @@ public class VistaGraficaSwing extends JFrame implements IVista{
             public void itemStateChanged(ItemEvent ev) {
                 if (mano.getCantidadCartas() >= 8) {
                     if (ev.getStateChange() == ItemEvent.SELECTED) {
-                        indiceCartasSeleccionadas.add("7");
+                        indiceCartasSeleccionadas.add(7);
                     } else {
                         if (ev.getStateChange() == ItemEvent.DESELECTED) {
-                            indiceCartasSeleccionadas.remove("7");
+                            indiceCartasSeleccionadas.remove(7);
                         }
                     }
                 }
@@ -182,10 +185,10 @@ public class VistaGraficaSwing extends JFrame implements IVista{
             public void itemStateChanged(ItemEvent ev) {
                 if (mano.getCantidadCartas() >= 9) {
                     if (ev.getStateChange() == ItemEvent.SELECTED) {
-                        indiceCartasSeleccionadas.add("8");
+                        indiceCartasSeleccionadas.add(8);
                     } else {
                         if (ev.getStateChange() == ItemEvent.DESELECTED) {
-                            indiceCartasSeleccionadas.remove("8");
+                            indiceCartasSeleccionadas.remove(8);
                         }
                     }
                 }
@@ -196,10 +199,10 @@ public class VistaGraficaSwing extends JFrame implements IVista{
             public void itemStateChanged(ItemEvent ev) {
                 if (mano.getCantidadCartas() >= 10) {
                     if (ev.getStateChange() == ItemEvent.SELECTED) {
-                        indiceCartasSeleccionadas.add("9");
+                        indiceCartasSeleccionadas.add(9);
                     } else {
                         if (ev.getStateChange() == ItemEvent.DESELECTED) {
-                            indiceCartasSeleccionadas.remove("9");
+                            indiceCartasSeleccionadas.remove(9);
                         }
                     }
                 }
@@ -210,10 +213,10 @@ public class VistaGraficaSwing extends JFrame implements IVista{
             public void itemStateChanged(ItemEvent ev) {
                 if (mano.getCantidadCartas() >= 11) {
                     if (ev.getStateChange() == ItemEvent.SELECTED) {
-                        indiceCartasSeleccionadas.add("10");
+                        indiceCartasSeleccionadas.add(10);
                     } else {
                         if (ev.getStateChange() == ItemEvent.DESELECTED) {
-                            indiceCartasSeleccionadas.remove("10");
+                            indiceCartasSeleccionadas.remove(10);
                         }
                     }
                 }
@@ -224,10 +227,10 @@ public class VistaGraficaSwing extends JFrame implements IVista{
             public void itemStateChanged(ItemEvent ev) {
                 if (mano.getCantidadCartas() >= 12) {
                     if (ev.getStateChange() == ItemEvent.SELECTED) {
-                        indiceCartasSeleccionadas.add("11");
+                        indiceCartasSeleccionadas.add(11);
                     } else {
                         if (ev.getStateChange() == ItemEvent.DESELECTED) {
-                            indiceCartasSeleccionadas.remove("11");
+                            indiceCartasSeleccionadas.remove(11);
                         }
                     }
                 }
@@ -238,10 +241,10 @@ public class VistaGraficaSwing extends JFrame implements IVista{
             public void itemStateChanged(ItemEvent ev) {
                 if (mano.getCantidadCartas() >= 13) {
                     if (ev.getStateChange() == ItemEvent.SELECTED) {
-                        indiceCartasSeleccionadas.add("12");
+                        indiceCartasSeleccionadas.add(12);
                     } else {
                         if (ev.getStateChange() == ItemEvent.DESELECTED) {
-                            indiceCartasSeleccionadas.remove("12");
+                            indiceCartasSeleccionadas.remove(12);
                         }
                     }
                 }
@@ -250,7 +253,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
         armarJugadaButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int[] indicesCartas = sacarCartasNulas();
+                int[] indicesCartas = generarArrayCartasSeleccionadas();
                 resetBotonesCartas();
                 controlador.armarJugada(indicesCartas);
             }
@@ -258,7 +261,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
         tirarCartaButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                int[] indicesCartas = sacarCartasNulas();
+                int[] indicesCartas = generarArrayCartasSeleccionadas();
                 resetBotonesCartas();
                 if (indicesCartas.length != 1) {
                     printError(ErrorVista.CANTIDAD_INCORRECTA_CARTAS);
@@ -327,7 +330,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    setSize(940,300);
+                    setSize(970,300);
                     setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -339,48 +342,20 @@ public class VistaGraficaSwing extends JFrame implements IVista{
     public void setManoActual(IMano mano) {
         this.mano = mano;
     }
-    @Override
-    public void bajadaRechazada() {
-        printError(ErrorVista.CONEXION);
-        setEstado(EstadoVista.TIRAR_O_BAJAR);
-    }
-    private int[] sacarCartasNulas() {
+
+    private int[] generarArrayCartasSeleccionadas() {
         int[] retorno = new int[indiceCartasSeleccionadas.size()];
-        System.out.println("CARTAS: \n");
         for (int i = 0; i < retorno.length; i++) {
-            System.out.println(indiceCartasSeleccionadas.peek());
-            retorno[i] = Integer.parseInt(indiceCartasSeleccionadas.remove());
+            retorno[i] = indiceCartasSeleccionadas.remove();
         }
-        System.out.println("\n");
         return retorno;
     }
-    /**
-    private int[] sacarCartasNulas(){
-        int[] cartasSeleccionadas = new int[cantidadCartasSeleccionadas()];
-        int i = 0;
-        for (int x = 0; x < indicesCartasSeleccionadas.length; x ++) {
-            if (indicesCartasSeleccionadas[x]) {
-                cartasSeleccionadas[i] = x;
-                i++;
-            }
-        }
-        return cartasSeleccionadas;
-    }
-    private int cantidadCartasSeleccionadas() {
-        int cantidad = 0;
-        for (boolean indiceCartaSeleccionada : indicesCartasSeleccionadas) {
-            if (indiceCartaSeleccionada) {
-                cantidad++;
-            }
-        }
-        return cantidad;
-    }
-     **/
+
     private void agregarCartaJugada(boolean alFinal) {
         String aux = textbox.getText();
         clearTextbox();
         int indiceJugada = convertirANumero(aux);
-        int[] indicesCartas = sacarCartasNulas();
+        int[] indicesCartas = generarArrayCartasSeleccionadas();
         resetBotonesCartas();
         try {
             if ((indiceJugada <= 0) || (indiceJugada > controlador.getAllJugadas().size()) || (indicesCartas.length != 1)) {
@@ -537,10 +512,22 @@ public class VistaGraficaSwing extends JFrame implements IVista{
             clearMemo();
             IJugador ganador = this.controlador.getGanador();
             println("EL JUGADOR " + ganador.getNombre() + " HA GANADO! >:)");
-            println("Tu puntaje es de: " + jugador.getPuntaje());
+            println("Tu puntaje es de: " + jugador.getPuntaje() + "\n");
+            mostrarTopLowscores();
         }
         catch (RemoteException e) {
             printError(ErrorVista.CONEXION);
+        }
+    }
+    @Override
+    public void mostrarTopLowscores() {
+        List<IJugador> top = controlador.getTopLowscores();
+        if (top != null) {
+            println("----------- TOP PERDEDORES -----------");
+            println("(Jugador)           (Puntaje)");
+            for (IJugador jugador:top) {
+                println(jugador.getNombre() + "      " + jugador.getPuntaje());
+            }
         }
     }
     @Override
@@ -549,11 +536,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
     }
     @Override
     public void mostrarMano() {
-        if (mano == null) {
-            println("MANO NULA MANO NULA MANO NULA");
-            System.out.println("MANO NULA MANO NULA MANO NULA");
-        }
-        else {
+        if (mano != null) {
             List<Carta> cartas = mano.getCartas();
             for (int i = 0; i < botonesCarta.size(); i++) {
                 if (i < cartas.size()) {
@@ -596,6 +579,6 @@ public class VistaGraficaSwing extends JFrame implements IVista{
     }
     @Override
     public void printError(ErrorVista error) {
-        println(error.getLabel());
+        println(error.getText());
     }
 }

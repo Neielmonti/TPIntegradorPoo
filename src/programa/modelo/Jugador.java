@@ -3,11 +3,15 @@ import programa.modelo.conjuntoCarta.Carta;
 import programa.modelo.conjuntoCarta.Mano;
 import programa.modelo.conjuntoCarta.jugadas.Jugada;
 import programa.vista.IJugador;
+
+import java.io.Serial;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 public class Jugador implements IJugador, Serializable {
+    @Serial
+    private static final long serialVersionUID = -6610403937729533391L;
     private final String nombre;
     private int puntaje = 0;
     private boolean bajo = false;

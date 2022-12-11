@@ -208,10 +208,6 @@ public class VistaConsolaSwing extends JFrame implements IVista {
         this.manoActual = mano;
     }
     @Override
-    public void bajadaRechazada() {
-        printError(ErrorVista.JUGADAS_INVALIDAS);
-    }
-    @Override
     public void mostrarJugadasJugador() {
         List<IJugada> jugadas = new ArrayList<>(this.controlador.getJugadasJugador());
         for (IJugada jugada: jugadas) {
@@ -246,10 +242,22 @@ public class VistaConsolaSwing extends JFrame implements IVista {
             clearMemo();
             IJugador ganador = this.controlador.getGanador();
             println("EL JUGADOR " + ganador.getNombre() + " HA GANADO! >:)");
-            println("Tu puntaje es de: " + jugador.getPuntaje());
+            println("Tu puntaje es de: " + jugador.getPuntaje() + "\n");
+            mostrarTopLowscores();
         }
         catch (RemoteException e) {
             printError(ErrorVista.CONEXION);
+        }
+    }
+    @Override
+    public void mostrarTopLowscores() {
+        List<IJugador> top = controlador.getTopLowscores();
+        if (top != null) {
+            println("----------- TOP PERDEDORES -----------");
+            println("(Jugador)           (Puntaje)");
+            for (IJugador jugador:top) {
+                println(jugador.getNombre() + "      " + jugador.getPuntaje());
+            }
         }
     }
     public boolean verificarCartasJugada(String text) {
@@ -299,6 +307,6 @@ public class VistaConsolaSwing extends JFrame implements IVista {
     }
     @Override
     public void printError(ErrorVista error) {
-        println(error.getLabel());
+        println(error.getText());
     }
 }

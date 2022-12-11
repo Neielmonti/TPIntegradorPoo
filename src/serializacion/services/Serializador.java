@@ -1,0 +1,83 @@
+package serializacion.services;
+import java.io.EOFException;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.nio.file.Path;
+import java.util.ArrayList;
+public class Serializador {
+    private String fileName;
+    public Serializador(String fileName) {
+        super();
+        this.fileName = fileName;
+    }
+    public boolean writeOneObject(Object obj) {
+        boolean respuesta = false;
+        try {
+            ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName));
+            oos.writeObject(obj);
+            oos.close();
+            respuesta = true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return respuesta;
+    }
+    public boolean addOneObject(Object obj) {
+        boolean respuesta = false;
+        try {
+            AddableObjectOutputStream oos = new AddableObjectOutputStream (new FileOutputStream(fileName,true));
+            oos.writeObject(obj);
+            oos.close();
+            respuesta = true;
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return respuesta;
+    }
+    public Object readFirstObject() {
+        Object respuesta = null;
+        try {
+            ObjectInputStream ois = new ObjectInputStream(
+                    new FileInputStream(fileName));
+            respuesta = ois.readObject();
+            ois.close();
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
+        return respuesta;
+    }
+    public Object[] readObjects() {
+        Object[] respuesta;
+        ArrayList<Object> listOfObject = new ArrayList<>();
+        try {
+            ObjectInputStream ois = new ObjectInputStream(new FileInputStream(fileName));
+            Object r = ois.readObject();
+            while (r != null) {
+                listOfObject.add(r);
+                r = ois.readObject();
+            }
+            ois.close();
+        }
+        catch (EOFException e) {
+            System.out.println("Lectura completada");
+        }
+        catch (Exception e) {
+            System.out.println("No se encuentra el archivo segun java, igual lo lee asi que ni idea >:/");
+            //e.printStackTrace();
+        }
+        if (!listOfObject.isEmpty()) {
+            respuesta = new Object[listOfObject.size()];
+            int count = 0;
+            for(Object o : listOfObject)
+                respuesta[count++] = o;
+        }
+        else {
+            respuesta = null;
+        }
+        return respuesta;
+    }
+}

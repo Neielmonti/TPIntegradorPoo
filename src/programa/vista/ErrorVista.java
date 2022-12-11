@@ -11,10 +11,13 @@ public enum ErrorVista {
     CANTIDAD_INCORRECTA_CARTAS("Cantidad incorrecta de cartas, solo puede tirar una y solo una"),
     DESCARGA_INVALIDA("La carta no pudo ser agregada a la jugada"),
     CONEXION("Error de conexion");
-    private String df = "||ERROR||: ";
+    private static String df = "||ERROR||: ";
     private String label;
     ErrorVista(String label) {
-        this.label = df + label;
+        this.label = label;
+    }
+    public String getText() {
+        return (df + this.label);
     }
     public String getLabel() {
         return this.label;

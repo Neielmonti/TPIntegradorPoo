@@ -108,10 +108,8 @@ public class Controlador implements IControladorRemoto, Serializable{
                 }
                 case BAJADA_RECHAZADA -> {
                     if (this.juego.getJugadorActual().getNombre().equals(this.nombre)) {
-                        this.vista.bajadaRechazada();
-                        this.vista.printError(ErrorVista.BAJADA_RECHAZADA);
-                        this.vista.setEstado(EstadoVista.TIRAR_O_BAJAR);
                         this.juego.deshacerJugadas();
+                        this.vista.printError(ErrorVista.BAJADA_RECHAZADA);
                     }
                 }
                 case DESCARGA_RECHAZADA -> {
@@ -267,6 +265,15 @@ public class Controlador implements IControladorRemoto, Serializable{
     public IConjuntoCartas getPozo() {
         try {
             return this.juego.getPozo();
+        }
+        catch (RemoteException e) {
+            this.vista.printError(ErrorVista.CONEXION);
+        }
+        return null;
+    }
+    public List<IJugador> getTopLowscores(){
+        try {
+            return new ArrayList<>(this.juego.getTopLowscores());
         }
         catch (RemoteException e) {
             this.vista.printError(ErrorVista.CONEXION);

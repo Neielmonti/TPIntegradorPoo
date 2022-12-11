@@ -4,7 +4,6 @@ public interface IVista {
     void setControlador(Controlador controlador);
     void inicioGrafico();
     void setManoActual(IMano mano);
-    void bajadaRechazada();
     void mostrarJugadasJugador();
     void mostrarAllJugadas();
     void setEstado(EstadoVista estado);
@@ -17,4 +16,5 @@ public interface IVista {
     void clearTextbox();
     void println(String texto);
     void printError(ErrorVista error);
+    void mostrarTopLowscores();
 }

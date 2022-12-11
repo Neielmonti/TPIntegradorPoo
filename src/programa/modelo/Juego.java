@@ -11,6 +11,8 @@ import programa.modelo.conjuntoCarta.Mazo;
 import programa.modelo.conjuntoCarta.Pozo;
 import programa.modelo.conjuntoCarta.jugadas.Jugada;
 import programa.modelo.verificadores.*;
+import serializacion.services.Serializacion;
+
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.*;
@@ -22,6 +24,7 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
     private Mazo mazo = new Mazo();
     private Pozo pozo = new Pozo();
     private List<VerificarJugada> verificadoresJugada = new ArrayList<>();
+    private Serializacion topLowscores = new Serializacion(10);
     private boolean onGame = false;
     public Juego(){
         generarRondas();
@@ -42,7 +45,9 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         this.rondas.add(aux);
         actualizarPuntajes();
         resetearJugadores();
+        resetMazo();
         onGame = false;
+        guardarJugadoresTop();
         notificarObservadores(Evento.RONDA_GANADA);
     }
     @Override
@@ -148,8 +153,6 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         if ((!jugadores.contains(j)) && (jugadores.size() < this.maxJugadores)) {
             // Si el jugador es nuevo en el juego, y hay espacio, se lo agrega
             jugadores.add(j);
-            System.out.println("Jugador agregado: " + j.getNombre());
-            //j.notificarObservadores(Evento.JUGADOR_AGREGADO);
         }
     }
     private void generarVerificadores() {
@@ -164,6 +167,9 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         if (this.rondas.isEmpty()) {
             List<CantXFormacion> listaAux;
             // En el caso de rondas complejas (de varios tipos de jugadas) se utiliza una lista auxiliar para crearlas
+            this.rondas.add(new Ronda(Formacion.ESCALA,1));// ESTE ES SOLO PARA PRUEBAS
+            this.rondas.add(new Ronda(Formacion.ESCALA,1));// ESTE ES SOLO PARA PRUEBAS
+            this.rondas.add(new Ronda(Formacion.ESCALA,1));// ESTE ES SOLO PARA PRUEBAS
             this.rondas.add(new Ronda(Formacion.ESCALA,1));// ESTE ES SOLO PARA PRUEBAS
             this.rondas.add(new Ronda(Formacion.TRIO,2));
             listaAux = new ArrayList<>();
@@ -188,13 +194,14 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
     }
     private void resetMazo(){
         for(Jugador jugador:this.jugadores) {
-            Mano manoActual = jugador.getMano();
+            Mano manoActual = jugador.tomarMano();
             if (manoActual != null) {
                 manoActual.pasarCartas(this.mazo);
             }
         }
         pozo.pasarCartas(this.mazo);
     }
+    /**
     private void repartirCartas() {
         resetMazo();
         for(Jugador jugador:this.jugadores) {
@@ -203,8 +210,8 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         this.pozo.pasarCartas(this.mazo);
         this.pozo.agregarCarta(this.mazo.tomarCarta());
     }
-     // PRUEBITA
-    /**
+    **/
+    // PRUEBITA
     public void repartirCartas(){
         this.resetMazo();
         List<Carta> cartas;
@@ -221,7 +228,6 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         this.pozo.pasarCartas(this.mazo);
         this.pozo.agregarCarta(this.mazo.tomarCarta());
     }
-     **/
     @Override
     public void quitarJugador(String nombre, IControladorRemoto controlador) throws RemoteException{
         if (!jugadores.isEmpty()) {
@@ -260,7 +266,6 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
     }
     @Override
     public void tomarDelPozo() throws RemoteException {
-        System.out.println("JUGADOR ACTUAL: " + jugadores.peek().getNombre());
         this.jugadores.peek().getMano().agregarCarta(this.pozo.tomarCarta());
         if (this.pozo.isEmpty()) {
             this.pozo.agregarCarta(this.mazo.tomarCarta());
@@ -340,5 +345,19 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         for (Jugador jugador: jugadores) {
             jugador.resetearJugador();
         }
+    }
+    private void guardarJugadoresTop() {
+        Jugador jugadorActual = jugadores.peek();
+        List<Jugador> perdedores = new ArrayList<>();
+        for (Jugador jugador: jugadores) {
+            if (jugador != jugadorActual) {
+                perdedores.add(jugador);
+            }
+        }
+        topLowscores.GuardarNuevosJugadores(perdedores);
+    }
+    @Override
+    public List<Jugador> getTopLowscores() throws RemoteException {
+        return this.topLowscores.recuperarTop();
     }
 }
