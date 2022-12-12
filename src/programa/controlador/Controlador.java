@@ -22,7 +22,7 @@ public class Controlador implements IControladorRemoto, Serializable{
     }
     @Override
     public void actualizar(IObservableRemoto iObservableRemoto, Object o) throws RemoteException {
-        if ((o instanceof Evento)) {
+        if ((o instanceof Evento) && (this.nombre != null)) {
             Evento aux = (Evento) o;
             switch (aux) {
                 case JUGADOR_AGREGADO -> {
@@ -273,7 +273,9 @@ public class Controlador implements IControladorRemoto, Serializable{
     }
     public List<IJugador> getTopLowscores(){
         try {
-            return new ArrayList<>(this.juego.getTopLowscores());
+            List<Jugador> top = this.juego.getTopLowscores();
+            if (top == null) return null;
+            else return new ArrayList<>(this.juego.getTopLowscores());
         }
         catch (RemoteException e) {
             this.vista.printError(ErrorVista.CONEXION);

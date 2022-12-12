@@ -45,9 +45,9 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         this.rondas.add(aux);
         actualizarPuntajes();
         resetearJugadores();
+        guardarJugadoresTop();
         resetMazo();
         onGame = false;
-        guardarJugadoresTop();
         notificarObservadores(Evento.RONDA_GANADA);
     }
     @Override
@@ -209,8 +209,7 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         }
         this.pozo.pasarCartas(this.mazo);
         this.pozo.agregarCarta(this.mazo.tomarCarta());
-    }
-    **/
+    }**/
     // PRUEBITA
     public void repartirCartas(){
         this.resetMazo();
@@ -239,26 +238,33 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
                     jugadores.add(jugador);
                 } else {
                     eliminado = true;
+                    jugador.resetearJugador();
                     if (jugador.getMano() != null) {
                         jugador.getMano().pasarCartas(this.mazo);
-                    }
-                    for (Jugada j : jugador.getJugadas()) {
-                        j.pasarCartas(this.mazo);
                     }
                     i++;
                 }
             }
             if (eliminado) {
                 removerObservador(controlador);
-                if (jugadores.size() == 1) {
-                    notificarObservadores(Evento.RONDA_GANADA);
+                if (cantidadJugadoresJugando() == 1) {
+                    pasarSiguienteRonda();
                 }
-                else if ((eliminoJugadorActual) && (!jugadores.isEmpty()) && (onGame)) {
+                else if ((eliminoJugadorActual) && (cantidadJugadoresJugando() > 1) && (onGame)) {
                     notificarObservadores(Evento.CAMBIO_DE_JUGADOR);
                 }
                 else if (!jugadores.isEmpty()) {verificarJugadoresEstanPreparados();}
             }
         }
+    }
+    private int cantidadJugadoresJugando() {
+        int contador = 0;
+        for (Jugador jugador:jugadores) {
+            if (jugador.getMano() != null) {
+                contador++;
+            }
+        }
+        return contador;
     }
     @Override
     public Pozo getPozo() {
@@ -350,11 +356,13 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         Jugador jugadorActual = jugadores.peek();
         List<Jugador> perdedores = new ArrayList<>();
         for (Jugador jugador: jugadores) {
-            if (jugador != jugadorActual) {
+            System.out.println("Jugador ciclo: " + jugador.getNombre());
+            if ((jugador != jugadorActual) && (jugador.getMano() != null)) {
+                System.out.println("Jugador guardado: " + jugador.getNombre());
                 perdedores.add(jugador);
             }
         }
-        topLowscores.GuardarNuevosJugadores(perdedores);
+        if (!perdedores.isEmpty()) {topLowscores.GuardarNuevosJugadores(perdedores);}
     }
     @Override
     public List<Jugador> getTopLowscores() throws RemoteException {

@@ -1,12 +1,10 @@
 package serializacion.services;
 import java.io.EOFException;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.nio.file.Path;
 import java.util.ArrayList;
 public class Serializador {
     private String fileName;
@@ -22,7 +20,7 @@ public class Serializador {
             oos.close();
             respuesta = true;
         } catch (IOException e) {
-            e.printStackTrace();
+            //e.printStackTrace();
         }
         return respuesta;
     }
@@ -63,10 +61,11 @@ public class Serializador {
             ois.close();
         }
         catch (EOFException e) {
-            System.out.println("Lectura completada");
+            //System.out.println("Lectura completada");
+            //e.printStackTrace();
         }
         catch (Exception e) {
-            System.out.println("No se encuentra el archivo segun java, igual lo lee asi que ni idea >:/");
+            //System.out.println("No se encuentra el archivo segun java, igual lo lee asi que ni idea >:/");
             //e.printStackTrace();
         }
         if (!listOfObject.isEmpty()) {

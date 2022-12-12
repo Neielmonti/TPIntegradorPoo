@@ -13,9 +13,10 @@ public abstract class JugadaAscendienteMismoPalo extends JugadaAscendiente{
     private PaloCarta buscarPalo(List<Carta> cartas) {
         int i = 0;
         PaloCarta result = null;
-        while ((i < cartas.size()) && (result == null)) {
+        while (i < cartas.size()) {
             if (cartas.get(i).getPalo() != PaloCarta.JOKER) {
                 result = cartas.get(i).getPalo();
+                break;
             }
             i ++;
         }
@@ -23,13 +24,10 @@ public abstract class JugadaAscendienteMismoPalo extends JugadaAscendiente{
     }
     @Override
     protected boolean esSiguiente(Carta c1, Carta siguiente) {
-        return super.esSiguiente(c1, siguiente) && this.palo == siguiente.getPalo();
+        return ((super.esSiguiente(c1, siguiente)) && (this.palo == siguiente.getPalo()));
     }
     @Override
     protected boolean esAnterior(Carta c1, Carta anterior) {
-        if (super.esAnterior(c1, anterior) && this.palo == anterior.getPalo()) {
-            return true;
-        }
-        else return false;
+        return ((super.esAnterior(c1, anterior)) && (this.palo == anterior.getPalo()));
     }
 }

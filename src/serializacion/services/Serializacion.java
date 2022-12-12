@@ -12,7 +12,7 @@ public class Serializacion {
     public void GuardarNuevosJugadores(List<Jugador> jugadoresNuevos) {
         List<Jugador> jugadoresYaGuardados = recuperarTop();
         if (jugadoresYaGuardados == null) {almacenarJugadores(jugadoresNuevos);}
-        else if (!hayQueReescribirElArchivo(jugadoresNuevos)) {appendJugadoresAlTop(jugadoresNuevos);}
+        //else if (!hayQueReescribirElArchivo(jugadoresNuevos)) {appendJugadoresAlTop(jugadoresNuevos);}
         else {insertarJugadoresAlTop(jugadoresNuevos);}
     }
     private boolean hayQueReescribirElArchivo(List<Jugador> jugadoresNuevos) {

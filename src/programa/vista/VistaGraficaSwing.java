@@ -512,7 +512,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
             clearMemo();
             IJugador ganador = this.controlador.getGanador();
             println("EL JUGADOR " + ganador.getNombre() + " HA GANADO! >:)");
-            println("Tu puntaje es de: " + jugador.getPuntaje() + "\n");
+            if (jugador != null) {println("Tu puntaje es de: " + jugador.getPuntaje() + "\n");}
             mostrarTopLowscores();
         }
         catch (RemoteException e) {
