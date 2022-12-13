@@ -8,6 +8,7 @@ import java.util.List;
 
 public class Ronda implements IRonda, Serializable{
     private List<CantXFormacion> formaciones = new ArrayList<>();
+    // El constructor esta sobrecargado, para crear una ronda con un solo tipo de jugada (formacion), o con multiples
     public Ronda(Formacion formacion, int cantidad) {
         this.formaciones.add(new CantXFormacion(formacion,cantidad));
     }
@@ -16,6 +17,7 @@ public class Ronda implements IRonda, Serializable{
             Formacion formaActual = formaciones.get(0).forma();
             this.formaciones.add(formaciones.get(0));
             formaciones.remove(0);
+            // Se eliminan las formaciones repetidas para evitar el mal uso de las rondas (solo una precaucion)
             eliminarFormacionesRepetidas(formaActual,formaciones);
         }
     }
@@ -31,6 +33,8 @@ public class Ronda implements IRonda, Serializable{
     public boolean verificarJugadasxRonda(Jugador jugador) {
         List<Jugada> jugadas = jugador.getJugadas();
         boolean salida = true;
+        // Se revisa si el jugador tiene las jugadas (y la cantidad apropiada de ellas) correspondientes a
+        // las formaciones
         for (CantXFormacion cf:this.formaciones) {
             Formacion formaActual = cf.forma();
             int cantActual = cf.cantidad();
@@ -40,8 +44,10 @@ public class Ronda implements IRonda, Serializable{
                     contador++;
                 }
             }
-            if (cantActual != contador){
+            // Si la cantidad de jugadas de la formacion buscada no cumple con la cantidad requerida, se devuelve false
+            if (cantActual != contador) {
                 salida = false;
+                break;
             }
         }
         return salida;

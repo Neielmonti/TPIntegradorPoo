@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 public abstract class ConjuntoCartas implements IConjuntoCartas, Serializable {
-    private List<Carta> cartas = new ArrayList<>();
+    private List<Carta> cartas;
     public ConjuntoCartas(List <Carta> cartas) {
         this.cartas = cartas;
     }
@@ -29,20 +29,13 @@ public abstract class ConjuntoCartas implements IConjuntoCartas, Serializable {
             cartas.remove(0);
         }
     }
-    public void agregarCartas(List<Carta> cartas) {
-        if (cartas.size() > 0) {
-            this.cartas.addAll(cartas);
-        }
-    }
     public List<Carta> getCartas() {
         return this.cartas;
     }
     public void quitarCartas(ConjuntoCartas con) {
         List<Carta> resta = con.getCartas();
         for (Carta carta: resta) {
-            if (cartas.contains(carta)) {
-                cartas.remove(carta);
-            }
+            cartas.remove(carta);
         }
     }
     public Carta tomarCarta() {
@@ -67,12 +60,5 @@ public abstract class ConjuntoCartas implements IConjuntoCartas, Serializable {
             return true;
         }
         else return false;
-    }
-    public void quitarCartas(List<Carta> cartas) {
-        for (Carta carta: cartas) {
-            if (this.cartas.contains(carta)) {
-                this.cartas.remove(carta);
-            }
-        }
     }
 }

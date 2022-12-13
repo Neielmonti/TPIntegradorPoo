@@ -8,7 +8,6 @@ public interface IVista {
     void mostrarAllJugadas();
     void setEstado(EstadoVista estado);
     void rondaGanada(IJugador jugador);
-    void jugadaRechazada();
     void mostrarMano();
     void mostrarPozo();
     void mostrarRonda();

@@ -407,7 +407,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
     @Override
     public void setEstado(EstadoVista estado) {
         switch (estado) {
-            case ESPERANDO_TURNO -> {
+            case ESPERANDO_TURNO,ESPERANDO_JUGADORES,ESPERANDO_RONDA -> {
                 setEnabledBotonesCarta(false);
                 pozoButton.setEnabled(false);
                 mazoButton.setEnabled(false);
@@ -529,10 +529,6 @@ public class VistaGraficaSwing extends JFrame implements IVista{
                 println(jugador.getNombre() + "      " + jugador.getPuntaje());
             }
         }
-    }
-    @Override
-    public void jugadaRechazada() {
-        printError(ErrorVista.JUGADA_RECHAZADA);
     }
     @Override
     public void mostrarMano() {

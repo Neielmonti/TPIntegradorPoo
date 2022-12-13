@@ -3,7 +3,7 @@ public enum EstadoVista {
     ESPERANDO_USUARIO("Cuando este listo, presione el boton"),
     ESPERANDO_JUGADORES("Esperando a que todos los jugadores esten preparados!"),
     ESPERANDO_TURNO("Espere su turno"),
-    JUGANDO(""),
+    ESPERANDO_RONDA("Hay una ronda siendo jugada, espere hasta que termine"),
     INICIALIZANDO("Ingrese su nombre (No puede ser vacio ni uno ya usado)"),
     TOMAR_CARTA("De donde quiere tomar la carta? \n" +
             "Del [" + OpcionVista.MAZO.getLabel() + "] o del [" + OpcionVista.POZO.getLabel() + "], ingrese su opcion"),

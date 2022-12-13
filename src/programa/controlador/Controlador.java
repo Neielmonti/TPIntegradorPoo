@@ -172,16 +172,15 @@ public class Controlador implements IControladorRemoto, Serializable{
         }
     }
     public List<IJugada> getAllJugadas() throws RemoteException {
-        List<IJugada> jugadasOut = new ArrayList<>(this.juego.getAllJugadas());
-        return jugadasOut;
+        return new ArrayList<>(this.juego.getAllJugadas());
     }
     public void estaPreparado() {
         try {
-            this.vista.setEstado(EstadoVista.ESPERANDO_JUGADORES);
+            if (!this.juego.getOnGame()) {this.vista.setEstado(EstadoVista.ESPERANDO_JUGADORES);}
+            else {this.vista.setEstado(EstadoVista.ESPERANDO_RONDA);}
             this.juego.JugadorPreparado(this.nombre);
         }
         catch (RemoteException e) {
-            this.vista.println("Sip, exactamente, tambien hay error cuando pones estoy listo");
             this.vista.printError(ErrorVista.CONEXION);
         }
     }

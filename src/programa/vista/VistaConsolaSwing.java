@@ -56,7 +56,7 @@ public class VistaConsolaSwing extends JFrame implements IVista {
         });
         println("Ingrese su nombre de jugador \n");
     }
-    public void switchButton() throws RemoteException {
+    private void switchButton() throws RemoteException {
         switch (estado) {
             case ESPERANDO_TURNO -> clearTextbox();
             case ESPERANDO_USUARIO -> this.controlador.estaPreparado();
@@ -192,7 +192,7 @@ public class VistaConsolaSwing extends JFrame implements IVista {
             }
         }
     }
-    public int[] convertirAIndices(String[] texto) {
+    private int[] convertirAIndices(String[] texto) {
         int[] indices = new int[texto.length];
         int cantCartas = manoActual.getCantidadCartas();
         for (int i = 0; i < texto.length; i++) {
@@ -260,7 +260,7 @@ public class VistaConsolaSwing extends JFrame implements IVista {
             }
         }
     }
-    public boolean verificarCartasJugada(String text) {
+    private boolean verificarCartasJugada(String text) {
         boolean salida = true;
         for (int i = 0; i < text.length(); i++) {
             char c = text.charAt(i);
@@ -271,13 +271,10 @@ public class VistaConsolaSwing extends JFrame implements IVista {
         return salida;
     }
     @Override
-    public void jugadaRechazada() {
-        printError(ErrorVista.JUGADA_RECHAZADA);
-    }
-    @Override
     public void mostrarMano() {
-        //IMano mano = this.controlador.getMano();
-        println("---------MANO---------" + "\n" + manoActual.mostrarCartas() + "\n");
+        if (manoActual != null) {
+            println("---------MANO---------" + "\n" + manoActual.mostrarCartas() + "\n");
+        }
     }
     @Override
     public void mostrarPozo() {

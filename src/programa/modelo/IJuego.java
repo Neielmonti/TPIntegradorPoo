@@ -32,4 +32,5 @@ public interface IJuego extends Remote, IObservableRemoto{
     void JugadorPreparado(String nombre) throws RemoteException;
     void resetearJugadores() throws RemoteException;
     List<Jugador> getTopLowscores() throws RemoteException;
+    boolean getOnGame() throws RemoteException;
 }

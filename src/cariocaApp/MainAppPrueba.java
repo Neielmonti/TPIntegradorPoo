@@ -5,8 +5,11 @@ public class MainAppPrueba {
         AppCliente a1 = new AppCliente();
         AppCliente a2 = new AppCliente();
         AppCliente a3 = new AppCliente();
+        AppCliente a4 = new AppCliente();
+        AppCliente a5 = new AppCliente();
         s.iniciar();
         a1.inicioGrafico();
         a2.inicioGrafico();
+        a3.inicioGrafico();
     }
 }

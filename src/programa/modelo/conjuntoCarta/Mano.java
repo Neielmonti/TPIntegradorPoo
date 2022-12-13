@@ -15,14 +15,6 @@ public class Mano extends ConjuntoCartas implements IMano {
         else return false;
     }
     public static int getSizeMano(){return sizeMano;}
-    public boolean tiraCarta(Carta carta) {
-        List<Carta> cartas = getCartas();
-        if ((cartas.size() > sizeMano) || (cartas.contains(carta))) {
-            cartas.remove(carta);
-            return true;
-        }
-        else return false;
-    }
     @Override
     public int getCantidadCartas() {
         return getCartas().size();
@@ -37,6 +29,7 @@ public class Mano extends ConjuntoCartas implements IMano {
         else return null;
     }
     public int calcularPuntosCartas() {
+        // Se suman los valores (en puntos) que tienen todas las cartas de la mano
         List<Carta> cartas = this.getCartas();
         int resultado = 0;
         for (Carta carta: cartas) {

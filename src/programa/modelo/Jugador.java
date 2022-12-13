@@ -3,10 +3,8 @@ import programa.modelo.conjuntoCarta.Carta;
 import programa.modelo.conjuntoCarta.Mano;
 import programa.modelo.conjuntoCarta.jugadas.Jugada;
 import programa.vista.IJugador;
-
 import java.io.Serial;
 import java.io.Serializable;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.List;
 public class Jugador implements IJugador, Serializable {
@@ -31,25 +29,28 @@ public class Jugador implements IJugador, Serializable {
         this.bajo = true;
     }
     public void actualizarPuntaje() {
+        // Si tiene una mano, se le suman los puntos de la mano al puntaje del jugador
         if (this.mano != null) {
             this.puntaje += this.mano.calcularPuntosCartas();
         }
     }
     public Mano tomarMano(){
+        // Se le quita la mano al jugador
         Mano m = this.mano;
         this.mano = null;
         return m;
     }
     public void deshacerJugadas() {
         if (mano != null) {
+            // Todas las jugadas del jugador le pasan sus cartas a la mano del jugador
             for (Jugada jugada: jugadas) {
-                List<Carta> cartas = jugada.getCartas();
                 jugada.pasarCartas(mano);
             }
             this.jugadas = new ArrayList<>();
         }
     }
     public void resetearJugador() {
+        // Se lo deja preparado para volver a jugar
         this.bajo = false;
         deshacerJugadas();
         this.preparado = false;

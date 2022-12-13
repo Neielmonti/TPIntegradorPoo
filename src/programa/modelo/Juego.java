@@ -12,14 +12,13 @@ import programa.modelo.conjuntoCarta.Pozo;
 import programa.modelo.conjuntoCarta.jugadas.Jugada;
 import programa.modelo.verificadores.*;
 import serializacion.services.Serializacion;
-
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.*;
 public class Juego extends ObservableRemoto implements IJuego, Serializable{
     private Queue<Jugador> jugadores = new LinkedList<>();
-    private int maxJugadores = 4;
-    private int minJugadores = 2;
+    private final int maxJugadores = 4;
+    private final int minJugadores = 2;
     private Queue<Ronda> rondas = new LinkedList();
     private Mazo mazo = new Mazo();
     private Pozo pozo = new Pozo();
@@ -27,20 +26,27 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
     private Serializacion topLowscores = new Serializacion(10);
     private boolean onGame = false;
     public Juego(){
+        //Se generan las rondas y los verificadores
         generarRondas();
         generarVerificadores();
     }
     private void pasarSiguienteJugador() throws RemoteException {
+        //Se desencola y encola el jugador del frente
         Jugador aux = this.jugadores.remove();
         this.jugadores.add(aux);
         int i = 0;
+        //Se sigue pasando de jugador hasta que el jugador del frente este preparado y tenga una mano (este jugando)
+        // (El contador "i" es solo para evitar que recorra infinitamente la cola de jugadores de no encontrar un jugador jugando)
         while (((!jugadores.peek().getPreparado()) || (jugadores.peek().getMano() == null)) && (i < jugadores.size())) {
             aux = this.jugadores.remove();
             this.jugadores.add(aux);
         }
+        //Una vez pasado el jugador, se notifica a los observadores
         notificarObservadores(Evento.CAMBIO_DE_JUGADOR);
     }
     private void pasarSiguienteRonda() throws RemoteException{
+        //Cada vez que se pasa de ronda, significa que alguien gano, por lo que deben calcularse los puntajes,
+        // reiniciar los jugadores, pasar las cartas al mazo, y notificar a los observadores
         Ronda aux = this.rondas.remove();
         this.rondas.add(aux);
         actualizarPuntajes();
@@ -52,22 +58,25 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
     }
     @Override
     public void agregarCartaAJugada(int indiceJugada,int indiceCarta, boolean alFinal) throws RemoteException {
-
-        Mano mano = jugadores.peek().getMano();
         //Primero se verifica que la mano del jugador actual contenga la carta pasada
+        Mano mano = jugadores.peek().getMano();
         Carta carta = mano.tomarCarta(indiceCarta);
-
+        // Tambien se verifica que el indice de la jugada corresponda con alguna jugada existente
         if ((carta != null) && (indiceJugada >= 0) && (indiceJugada < getAllJugadas().size())) {
             Jugada jugada = getAllJugadas().get(indiceJugada);
             if (jugada.agregarCarta(carta, alFinal)) {
                 // Si el jugador se quedo sin cartas, se pasa de ronda (el jugador gano)
                 if (mano.isEmpty()) {
                     pasarSiguienteRonda();
-                } else {
+                }
+                // Caso contrario, se notifica de una mano actualizada, y de una jugada modificada
+                else {
                     notificarObservadores(Evento.MANO_ACTUALIZADA);
                     notificarObservadores(Evento.JUGADA_MODIFICADA);
                 }
-            } else {
+            }
+            // Si la descarga no pudo realizarse, se notifica que la descarga fue rechazada
+            else {
                 mano.agregarCarta(carta);
                 notificarObservadores(Evento.DESCARGA_RECHAZADA);
             }
@@ -79,6 +88,7 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
     }
     @Override
     public boolean nombreValido(String nombre) throws RemoteException {
+        // Se verifica que el nombre pasado por parametro no corresponda a ningun jugador
         for (Jugador jugador: jugadores) {
             if (jugador.getNombre().equals(nombre)) {
                 return false;
@@ -98,19 +108,20 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
     }
     @Override
     public void verificarJugadas() throws RemoteException {
-        if ((!jugadores.peek().yaBajo()) && (this.rondas.peek().verificarJugadasxRonda(jugadores.peek()))) {
-            // Si el jugador actual aun no bajo, y sus jugadas coincides con las pedidas en la ronda, se lo baja y se notifica a todos
-            jugadores.peek().bajar();
-            notificarObservadores(Evento.JUGADOR_BAJO);
-        }
-        else {
-            // Caso contrario, se le notifica solo a este jugador que sus jugadas fueron rechazadas (no puede bajarse)
-            notificarObservadores(Evento.BAJADA_RECHAZADA);
+        if (jugadores.peek() != null) {
+            if ((!jugadores.peek().yaBajo()) && (this.rondas.peek().verificarJugadasxRonda(jugadores.peek()))) {
+                // Si el jugador actual aun no bajo, y sus jugadas coincides con las pedidas en la ronda, se lo baja y se notifica a todos
+                jugadores.peek().bajar();
+                notificarObservadores(Evento.JUGADOR_BAJO);
+            } else {
+                // Caso contrario, se notifica que sus jugadas fueron rechazadas (no puede bajarse)
+                notificarObservadores(Evento.BAJADA_RECHAZADA);
+            }
         }
     }
     @Override
     public List<Jugada> getAllJugadas() throws RemoteException {
-        // Se devuelven todas las jugadas de todos los jugadores en forma de lista
+        // Se devuelven todas las jugadas (de todos los jugadores) en forma de lista
         List<Jugada> jugadas = new ArrayList<>();
         for (Jugador jugador: jugadores) {
             jugadas.addAll(jugador.getJugadas());
@@ -121,6 +132,7 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
     public void armarJugada(int[] indices) throws RemoteException {
         List<Carta> cartasMano = jugadores.peek().getMano().getCartas();
         List<Carta> cartasJugada = new ArrayList<>();
+        // Se forma una lista tomando las cartas que corresponden con los indices pasados por parametro
         for (int index : indices) {
             cartasJugada.add(cartasMano.get(index));
         }
@@ -156,6 +168,7 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         }
     }
     private void generarVerificadores() {
+        // Solo se ejecuta si los verificadores no fueron agregados a la lista de verificadores
         if (verificadoresJugada.isEmpty()) {
             this.verificadoresJugada.add(new VerificarEscaleraReal());
             this.verificadoresJugada.add(new VerificarEscaleraSucia());
@@ -167,10 +180,10 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         if (this.rondas.isEmpty()) {
             List<CantXFormacion> listaAux;
             // En el caso de rondas complejas (de varios tipos de jugadas) se utiliza una lista auxiliar para crearlas
-            this.rondas.add(new Ronda(Formacion.ESCALA,1));// ESTE ES SOLO PARA PRUEBAS
-            this.rondas.add(new Ronda(Formacion.ESCALA,1));// ESTE ES SOLO PARA PRUEBAS
-            this.rondas.add(new Ronda(Formacion.ESCALA,1));// ESTE ES SOLO PARA PRUEBAS
-            this.rondas.add(new Ronda(Formacion.ESCALA,1));// ESTE ES SOLO PARA PRUEBAS
+            //this.rondas.add(new Ronda(Formacion.ESCALA,1));// ESTE ES SOLO PARA PRUEBAS
+            //this.rondas.add(new Ronda(Formacion.ESCALA,1));// ESTE ES SOLO PARA PRUEBAS
+            //this.rondas.add(new Ronda(Formacion.ESCALA,1));// ESTE ES SOLO PARA PRUEBAS
+            //this.rondas.add(new Ronda(Formacion.ESCALA,1));// ESTE ES SOLO PARA PRUEBAS
             this.rondas.add(new Ronda(Formacion.TRIO,2));
             listaAux = new ArrayList<>();
             listaAux.add(new CantXFormacion(Formacion.TRIO,1));
@@ -193,15 +206,17 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         }
     }
     private void resetMazo(){
+        // Se pasan todas las cartas de las manos de todos los jugadores al mazo
         for(Jugador jugador:this.jugadores) {
             Mano manoActual = jugador.tomarMano();
             if (manoActual != null) {
                 manoActual.pasarCartas(this.mazo);
             }
         }
+        // tambien se pasan todas las cartas del pozo al mazo
         pozo.pasarCartas(this.mazo);
     }
-    /**
+
     private void repartirCartas() {
         resetMazo();
         for(Jugador jugador:this.jugadores) {
@@ -209,7 +224,8 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         }
         this.pozo.pasarCartas(this.mazo);
         this.pozo.agregarCarta(this.mazo.tomarCarta());
-    }**/
+    }
+    /**
     // PRUEBITA
     public void repartirCartas(){
         this.resetMazo();
@@ -226,17 +242,20 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         }
         this.pozo.pasarCartas(this.mazo);
         this.pozo.agregarCarta(this.mazo.tomarCarta());
-    }
+    }**/
     @Override
     public void quitarJugador(String nombre, IControladorRemoto controlador) throws RemoteException{
         if (!jugadores.isEmpty()) {
+            // Primero se corrobora si el jugador a quitar es el que tiene actualmente el turno
             boolean eliminoJugadorActual = jugadores.peek().getNombre().equals(nombre);
             boolean eliminado = false;
             for (int i = 0; i < jugadores.size(); i++) {
                 Jugador jugador = jugadores.remove();
                 if (!jugador.getNombre().equals(nombre)) {
+                    // Si el jugador quitado NO tiene el nombre del jugador a eliminar, se lo vuelve a agregar a la cola
                     jugadores.add(jugador);
                 } else {
+                    // Caso contrario, se le quitan todas las cartas, y NO se lo vuelve a agregar a la cola
                     eliminado = true;
                     jugador.resetearJugador();
                     if (jugador.getMano() != null) {
@@ -246,13 +265,19 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
                 }
             }
             if (eliminado) {
+                // Si el jugador fue eliminado, se quita al observador (controlador) de la lista de observadores
                 removerObservador(controlador);
                 if (cantidadJugadoresJugando() == 1) {
+                    // Si solo queda un jugador (jugando), este gana automaticamente
                     pasarSiguienteRonda();
                 }
                 else if ((eliminoJugadorActual) && (cantidadJugadoresJugando() > 1) && (onGame)) {
+                    // Si se elimino al jugador que tenia el turno, hay jugadores jugando, y se esta jugando una ronda, se cambia de jugador
                     notificarObservadores(Evento.CAMBIO_DE_JUGADOR);
                 }
+                // De no cumplirse con nada de lo anterior, significa que no quedan jugadores jugando.
+                // Si aun asi hay jugadores (los cuales no estan jugando), se verifica que todos esten preparados (de esta forma empezaria otra
+                // ronda)
                 else if (!jugadores.isEmpty()) {verificarJugadoresEstanPreparados();}
             }
         }
@@ -260,6 +285,7 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
     private int cantidadJugadoresJugando() {
         int contador = 0;
         for (Jugador jugador:jugadores) {
+            // Si el jugador tiene una mano, significa que esta jugando
             if (jugador.getMano() != null) {
                 contador++;
             }
@@ -272,37 +298,49 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
     }
     @Override
     public void tomarDelPozo() throws RemoteException {
-        this.jugadores.peek().getMano().agregarCarta(this.pozo.tomarCarta());
-        if (this.pozo.isEmpty()) {
-            this.pozo.agregarCarta(this.mazo.tomarCarta());
+        if (jugadores.peek() != null) {
+            this.jugadores.peek().getMano().agregarCarta(this.pozo.tomarCarta());
+            if (this.pozo.isEmpty()) {
+                // Si el pozo se vacio, se le pasa una carta del mazo
+                this.pozo.agregarCarta(this.mazo.tomarCarta());
+            }
+            notificarObservadores(Evento.POZO_ACTUALIZADO);
+            notificarObservadores(Evento.MANO_ACTUALIZADA);
         }
-        notificarObservadores(Evento.POZO_ACTUALIZADO);
-        notificarObservadores(Evento.MANO_ACTUALIZADA);
     }
     @Override
     public void tirarCartaPozo(int indice) throws RemoteException {
-        if (jugadores.peek().getMano() != null) {
+        if (jugadores.peek() != null) {
             Carta carta = jugadores.peek().getMano().tomarCarta(indice);
-            jugadores.peek().getMano().quitarCarta(carta);
-            this.pozo.agregarCarta(carta);
-            if ((jugadores.peek().getJugadas().size() > 0) && (!jugadores.peek().yaBajo())) {
-                jugadores.peek().deshacerJugadas();
+            // Se le quita la carta correspondiente al indice de la mano del jugador
+            if (carta != null) {
+                // De encontrar la carta, se agrega al pozo
+                this.pozo.agregarCarta(carta);
+                // Si el jugador tiro una carta al pozo, tiene jugadas, y NO se bajo, las jugadas se deshacen
+                if ((jugadores.peek().getJugadas().size() > 0) && (!jugadores.peek().yaBajo())) {
+                    jugadores.peek().deshacerJugadas();
+                }
+                // Si el jugador se quedo sin cartas, se pasa a la siguiente ronda (gano)
+                if (jugadores.peek().getMano().isEmpty()) {
+                    pasarSiguienteRonda();
+                }
+                // Caso contrario, simplemente se pasa al siguiente jugador
+                else pasarSiguienteJugador();
             }
-            if (jugadores.peek().getMano().isEmpty()) {
-                pasarSiguienteRonda();
-            }
-            else pasarSiguienteJugador();
         }
     }
     @Override
-    public void tomarDelMazo() throws RemoteException{
-//        jugador.getMano().agregarCarta(this.mazo.tomarCarta());
-        jugadores.peek().getMano().agregarCarta(this.mazo.tomarCarta());
-        if (this.mazo.isEmpty()) {
-            pozo.pasarCartas(this.mazo);
-            this.pozo.agregarCarta(this.mazo.tomarCarta());
+    public void tomarDelMazo() throws RemoteException {
+        if (jugadores.peek() != null) {
+            // Se le agrega una carta a la mano del jugador (la misma fue tomada del mazo)
+            jugadores.peek().getMano().agregarCarta(this.mazo.tomarCarta());
+            if (this.mazo.isEmpty()) {
+                // Si el mazo esta vacio, se le pasan todas las cartas del pozo, y luego se tira una carta al pozo
+                pozo.pasarCartas(this.mazo);
+                this.pozo.agregarCarta(this.mazo.tomarCarta());
+            }
+            notificarObservadores(Evento.MANO_ACTUALIZADA);
         }
-        notificarObservadores(Evento.MANO_ACTUALIZADA);
     }
     @Override
     public Jugador getJugadorActual() {
@@ -311,6 +349,7 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
     @Override
     public Jugador getJugador(String nombre) {
         for (Jugador jugador: jugadores) {
+            // Se devuelve el jugador que tenga el nombre pasado por parametro
             if (jugador.getNombre().equals(nombre)) {
                 return jugador;
             }
@@ -334,12 +373,15 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
     }
     private void verificarJugadoresEstanPreparados() throws RemoteException{
         boolean todosListos = !jugadores.isEmpty();
+        // Se verifica si hay algun jugador que no este preparado
         for (Jugador jugador: jugadores) {
             if (!jugador.getPreparado()) {
                 todosListos = false;
                 break;
             }
         }
+        // Si estan todos listos, se cumple la cantidad minima de jugadores, y no se esta jugando actualmente,
+        // se inicia el juego
         if ((todosListos) && (jugadores.size() >= this.minJugadores) && (!onGame)){
             repartirCartas();
             onGame = true;
@@ -355,17 +397,22 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
     private void guardarJugadoresTop() {
         Jugador jugadorActual = jugadores.peek();
         List<Jugador> perdedores = new ArrayList<>();
+        // Se guardan en "perdedores" a todos los jugadores que no sean el actual (es decir, el ganador),
+        // y que ademas tengan una mano (es decir, estaban jugando)
         for (Jugador jugador: jugadores) {
-            System.out.println("Jugador ciclo: " + jugador.getNombre());
             if ((jugador != jugadorActual) && (jugador.getMano() != null)) {
-                System.out.println("Jugador guardado: " + jugador.getNombre());
                 perdedores.add(jugador);
             }
         }
+        // Si hay perdedores, se los guarda en el top (hay casos donde no hay perdedores)
         if (!perdedores.isEmpty()) {topLowscores.GuardarNuevosJugadores(perdedores);}
     }
     @Override
     public List<Jugador> getTopLowscores() throws RemoteException {
         return this.topLowscores.recuperarTop();
+    }
+    @Override
+    public boolean getOnGame(){
+        return this.onGame;
     }
 }

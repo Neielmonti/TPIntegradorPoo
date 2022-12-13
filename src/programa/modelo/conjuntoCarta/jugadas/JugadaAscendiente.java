@@ -9,16 +9,10 @@ public abstract class JugadaAscendiente extends Jugada{
         super(forma, cartas, jugador);
     }
     protected boolean esSiguiente(Carta c1, Carta siguiente) {
-        if (siguiente.getTipo() == c1.getTipo().getNext()) {
-            return true;
-        }
-        else return false;
+        return siguiente.getTipo() == c1.getTipo().getNext();
     }
     protected boolean esAnterior(Carta c1, Carta anterior) {
-        if (anterior.getTipo() == c1.getTipo().getPrevius()) {
-            return true;
-        }
-        else return false;
+        return anterior.getTipo() == c1.getTipo().getPrevius();
     }
     @Override
     public boolean agregarCarta(Carta carta, boolean alFinal) {

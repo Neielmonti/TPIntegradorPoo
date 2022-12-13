@@ -61,11 +61,9 @@ public class Serializador {
             ois.close();
         }
         catch (EOFException e) {
-            //System.out.println("Lectura completada");
             //e.printStackTrace();
         }
         catch (Exception e) {
-            //System.out.println("No se encuentra el archivo segun java, igual lo lee asi que ni idea >:/");
             //e.printStackTrace();
         }
         if (!listOfObject.isEmpty()) {
