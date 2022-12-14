@@ -1,5 +1,5 @@
 package programa.modelo.verificadores;
-import programa.modelo.Jugador;
+import programa.modelo.jugador.Jugador;
 import programa.modelo.commons.Formacion;
 import programa.modelo.commons.TipoCarta;
 import programa.modelo.conjuntoCarta.Carta;

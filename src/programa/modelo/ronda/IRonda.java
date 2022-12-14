@@ -1,4 +1,4 @@
-package programa.vista;
+package programa.modelo.ronda;
 public interface IRonda {
     String mostrarRonda();
 }

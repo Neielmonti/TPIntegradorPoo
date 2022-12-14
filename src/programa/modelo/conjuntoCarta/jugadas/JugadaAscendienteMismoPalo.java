@@ -1,5 +1,5 @@
 package programa.modelo.conjuntoCarta.jugadas;
-import programa.modelo.Jugador;
+import programa.modelo.jugador.Jugador;
 import programa.modelo.commons.Formacion;
 import programa.modelo.commons.PaloCarta;
 import programa.modelo.conjuntoCarta.Carta;

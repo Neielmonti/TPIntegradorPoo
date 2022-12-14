@@ -1,7 +1,8 @@
-package programa.modelo;
+package programa.modelo.ronda;
+import programa.modelo.jugador.Jugador;
 import programa.modelo.commons.Formacion;
 import programa.modelo.conjuntoCarta.jugadas.Jugada;
-import programa.vista.IRonda;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;

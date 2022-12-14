@@ -27,6 +27,6 @@ public abstract class VerificarAscendienteMismoPalo extends VerificarAscendiente
     }
     @Override
     protected boolean esSiguiente(Carta c1, Carta siguiente) {
-        return super.esSiguiente(c1, siguiente) && (siguiente.getPalo() == this.palo);
+        return ((super.esSiguiente(c1, siguiente)) && (siguiente.getPalo() == this.palo));
     }
 }

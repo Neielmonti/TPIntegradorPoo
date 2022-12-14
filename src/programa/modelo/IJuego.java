@@ -1,13 +1,13 @@
 package programa.modelo;
 import ar.edu.unlu.rmimvc.cliente.IControladorRemoto;
 import ar.edu.unlu.rmimvc.observer.IObservableRemoto;
-import programa.controlador.Evento;
 import programa.modelo.conjuntoCarta.Carta;
-import programa.modelo.conjuntoCarta.Mano;
 import programa.modelo.conjuntoCarta.Pozo;
 import programa.modelo.conjuntoCarta.jugadas.Jugada;
+import programa.modelo.jugador.Jugador;
+import programa.modelo.ranking.Ranking;
+import programa.modelo.ronda.Ronda;
 
-import java.io.Serializable;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.util.List;
@@ -31,6 +31,6 @@ public interface IJuego extends Remote, IObservableRemoto{
     Jugador getJugador(String nombre) throws RemoteException;
     void JugadorPreparado(String nombre) throws RemoteException;
     void resetearJugadores() throws RemoteException;
-    List<Jugador> getTopLowscores() throws RemoteException;
+    Ranking getRanking() throws RemoteException;
     boolean getOnGame() throws RemoteException;
 }

@@ -1,7 +1,12 @@
 package programa.vista;
 import programa.controlador.Controlador;
+import programa.modelo.jugador.IJugador;
+import programa.modelo.ranking.IRanking;
+import programa.modelo.ronda.IRonda;
 import programa.modelo.conjuntoCarta.Carta;
-
+import programa.modelo.conjuntoCarta.IConjuntoCartas;
+import programa.modelo.conjuntoCarta.IMano;
+import programa.modelo.conjuntoCarta.jugadas.IJugada;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -11,10 +16,6 @@ import java.awt.event.ItemListener;
 import java.rmi.RemoteException;
 import java.util.*;
 import java.util.List;
-
-import static javax.swing.JOptionPane.ERROR_MESSAGE;
-import static javax.swing.JOptionPane.showMessageDialog;
-
 public class VistaGraficaSwing extends JFrame implements IVista{
     private JPanel panelPrincipal;
     private JToggleButton c1ToggleButton;
@@ -40,9 +41,9 @@ public class VistaGraficaSwing extends JFrame implements IVista{
     private JButton alFinalButton;
     private JButton alInicioButton;
     private JButton setNombreButton;
+    private JButton deshacerJugadasButton;
     private Controlador controlador;
     private EstadoVista estado = EstadoVista.INICIALIZANDO;
-    private IMano mano;
     private List<JToggleButton> botonesCarta = new ArrayList<>();
     private Queue<Integer> indiceCartasSeleccionadas = new LinkedList<>();
     public VistaGraficaSwing() {
@@ -67,11 +68,10 @@ public class VistaGraficaSwing extends JFrame implements IVista{
         botonesCarta.add(c11ToggleButton);
         botonesCarta.add(c12ToggleButton);
         botonesCarta.add(c13ToggleButton);
-//        Arrays.fill(indicesCartasSeleccionadas, false);
         c1ToggleButton.setFocusable(false);
         c1ToggleButton.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent ev) {
-                if (mano.getCantidadCartas() >= 1) {
+                if (controlador.getMano().getCantidadCartas() >= 1) {
                     if (ev.getStateChange() == ItemEvent.SELECTED) {
                         indiceCartasSeleccionadas.add(0);
                     } else {
@@ -85,7 +85,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
         c2ToggleButton.setFocusable(false);
         c2ToggleButton.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent ev) {
-                if (mano.getCantidadCartas() >= 2) {
+                if (controlador.getMano().getCantidadCartas() >= 2) {
                     if (ev.getStateChange() == ItemEvent.SELECTED) {
                         indiceCartasSeleccionadas.add(1);
                     } else {
@@ -99,7 +99,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
         c3ToggleButton.setFocusable(false);
         c3ToggleButton.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent ev) {
-                if (mano.getCantidadCartas() >= 3) {
+                if (controlador.getMano().getCantidadCartas() >= 3) {
                     if (ev.getStateChange() == ItemEvent.SELECTED) {
                         indiceCartasSeleccionadas.add(2);
                     } else {
@@ -113,7 +113,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
         c4ToggleButton.setFocusable(false);
         c4ToggleButton.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent ev) {
-                if (mano.getCantidadCartas() >= 4) {
+                if (controlador.getMano().getCantidadCartas() >= 4) {
                     if (ev.getStateChange() == ItemEvent.SELECTED) {
                         indiceCartasSeleccionadas.add(3);
                     } else {
@@ -127,7 +127,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
         c5ToggleButton.setFocusable(false);
         c5ToggleButton.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent ev) {
-                if (mano.getCantidadCartas() >= 5) {
+                if (controlador.getMano().getCantidadCartas() >= 5) {
                     if (ev.getStateChange() == ItemEvent.SELECTED) {
                         indiceCartasSeleccionadas.add(4);
                     } else {
@@ -141,7 +141,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
         c6ToggleButton.setFocusable(false);
         c6ToggleButton.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent ev) {
-                if (mano.getCantidadCartas() >= 6) {
+                if (controlador.getMano().getCantidadCartas() >= 6) {
                     if (ev.getStateChange() == ItemEvent.SELECTED) {
                         indiceCartasSeleccionadas.add(5);
                     } else {
@@ -155,7 +155,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
         c7ToggleButton.setFocusable(false);
         c7ToggleButton.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent ev) {
-                if (mano.getCantidadCartas() >= 7) {
+                if (controlador.getMano().getCantidadCartas() >= 7) {
                     if (ev.getStateChange() == ItemEvent.SELECTED) {
                         indiceCartasSeleccionadas.add(6);
                     } else {
@@ -169,7 +169,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
         c8ToggleButton.setFocusable(false);
         c8ToggleButton.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent ev) {
-                if (mano.getCantidadCartas() >= 8) {
+                if (controlador.getMano().getCantidadCartas() >= 8) {
                     if (ev.getStateChange() == ItemEvent.SELECTED) {
                         indiceCartasSeleccionadas.add(7);
                     } else {
@@ -183,7 +183,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
         c9ToggleButton.setFocusable(false);
         c9ToggleButton.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent ev) {
-                if (mano.getCantidadCartas() >= 9) {
+                if (controlador.getMano().getCantidadCartas() >= 9) {
                     if (ev.getStateChange() == ItemEvent.SELECTED) {
                         indiceCartasSeleccionadas.add(8);
                     } else {
@@ -197,7 +197,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
         c10ToggleButton.setFocusable(false);
         c10ToggleButton.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent ev) {
-                if (mano.getCantidadCartas() >= 10) {
+                if (controlador.getMano().getCantidadCartas() >= 10) {
                     if (ev.getStateChange() == ItemEvent.SELECTED) {
                         indiceCartasSeleccionadas.add(9);
                     } else {
@@ -211,7 +211,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
         c11ToggleButton.setFocusable(false);
         c11ToggleButton.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent ev) {
-                if (mano.getCantidadCartas() >= 11) {
+                if (controlador.getMano().getCantidadCartas() >= 11) {
                     if (ev.getStateChange() == ItemEvent.SELECTED) {
                         indiceCartasSeleccionadas.add(10);
                     } else {
@@ -225,7 +225,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
         c12ToggleButton.setFocusable(false);
         c12ToggleButton.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent ev) {
-                if (mano.getCantidadCartas() >= 12) {
+                if (controlador.getMano().getCantidadCartas() >= 12) {
                     if (ev.getStateChange() == ItemEvent.SELECTED) {
                         indiceCartasSeleccionadas.add(11);
                     } else {
@@ -239,7 +239,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
         c13ToggleButton.setFocusable(false);
         c13ToggleButton.addItemListener(new ItemListener() {
             public void itemStateChanged(ItemEvent ev) {
-                if (mano.getCantidadCartas() >= 13) {
+                if (controlador.getMano().getCantidadCartas() >= 13) {
                     if (ev.getStateChange() == ItemEvent.SELECTED) {
                         indiceCartasSeleccionadas.add(12);
                     } else {
@@ -320,6 +320,12 @@ public class VistaGraficaSwing extends JFrame implements IVista{
             }
         });
         setEstado(EstadoVista.INICIALIZANDO);
+        deshacerJugadasButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                controlador.deshacerJugadas();
+            }
+        });
     }
     @Override
     public void setControlador(Controlador controlador) {
@@ -330,7 +336,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
         EventQueue.invokeLater(new Runnable() {
             public void run() {
                 try {
-                    setSize(970,300);
+                    setSize(970,330);
                     setVisible(true);
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -338,11 +344,6 @@ public class VistaGraficaSwing extends JFrame implements IVista{
             }
         });
     }
-    @Override
-    public void setManoActual(IMano mano) {
-        this.mano = mano;
-    }
-
     private int[] generarArrayCartasSeleccionadas() {
         int[] retorno = new int[indiceCartasSeleccionadas.size()];
         for (int i = 0; i < retorno.length; i++) {
@@ -377,7 +378,6 @@ public class VistaGraficaSwing extends JFrame implements IVista{
         for (JToggleButton boton: botonesCarta) {
             boton.setSelected(false);
         }
-        //Arrays.fill(indicesCartasSeleccionadas, false);
         indiceCartasSeleccionadas = new LinkedList<>();
     }
     @Override
@@ -385,6 +385,10 @@ public class VistaGraficaSwing extends JFrame implements IVista{
         List<IJugada> jugadas = new ArrayList<>(this.controlador.getJugadasJugador());
         for (IJugada jugada: jugadas) {
             println("[Jugada " + (jugadas.indexOf(jugada) + 1) + "] -------- \n" + jugada.mostrarCartas() + "\n");
+        }
+        if (jugadas.size() > 0) {
+            deshacerJugadasButton.setEnabled(true);
+            setEnabledBotonesCarta(true);
         }
     }
     @Override
@@ -415,6 +419,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
                 alInicioButton.setEnabled(false);
                 tirarCartaButton.setEnabled(false);
                 armarJugadaButton.setEnabled(false);
+                deshacerJugadasButton.setEnabled(false);
                 bajarseButton.setEnabled(false);
                 textbox.setEnabled(false);
                 setNombreButton.setEnabled(false);
@@ -429,6 +434,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
                 alInicioButton.setEnabled(false);
                 tirarCartaButton.setEnabled(false);
                 armarJugadaButton.setEnabled(false);
+                deshacerJugadasButton.setEnabled(false);
                 bajarseButton.setEnabled(false);
                 textbox.setEnabled(true);
                 setNombreButton.setEnabled(true);
@@ -443,6 +449,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
                 alInicioButton.setEnabled(false);
                 tirarCartaButton.setEnabled(false);
                 armarJugadaButton.setEnabled(false);
+                deshacerJugadasButton.setEnabled(false);
                 bajarseButton.setEnabled(false);
                 textbox.setEnabled(false);
                 setNombreButton.setEnabled(true);
@@ -459,6 +466,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
                 alInicioButton.setEnabled(false);
                 tirarCartaButton.setEnabled(false);
                 armarJugadaButton.setEnabled(false);
+                deshacerJugadasButton.setEnabled(false);
                 bajarseButton.setEnabled(false);
                 textbox.setEnabled(false);
                 setNombreButton.setEnabled(false);
@@ -473,10 +481,10 @@ public class VistaGraficaSwing extends JFrame implements IVista{
                 alInicioButton.setEnabled(false);
                 tirarCartaButton.setEnabled(true);
                 armarJugadaButton.setEnabled(true);
+                deshacerJugadasButton.setEnabled(false);
                 bajarseButton.setEnabled(true);
                 textbox.setEnabled(false);
                 setNombreButton.setEnabled(false);
-                //setEnabledBotonesCarta(true);
                 resetBotonesCartas();
                 mostrarMano();
                 setEnabledBotonesCarta(true);
@@ -490,6 +498,7 @@ public class VistaGraficaSwing extends JFrame implements IVista{
                 alInicioButton.setEnabled(true);
                 tirarCartaButton.setEnabled(true);
                 armarJugadaButton.setEnabled(false);
+                deshacerJugadasButton.setEnabled(false);
                 bajarseButton.setEnabled(false);
                 textbox.setEnabled(true);
                 setNombreButton.setEnabled(false);
@@ -513,27 +522,23 @@ public class VistaGraficaSwing extends JFrame implements IVista{
             IJugador ganador = this.controlador.getGanador();
             println("EL JUGADOR " + ganador.getNombre() + " HA GANADO! >:)");
             if (jugador != null) {println("Tu puntaje es de: " + jugador.getPuntaje() + "\n");}
-            mostrarTopLowscores();
+            mostrarRanking();
         }
         catch (RemoteException e) {
             printError(ErrorVista.CONEXION);
         }
     }
     @Override
-    public void mostrarTopLowscores() {
-        List<IJugador> top = controlador.getTopLowscores();
-        if (top != null) {
-            println("----------- TOP PERDEDORES -----------");
-            println("(Jugador)           (Puntaje)");
-            for (IJugador jugador:top) {
-                println(jugador.getNombre() + "      " + jugador.getPuntaje());
-            }
+    public void mostrarRanking() {
+        IRanking ranking = controlador.getRanking();
+        if (ranking != null) {
+            println(ranking.mostrarRanking());
         }
     }
     @Override
     public void mostrarMano() {
-        if (mano != null) {
-            List<Carta> cartas = mano.getCartas();
+        if (controlador.getMano() != null) {
+            List<Carta> cartas = controlador.getMano().getCartas();
             for (int i = 0; i < botonesCarta.size(); i++) {
                 if (i < cartas.size()) {
                     Carta carta = cartas.get(i);

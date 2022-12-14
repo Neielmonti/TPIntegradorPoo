@@ -10,6 +10,7 @@ public class MainAppPrueba {
         s.iniciar();
         a1.inicioGrafico();
         a2.inicioGrafico();
-        a3.inicioGrafico();
+        //a3.inicioGrafico();
+        //a4.inicioGrafico();
     }
 }

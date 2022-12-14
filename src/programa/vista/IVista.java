@@ -1,9 +1,11 @@
 package programa.vista;
 import programa.controlador.Controlador;
+import programa.modelo.jugador.IJugador;
+import programa.modelo.conjuntoCarta.IMano;
+
 public interface IVista {
     void setControlador(Controlador controlador);
     void inicioGrafico();
-    void setManoActual(IMano mano);
     void mostrarJugadasJugador();
     void mostrarAllJugadas();
     void setEstado(EstadoVista estado);
@@ -15,5 +17,5 @@ public interface IVista {
     void clearTextbox();
     void println(String texto);
     void printError(ErrorVista error);
-    void mostrarTopLowscores();
+    void mostrarRanking();
 }

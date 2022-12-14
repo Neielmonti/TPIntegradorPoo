@@ -1,4 +1,4 @@
-package programa.vista;
+package programa.modelo.conjuntoCarta;
 
 import programa.modelo.conjuntoCarta.Carta;
 

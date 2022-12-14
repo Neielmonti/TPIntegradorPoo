@@ -1,7 +1,4 @@
-package programa.vista;
-
-import programa.modelo.conjuntoCarta.Carta;
-
+package programa.modelo.conjuntoCarta;
 import java.util.List;
 
 public interface IMano {

@@ -1,4 +1,4 @@
-package programa.vista;
+package programa.modelo.jugador;
 import programa.modelo.conjuntoCarta.jugadas.Jugada;
 import java.util.List;
 public interface IJugador {

@@ -6,7 +6,6 @@ import programa.controlador.Controlador;
 import programa.vista.IVista;
 import programa.vista.VistaConsolaSwing;
 import programa.vista.VistaGraficaSwing;
-
 import javax.swing.*;
 import java.rmi.RemoteException;
 import java.util.ArrayList;

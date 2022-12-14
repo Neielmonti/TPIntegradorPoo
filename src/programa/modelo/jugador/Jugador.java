@@ -1,8 +1,7 @@
-package programa.modelo;
-import programa.modelo.conjuntoCarta.Carta;
+package programa.modelo.jugador;
 import programa.modelo.conjuntoCarta.Mano;
 import programa.modelo.conjuntoCarta.jugadas.Jugada;
-import programa.vista.IJugador;
+
 import java.io.Serial;
 import java.io.Serializable;
 import java.util.ArrayList;

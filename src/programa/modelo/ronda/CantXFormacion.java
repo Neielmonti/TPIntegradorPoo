@@ -1,4 +1,4 @@
-package programa.modelo;
+package programa.modelo.ronda;
 import programa.modelo.commons.Formacion;
 import java.io.Serializable;
 public record CantXFormacion(Formacion forma, int cantidad) implements Serializable {

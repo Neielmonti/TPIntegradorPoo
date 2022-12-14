@@ -37,7 +37,7 @@ public abstract class VerificarAscendiente extends VerificarJugada{
                 else {cartaAnterior = new Carta(cartaAnterior.getPalo(),cartaAnterior.getTipo().getNext());}
             }
             else {
-                if (cartas.get(i).getTipo() != cartaAnterior.getTipo().getNext()) {
+                if (!esSiguiente(cartaAnterior,cartas.get(i))) {
                     armado = false;
                 }
                 else cartaAnterior = cartas.get(i);

@@ -44,7 +44,7 @@ public class Serializador {
             respuesta = ois.readObject();
             ois.close();
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();
+        //    e.printStackTrace();
         }
         return respuesta;
     }
@@ -59,11 +59,7 @@ public class Serializador {
                 r = ois.readObject();
             }
             ois.close();
-        }
-        catch (EOFException e) {
-            //e.printStackTrace();
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             //e.printStackTrace();
         }
         if (!listOfObject.isEmpty()) {

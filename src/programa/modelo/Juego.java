@@ -10,8 +10,12 @@ import programa.modelo.conjuntoCarta.Mano;
 import programa.modelo.conjuntoCarta.Mazo;
 import programa.modelo.conjuntoCarta.Pozo;
 import programa.modelo.conjuntoCarta.jugadas.Jugada;
+import programa.modelo.jugador.Jugador;
+import programa.modelo.ranking.Ranking;
+import programa.modelo.ronda.CantXFormacion;
+import programa.modelo.ronda.Ronda;
 import programa.modelo.verificadores.*;
-import serializacion.services.Serializacion;
+import programa.modelo.ranking.SerializacionRanking;
 import java.io.Serializable;
 import java.rmi.RemoteException;
 import java.util.*;
@@ -23,7 +27,7 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
     private Mazo mazo = new Mazo();
     private Pozo pozo = new Pozo();
     private List<VerificarJugada> verificadoresJugada = new ArrayList<>();
-    private Serializacion topLowscores = new Serializacion(10);
+    private SerializacionRanking serializacionRanking = new SerializacionRanking();
     private boolean onGame = false;
     public Juego(){
         //Se generan las rondas y los verificadores
@@ -50,8 +54,8 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         Ronda aux = this.rondas.remove();
         this.rondas.add(aux);
         actualizarPuntajes();
-        resetearJugadores();
         guardarJugadoresTop();
+        resetearJugadores();
         resetMazo();
         onGame = false;
         notificarObservadores(Evento.RONDA_GANADA);
@@ -112,7 +116,10 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
             if ((!jugadores.peek().yaBajo()) && (this.rondas.peek().verificarJugadasxRonda(jugadores.peek()))) {
                 // Si el jugador actual aun no bajo, y sus jugadas coincides con las pedidas en la ronda, se lo baja y se notifica a todos
                 jugadores.peek().bajar();
-                notificarObservadores(Evento.JUGADOR_BAJO);
+                if (jugadores.peek().getMano().getCantidadCartas() == 0) {
+                    pasarSiguienteRonda();
+                }
+                else notificarObservadores(Evento.JUGADOR_BAJO);
             } else {
                 // Caso contrario, se notifica que sus jugadas fueron rechazadas (no puede bajarse)
                 notificarObservadores(Evento.BAJADA_RECHAZADA);
@@ -140,12 +147,13 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         if (jugada != null) {
             // Si se pudo formar una jugada, se le quitan las cartas de la mano del jugador
             jugadores.peek().getMano().quitarCartas(jugada);
-            if (jugadores.peek().getMano().isEmpty()) {
+            //if ((jugadores.peek().getMano().isEmpty())) {
+            //    verificarJugadas();
                 // Si el jugador se quedo sin cartas, se pasa de ronda (el jugador gano)
-                pasarSiguienteRonda();
-            }
+            //}
             // Caso contrario se le avisa al jugador que la jugada fue armada
-            else notificarObservadores(Evento.JUGADA_ARMADA);
+            //else
+                notificarObservadores(Evento.JUGADA_ARMADA);
         }
         // Si no se pudo formar la jugada, se le avisa al jugador
         else notificarObservadores(Evento.JUGADA_RECHAZADA);
@@ -180,10 +188,7 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         if (this.rondas.isEmpty()) {
             List<CantXFormacion> listaAux;
             // En el caso de rondas complejas (de varios tipos de jugadas) se utiliza una lista auxiliar para crearlas
-            //this.rondas.add(new Ronda(Formacion.ESCALA,1));// ESTE ES SOLO PARA PRUEBAS
-            //this.rondas.add(new Ronda(Formacion.ESCALA,1));// ESTE ES SOLO PARA PRUEBAS
-            //this.rondas.add(new Ronda(Formacion.ESCALA,1));// ESTE ES SOLO PARA PRUEBAS
-            //this.rondas.add(new Ronda(Formacion.ESCALA,1));// ESTE ES SOLO PARA PRUEBAS
+            this.rondas.add(new Ronda(Formacion.ESCALA,1));// ESTE ES SOLO PARA PRUEBAS
             this.rondas.add(new Ronda(Formacion.TRIO,2));
             listaAux = new ArrayList<>();
             listaAux.add(new CantXFormacion(Formacion.TRIO,1));
@@ -216,7 +221,7 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         // tambien se pasan todas las cartas del pozo al mazo
         pozo.pasarCartas(this.mazo);
     }
-
+    /**
     private void repartirCartas() {
         resetMazo();
         for(Jugador jugador:this.jugadores) {
@@ -225,24 +230,34 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         this.pozo.pasarCartas(this.mazo);
         this.pozo.agregarCarta(this.mazo.tomarCarta());
     }
-    /**
+    **/
     // PRUEBITA
     public void repartirCartas(){
         this.resetMazo();
         List<Carta> cartas;
         for (Jugador jugador: jugadores) {
             cartas = new ArrayList<>();
+            /**
+            cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.A));
+            cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.DOS));
+            cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.TRES));
+            cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.CUATRO));
+            cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.CINCO));
+            cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.SEIS));
+            cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.SIETE));
+            cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.OCHO));
+             **/
             cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.NUEVE));
             cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.DIEZ));
             cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.J));
-            cartas.add(new Carta(PaloCarta.JOKER, TipoCarta.JOKER));
-            cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.K));
             cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.Q));
+            cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.K));
+            cartas.add(new Carta(PaloCarta.JOKER, TipoCarta.JOKER));
             jugador.setMano(new Mano(cartas));
         }
         this.pozo.pasarCartas(this.mazo);
         this.pozo.agregarCarta(this.mazo.tomarCarta());
-    }**/
+    }
     @Override
     public void quitarJugador(String nombre, IControladorRemoto controlador) throws RemoteException{
         if (!jugadores.isEmpty()) {
@@ -405,11 +420,13 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
             }
         }
         // Si hay perdedores, se los guarda en el top (hay casos donde no hay perdedores)
-        if (!perdedores.isEmpty()) {topLowscores.GuardarNuevosJugadores(perdedores);}
+        if (!perdedores.isEmpty()) {
+            serializacionRanking.GuardarNuevosJugadores(perdedores);
+        }
     }
     @Override
-    public List<Jugador> getTopLowscores() throws RemoteException {
-        return this.topLowscores.recuperarTop();
+    public Ranking getRanking() throws RemoteException {
+        return this.serializacionRanking.recuperarRanking();
     }
     @Override
     public boolean getOnGame(){

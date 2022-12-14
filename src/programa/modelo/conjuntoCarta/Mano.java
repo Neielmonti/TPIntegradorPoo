@@ -1,5 +1,4 @@
 package programa.modelo.conjuntoCarta;
-import programa.vista.IMano;
 import java.util.List;
 public class Mano extends ConjuntoCartas implements IMano {
     private static int sizeMano = 12;

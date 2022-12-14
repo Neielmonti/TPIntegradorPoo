@@ -1,9 +1,8 @@
 package programa.modelo.conjuntoCarta.jugadas;
-import programa.modelo.Jugador;
+import programa.modelo.jugador.Jugador;
 import programa.modelo.commons.Formacion;
 import programa.modelo.conjuntoCarta.Carta;
 import programa.modelo.conjuntoCarta.ConjuntoCartas;
-import programa.vista.IJugada;
 
 import java.util.List;
 public abstract class Jugada extends ConjuntoCartas implements IJugada {

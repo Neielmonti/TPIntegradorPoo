@@ -1,6 +1,11 @@
 package programa.vista;
 import java.lang.Character;
 import programa.controlador.Controlador;
+import programa.modelo.jugador.IJugador;
+import programa.modelo.ranking.IRanking;
+import programa.modelo.ronda.IRonda;
+import programa.modelo.conjuntoCarta.IMano;
+import programa.modelo.conjuntoCarta.jugadas.IJugada;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,7 +19,6 @@ public class VistaConsolaSwing extends JFrame implements IVista {
     private JTextField textbox;
     private JButton buttEnter;
     private JPanel panelPrincipal;
-    private IMano manoActual;
     private EstadoVista estado = EstadoVista.INICIALIZANDO;
     private Controlador controlador;
     @Override
@@ -104,7 +108,7 @@ public class VistaConsolaSwing extends JFrame implements IVista {
                 } else {
                     try {
                         int indiceCarta = Integer.parseInt(in);
-                        if ((indiceCarta <= 0) || (indiceCarta > this.manoActual.getCantidadCartas())) {
+                        if ((indiceCarta <= 0) || (indiceCarta > this.controlador.getMano().getCantidadCartas())) {
                             println("Carta fuera de rango");
                         }
                         else this.controlador.tirarCartaAlPozo(indiceCarta - 1);
@@ -174,8 +178,8 @@ public class VistaConsolaSwing extends JFrame implements IVista {
                     int indiceJugada = Integer.parseInt(aux[1]);
                     List<IJugada> jugadas = this.controlador.getAllJugadas();
 
-                    if ((indiceCarta > manoActual.getCantidadCartas()) || (indiceCarta < 1)) {
-                        println("Carta fuera de rango, la mano tiene solamente: " + manoActual.getCantidadCartas());
+                    if ((indiceCarta > controlador.getMano().getCantidadCartas()) || (indiceCarta < 1)) {
+                        println("Carta fuera de rango, la mano tiene solamente: " + controlador.getMano().getCantidadCartas());
                     } else if ((indiceJugada < 1) || (indiceJugada > jugadas.size())) {
                         println("Jugada fuera de rango");
                     } else {
@@ -194,7 +198,7 @@ public class VistaConsolaSwing extends JFrame implements IVista {
     }
     private int[] convertirAIndices(String[] texto) {
         int[] indices = new int[texto.length];
-        int cantCartas = manoActual.getCantidadCartas();
+        int cantCartas = controlador.getMano().getCantidadCartas();
         for (int i = 0; i < texto.length; i++) {
             int a = Integer.parseInt(texto[i]);
             if ((a > cantCartas) || (a < 1)) {
@@ -202,10 +206,6 @@ public class VistaConsolaSwing extends JFrame implements IVista {
             } else indices[i] = (a - 1);
         }
         return indices;
-    }
-    @Override
-    public void setManoActual(IMano mano) {
-        this.manoActual = mano;
     }
     @Override
     public void mostrarJugadasJugador() {
@@ -243,21 +243,17 @@ public class VistaConsolaSwing extends JFrame implements IVista {
             IJugador ganador = this.controlador.getGanador();
             println("EL JUGADOR " + ganador.getNombre() + " HA GANADO! >:)");
             if (jugador != null) {println("Tu puntaje es de: " + jugador.getPuntaje() + "\n");}
-            mostrarTopLowscores();
+            mostrarRanking();
         }
         catch (RemoteException e) {
             printError(ErrorVista.CONEXION);
         }
     }
     @Override
-    public void mostrarTopLowscores() {
-        List<IJugador> top = controlador.getTopLowscores();
-        if (top != null) {
-            println("----------- TOP PERDEDORES -----------");
-            println("(Jugador)           (Puntaje)");
-            for (IJugador jugador:top) {
-                println(jugador.getNombre() + "      " + jugador.getPuntaje());
-            }
+    public void mostrarRanking() {
+        IRanking ranking = controlador.getRanking();
+        if (ranking != null) {
+            println(ranking.mostrarRanking());
         }
     }
     private boolean verificarCartasJugada(String text) {
@@ -272,8 +268,8 @@ public class VistaConsolaSwing extends JFrame implements IVista {
     }
     @Override
     public void mostrarMano() {
-        if (manoActual != null) {
-            println("---------MANO---------" + "\n" + manoActual.mostrarCartas() + "\n");
+        if (controlador.getMano() != null) {
+            println("---------MANO---------" + "\n" + controlador.getMano().mostrarCartas() + "\n");
         }
     }
     @Override
