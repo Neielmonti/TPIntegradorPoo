@@ -188,7 +188,7 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         if (this.rondas.isEmpty()) {
             List<CantXFormacion> listaAux;
             // En el caso de rondas complejas (de varios tipos de jugadas) se utiliza una lista auxiliar para crearlas
-            this.rondas.add(new Ronda(Formacion.ESCALA,1));// ESTE ES SOLO PARA PRUEBAS
+            // Para las rondas simples, solo se necesita la formacion, y la cantidad a formar
             this.rondas.add(new Ronda(Formacion.TRIO,2));
             listaAux = new ArrayList<>();
             listaAux.add(new CantXFormacion(Formacion.TRIO,1));
@@ -221,39 +221,10 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         // tambien se pasan todas las cartas del pozo al mazo
         pozo.pasarCartas(this.mazo);
     }
-    /**
     private void repartirCartas() {
         resetMazo();
         for(Jugador jugador:this.jugadores) {
             if (jugador.getPreparado()) {jugador.setMano(this.mazo.formarMano());}
-        }
-        this.pozo.pasarCartas(this.mazo);
-        this.pozo.agregarCarta(this.mazo.tomarCarta());
-    }
-    **/
-    // PRUEBITA
-    private void repartirCartas(){
-        this.resetMazo();
-        List<Carta> cartas;
-        for (Jugador jugador: jugadores) {
-            cartas = new ArrayList<>();
-            /**
-            cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.A));
-            cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.DOS));
-            cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.TRES));
-            cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.CUATRO));
-            cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.CINCO));
-            cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.SEIS));
-            cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.SIETE));
-            cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.OCHO));
-             **/
-            cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.NUEVE));
-            cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.DIEZ));
-            cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.J));
-            cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.Q));
-            cartas.add(new Carta(PaloCarta.CORAZONES, TipoCarta.K));
-            cartas.add(new Carta(PaloCarta.JOKER, TipoCarta.JOKER));
-            jugador.setMano(new Mano(cartas));
         }
         this.pozo.pasarCartas(this.mazo);
         this.pozo.agregarCarta(this.mazo.tomarCarta());

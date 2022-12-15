@@ -21,9 +21,7 @@ public abstract class VerificarJugada {
         return contador;
     }
     protected boolean verificarListaCartas(List<Carta> cartas) {
-        if ((cartas.size() != this.forma.getCantCartas()) || (cartas.size() == 0) || (cantJokers(cartas) > 1)) {
-            return false;
-        }
-        else return true;
+        // Solo se devuelve verdadero si la cantidad de cartas es la misma que la cantidad de la formacion, y si tiene 1 joker o menos
+        return (cartas.size() == this.forma.getCantCartas()) && (cartas.size() != 0) && (cantJokers(cartas) <= 1);
     }
 }

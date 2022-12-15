@@ -41,7 +41,7 @@ public class Ronda implements IRonda, Serializable{
             int cantActual = cf.cantidad();
             int contador = 0;
             for (Jugada jugada:jugadas) {
-                if (jugada.getForma() == formaActual) {
+                if ((jugada.getForma() == formaActual) || (formaActual.esEquivalente(jugada.getForma()))) {
                     contador++;
                 }
             }
