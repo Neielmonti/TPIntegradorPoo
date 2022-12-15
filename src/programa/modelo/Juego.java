@@ -54,7 +54,7 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
         Ronda aux = this.rondas.remove();
         this.rondas.add(aux);
         actualizarPuntajes();
-        guardarJugadoresTop();
+        guardarJugadoresRanking();
         resetearJugadores();
         resetMazo();
         onGame = false;
@@ -232,7 +232,7 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
     }
     **/
     // PRUEBITA
-    public void repartirCartas(){
+    private void repartirCartas(){
         this.resetMazo();
         List<Carta> cartas;
         for (Jugador jugador: jugadores) {
@@ -409,7 +409,7 @@ public class Juego extends ObservableRemoto implements IJuego, Serializable{
             jugador.resetearJugador();
         }
     }
-    private void guardarJugadoresTop() {
+    private void guardarJugadoresRanking() {
         Jugador jugadorActual = jugadores.peek();
         List<Jugador> perdedores = new ArrayList<>();
         // Se guardan en "perdedores" a todos los jugadores que no sean el actual (es decir, el ganador),
