@@ -5,7 +5,7 @@
 Carioca es un juego de naipes chileno, perteneciente a la familia del rummy, en el cual todos los jugadores, generalmente entre 2 a 4, 
 reciben 12 cartas ocultas y deben crear diferentes juegos con su mano. El juego se basa en el sistema de puntaje, siendo el propósito 
 evitar generar puntos que son en contra. Carioca se juega con 2 mazos de naipes ingleses de 52 cartas cada una, incluyendo los Jokers.
-El objetivo es "bajarse" o deshacerse de todas las cartas completando "juegadas". Quien primero se deshaga de sus cartas, 
+El objetivo es "bajarse" o deshacerse de todas las cartas completando "jugadas". Quien primero se deshaga de sus cartas, 
 no sumará puntos. Por el contrario, quienes se quedaron con cartas en la mano al momento que un jugador no tenga, sus cartas sumarán 
 puntos en contra de ellos mismos. Gana quien finalice con menos puntos.
 
@@ -41,9 +41,10 @@ Antes de continuar con la explicación del juego debemos detallar cuales son las
 - Escalera Sucia (13 cartas)
 - Escalera Real (13 cartas)
 
-Los Tríos consisten en 3 cartas del mismo número sin importar color o pinta. Las escalas son 4 cartas en escala, pero deben ser del mismo color y escala. 
-En el caso de la Escalera sucia, se refiere a una escala del A al K sin importar color o pinta, al contrario de la escalera real en la cual debemos forma 
-una escala de A a K de la misma pinta.
+Los Tríos consisten en 3 cartas del mismo número sin importar el palo.  
+Las escalas son 4 cartas en escala, pero deben ser del mismo palo y escala.  
+En el caso de la escalera sucia, se refiere a una escala del A al K sin importar el palo.  
+Al contrario de la escalera real en la cual debemos forma una escala de A a K del mismo palo.
 
 Ahora ya teniendo claro en qué consiste cada ronda continuaremos con la explicación y el inicio del juego.
 
@@ -53,11 +54,10 @@ A quien le toque jugar podrá partir sacando una carta del mazo, o del pozo. Al 
 que sus competidores. En ese momento el jugador tendrá 13 cartas y está  obligado a tirar una carta (al tirar la carta terminara su turno).
 Al completar las jugdas correspondiente (ejemplo 3 tríos, total de 9 cartas), el jugador en su turno podrá bajar sus cartas en la mesa (quedara con 4 cartas 
 en mano, según el ejemplo) y tirará una carta al “pozo” (3 cartas en mano). En ese momento el jugador seguirá  jugando para deshacerse de las cartas restantes, 
-esto lo lograra descargando las cartas que correspondan a sí mismo (por ejemplo, si uno se bajo con un trío de 5 y en su mano tiene 2 cartas 5 extras, en la siguiente 
-ronda el jugador podrá poner esas 2 cartas 5 al lado del trió de cincos puestos en el turno anterior) o a los rivales que ya se hayan bajado.
+esto lo lograra descargando las cartas que correspondan a sí mismo (por ejemplo, si uno se bajo con un trío de 5 y en su mano tiene 2 cartas 5 extras, en el siguiente turno el jugador podrá poner esas 2 cartas 5 al lado del trió de cincos puestos en el turno anterior) o a los rivales que ya se hayan bajado.
 En un turno el jugador puede deshacerse de las cartas que quiera, e incluso bajando toda su mano si pudiese.
 El juego termina luego de la 10 ronda y gana la persona que termina con menos puntaje en toda la partida.
-No se puede tener dos o más comodines en una misma escala o trío.
+No se puede tener dos o más comodines en una misma jugada.
 
 ## Acerca del programa
 
