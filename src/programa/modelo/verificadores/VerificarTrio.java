@@ -21,17 +21,31 @@ public class VerificarTrio extends VerificarJugada{
         if (!super.verificarListaCartas(cartas)) {
             return false;
         }
+        if (hayCartasRepetidas(cartas)) {
+            return false;
+        }
         int i = 1;
         boolean armado = true;
         TipoCarta primero = cartas.get(0).getTipo();
         if (primero == TipoCarta.JOKER) {primero = cartas.get(cartas.size()-1).getTipo();}
 
         while ((i < cartas.size()) && (armado)) {
-            if ((cartas.get(i).getTipo() != primero) && (cartas.get(i).getTipo() != TipoCarta.JOKER)) {
+            if (((cartas.get(i).getTipo() != primero) && (cartas.get(i).getTipo() != TipoCarta.JOKER))) {
                 armado = false;
             }
             i++;
         }
         return armado;
+    }
+    private boolean hayCartasRepetidas(List<Carta> cartas) {
+        for (int i = 0; i < cartas.size(); i ++) {
+            Carta carta = cartas.remove(i);
+            if (cartas.contains(carta)) {
+                cartas.add(i,carta);
+                return true;
+            }
+            else cartas.add(i,carta);
+        }
+        return false;
     }
 }
