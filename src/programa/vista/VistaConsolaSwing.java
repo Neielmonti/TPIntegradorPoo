@@ -101,10 +101,17 @@ public class VistaConsolaSwing extends JFrame implements IVista {
             case TIRAR_CARTA -> {
                 String in = textbox.getText().trim();
                 if (in.equals(OpcionVista.CANCELAR.getLabel())) {
+                    clearMemo();
                     if (this.controlador.jugadorYaBajo()) {
+                        mostrarMano();
+                        mostrarAllJugadas();
                         setEstado(EstadoVista.BAJADO_DESCARGAR_O_TIRAR);
                     }
-                    else setEstado(EstadoVista.TIRAR_O_BAJAR);
+                    else {
+                        mostrarRonda();
+                        mostrarMano();
+                        setEstado(EstadoVista.TIRAR_O_BAJAR);
+                    }
                 } else {
                     try {
                         int indiceCarta = Integer.parseInt(in);
@@ -127,6 +134,9 @@ public class VistaConsolaSwing extends JFrame implements IVista {
                     this.controlador.verificarJugadas();
                 }
                 else if (in.equals(OpcionVista.CANCELAR.getLabel())) {
+                    clearMemo();
+                    mostrarRonda();
+                    mostrarMano();
                     setEstado(EstadoVista.TIRAR_O_BAJAR);
                     controlador.deshacerJugadas();
                 }
@@ -135,6 +145,9 @@ public class VistaConsolaSwing extends JFrame implements IVista {
             case ARMANDO_JUGADA -> {
                 String in = textbox.getText().trim();
                 if (in.equals(OpcionVista.CANCELAR.getLabel())) {
+                    clearMemo();
+                    mostrarRonda();
+                    mostrarMano();
                     setEstado(EstadoVista.BAJAR);
                 }
                 else if (!verificarCartasJugada(in)) {
@@ -166,6 +179,8 @@ public class VistaConsolaSwing extends JFrame implements IVista {
                 String in = textbox.getText().trim();
                 String[] aux = in.split("-");
                 if (in.equals(OpcionVista.CANCELAR.getLabel())) {
+                    clearMemo();
+                    mostrarMano();
                     setEstado(EstadoVista.BAJADO_DESCARGAR_O_TIRAR);
                     break;
                 }
